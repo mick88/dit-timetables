@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mick88.dittimetable"
     android:installLocation="auto"
-    android:versionCode="11"
-    android:versionName="2.0.1" >
+    android:versionCode="12"
+    android:versionName="2.1" >
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -20,8 +20,9 @@
         android:theme="@style/AppTheme"
         android:name="com.mick88.dittimetable.TimetableApp">
         <activity
-            android:name="screens.TimetableActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" >
+            android:name="com.mick88.dittimetable.screens.TimetableActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" 
+            >
 
             <!-- prevents activity from restarting when orientation changes -->
             <intent-filter>
@@ -29,7 +30,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <intent-filter>
+          <!--   <intent-filter>
                 <action android:name="android.intent.action.VIEW" >
                 </action>
 
@@ -43,24 +44,27 @@
                     android:pathPrefix="/timetables/PortalServ"
                     android:scheme="https" >
                 </data>
-            </intent-filter>
+            </intent-filter> -->
         </activity>
         <activity
-            android:name="screens.SettingsActivity"
+            android:name="com.mick88.dittimetable.screens.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
-            android:name="com.google.ads.AdActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" >
-        </activity>
-        <activity
-            android:name="screens.EventDetailsActivity"
+            android:name="com.mick88.dittimetable.screens.EventDetailsActivity"
             android:label="@string/title_activity_event_details"
-            android:parentActivityName="screens.TimetableActivity" >
+            android:parentActivityName="com.mick88.dittimetable.screens.TimetableActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mick88.dittimetable.TimetableActivity" />
         </activity>
+<!--         <receiver android:name="com.mick88.dittimetable.widget.TimetableWidget" android:label="Timetable">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info"/>
+        </receiver> -->
     </application>
 
 </manifest>

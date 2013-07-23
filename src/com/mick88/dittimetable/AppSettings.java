@@ -6,10 +6,14 @@ import java.util.List;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class AppSettings implements OnSharedPreferenceChangeListener
 {
+	private static final String 
+		DEFAULT_USERNAME = "students",
+		DEFAULT_PASSWORD = "timetables";
 	SharedPreferences sharedPreferences;
 	public static final String sharedPrefNameTag = "com.mick88.dittimetable";
 	final static String GROUP_SEPARATOR = ",";
@@ -38,6 +42,11 @@ public class AppSettings implements OnSharedPreferenceChangeListener
 		hiddenGroups = new ArrayList<String>();
 	}
 	
+	public boolean isCourseDataSpecified()
+	{
+		return TextUtils.isEmpty(course) == false && TextUtils.isEmpty(weeks) == false && year > 0;
+	}
+	
 	public AppSettings(Context context, boolean loadSettings)
 	{
 		this(context);
@@ -46,8 +55,8 @@ public class AppSettings implements OnSharedPreferenceChangeListener
 	
 	public void loadSettings()
 	{
-		username = sharedPreferences.getString("username", "");
-		password = sharedPreferences.getString("password", "");
+		username = sharedPreferences.getString("username", DEFAULT_USERNAME);
+		password = sharedPreferences.getString("password", DEFAULT_PASSWORD);
 		
 		course = sharedPreferences.getString("course", "");
 		weeks = sharedPreferences.getString("weeks", "");

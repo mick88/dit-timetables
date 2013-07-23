@@ -23,3 +23,8 @@ Changelog for update:
 + more weeks available
 + changed settings behavious, ability to cancel settings, pressing back will prompt to save/abandon changes
 + share timetable
+
++ predefined credentials
++ swipe timetable tabs
++ tabs on actionbar in landscape
++ optimized download (refresh) times

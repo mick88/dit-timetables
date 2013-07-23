@@ -1,6 +1,5 @@
 package com.mick88.dittimetable.timetable;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,15 +8,16 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import screens.TimetableActivity;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
@@ -25,9 +25,10 @@ import android.util.Log;
 
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.Connection;
+import com.mick88.dittimetable.screens.TimetableActivity;
 
 /**
- * Class containint a timetable divided into days
+ * Class containing a timetable divided into days
  * @author Michal
  *
  */
@@ -54,23 +55,24 @@ public class Timetable
 		public void onDebugStringReceived(String s);
 		public void onDownloadPdfStarted(boolean success);
 		public void onSettingsNotComplete();
+		/**
+		 * Called after full data download
+		 */
+		public void onFullDataDownloaded();
 	}
 	/**
 	 * All groups in currently loaded timetable
 	 */
 	ArrayList<String> groupsInTimetable=new ArrayList<String>();
-	@Deprecated
-//	ArrayList<String> hiddenGroups = new ArrayList<String>();
 	ResultHandler resultHandler=null;
 	Activity parentActivity=null;
 	final AppSettings settings;
+	boolean disposed=false;
 	
 	String sourceString = "";
 	public static final String [] dayNames = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 	static final String tableStart = "<table width=\"100%\" class=\"gridTable\" summary=\"Timetable Grid View\" >",
 			tableGraphicStart = "id=\"scrollContent\"", // this is how I know the page shows timetable 
-			//"CLASS=\"mainBG\" summary=\"layout table for Time table\"",
-			//"<table rules=\"rows\" class=\"mainBG\" summary=\"layout table for Time table\" align=\"center\">",
 			tableEnd = "</table>",
 			tableGraphicEnd = tableEnd,
 			rowStart = "<tr>",
@@ -111,39 +113,33 @@ public class Timetable
 		return new StringBuilder(course).append('-').append(year);
 	}
 	
+	public CharSequence describeWeeks()
+	{
+		if (weeks.equals(SEMESTER_1)) return "Semester 1";
+		else if (weeks.equals(SEMESTER_2)) return "Semester 2";
+		return new StringBuilder("Weeks ").append(weeks);
+	}
+	
 	public Date getLastUpdated()
 	{
 		return lastUpdated;
 	}
 	
-	@Deprecated
+/*	@Deprecated
 	public ArrayList<String> getHiddenGroups()
 	{
 		return (ArrayList<String>) settings.getHiddenGroups();
-	}
+	}*/
 	
 	public ArrayList<String> getGroupsInTimetable()
 	{
 		return groupsInTimetable;
 	}
 	
-	@Deprecated
 	public void hideGroup(String groupCode)
 	{
 		if (groupCode.equals(getCourseYearCode())) return; //cannot hide whole class
 		settings.hideGroup(groupCode);
-		/*if (hiddenGroups.contains(groupCode) == false)
-		{
-			hiddenGroups.add(groupCode);
-			Log.i(logTag, "Group hidden: "+groupCode);
-		}	*/
-	}
-	
-	@Deprecated
-	public void unhideGroup(String groupCode)
-	{
-		settings.unhideGroup(groupCode);
-//		hiddenGroups.remove(groupCode);
 	}
 	
 	public Connection getConnection()
@@ -220,6 +216,26 @@ public class Timetable
 		return (valid);
 	}	
 	
+	public Map<String,String> ToHashMap()
+	{
+		Map<String, String> result = new HashMap<String, String>();
+		result.put("Course", this.course);
+		result.put("Year", Integer.toString(this.year));
+		result.put("Week range", this.weeks);
+		
+		StringBuilder groups = new StringBuilder();
+		for (String group : groupsInTimetable)
+		{
+			if (settings.getHiddenGroups().contains(group) == false) groups.append(group).append(',');
+		}
+		result.put("groups", groups.toString());
+		
+		result.put("username", settings.getUsername());
+		result.put("password", settings.getPassword());
+		
+		return result;
+	}
+	
 	public static int getDayByName(String name)
 	{
 		for (int i=0; i < dayNames.length; i++)
@@ -229,12 +245,17 @@ public class Timetable
 		return -1;
 	}
 	
+	public TimetableDay getDay(int id)
+	{
+		return days[id];
+	}
+	
 	public String getCourseYearCode()
 	{
 		return String.format(Locale.getDefault(), "%s/%d", course, year);
 	}
 	
-	TimetableDay[] days = new TimetableDay[numDays];
+	private TimetableDay[] days = new TimetableDay[numDays];
 	
 	public Timetable(ResultHandler resultHandler, Activity parentActivity, AppSettings settings)
 	{
@@ -255,8 +276,34 @@ public class Timetable
 		
 		this.course = settings.getCourse();
 		this.year = settings.getYear();
-		this.weeks = settings.getWeeks();		
-		
+		this.weeks = settings.getWeeks();			
+	}
+	
+    public static int getTodayId(boolean defaultMonday)
+    {
+    	switch (Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
+    	{
+    		case Calendar.MONDAY:
+    			return 0;
+    		case Calendar.TUESDAY:
+    			return 1;
+    		case Calendar.WEDNESDAY:
+    			return 2;
+    		case Calendar.THURSDAY:
+    			return 3;
+    		case Calendar.FRIDAY:
+    			return 4;
+			default: //shows monday if its the weekend
+				if (defaultMonday) return 0;
+				else return -1;
+    	}
+    }
+	
+	public TimetableDay getToday(boolean defaultMonday)
+	{
+		int id = getTodayId(defaultMonday);
+		if (id == -1 | id >= days.length) return null;
+		return days[id];
 	}
 	
 	public Timetable(String course, int year, String weeks, ResultHandler resultHandler, Activity parentActivity, AppSettings settings)
@@ -296,11 +343,11 @@ public class Timetable
 	 * @param context
 	 * @return true if successful
 	 */
-	public boolean downloadFromWebsiteEx(Context context)
+	public boolean downloadFromWebsite(Context context)
 	{
 		if (connection.areCredentialsPresent() == false)
 		{
-			resultHandler.onTimetableLoadFinish(ErrorCode.usernamePasswordNotPresent);
+			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.usernamePasswordNotPresent);
 			return false;
 		}
 
@@ -310,74 +357,79 @@ public class Timetable
 		
 		if (string == null)
 		{
-			resultHandler.onTimetableLoadFinish(ErrorCode.connectionFailed);
+			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.connectionFailed);
 			return false;
-		}
-		
+		}	
 		
 		
 		if (string.contains("You must login again."))
 		{
-			resultHandler.onTimetableLoadFinish(ErrorCode.sessionExpired);
+			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.sessionExpired);
 			return false;
 		}
 		
 		if (string.contains("There are no events to display."))
 		{
-			resultHandler.onTimetableLoadFinish(ErrorCode.noEvents);
+			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.noEvents);
 			return false;
 		}
 		
 		if (string.contains("The system is loading commonly used data at the moment"))
 		{
-			resultHandler.onTimetableLoadFinish(ErrorCode.serverLoading);
+			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.serverLoading);
 			return false;
 		}
 		
 		if (string.contains("Your login details are incorrect. Please attempt login again."))
 		{
-			resultHandler.onTimetableLoadFinish(ErrorCode.wrongLoginDetails); 
+			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.wrongLoginDetails); 
 			return false;
 		}
 		
 		if (string.contains("There are no events in the selected timetable."))
 		{
-			resultHandler.onTimetableLoadFinish(ErrorCode.noEvents); 
+			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.noEvents); 
 			return false;
 		}
 		if (string.contains("There are no course records matching the criteria."))
 		{
-			resultHandler.onTimetableLoadFinish(ErrorCode.wrongCourse); 
+			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.wrongCourse); 
 			return false;
 		}
 		
 		if (string.contains(tableGraphicStart) == false)
 		{
-			resultHandler.onTimetableLoadFinish(ErrorCode.wrongDataReceived);
+			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.wrongDataReceived);
 			Log.d(logTag, string);
 			return false;
 		}
 		
 		boolean result = parseGraphicStringEx(string, false);
 		
-		if (result == true) resultHandler.onTimetableLoadFinish(ErrorCode.noError);
-		else 
-			{
-				resultHandler.onTimetableLoadFinish(ErrorCode.wrongDataReceived);
-			}
-		
-		try
+		if (result == true) 
 		{
-			if (result == true) 
-			{
-				saveToFile(context, string);
-				exportTimetable(context);
-				Log.i(logTag, "Timetable successfully downloaded");
-				lastUpdated = new Date();
-			}
-		} catch (IOException e)
-		{
+			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.noError);
 		}
+		else 
+		{
+			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.wrongDataReceived);
+		}
+		
+		// finalize by saving to file and downloading detailde info
+		if (result == true) 
+		{
+			for (TimetableDay day : days)
+			{
+				if (disposed) break;
+				day.downloadAccitionalInfo(context);
+			}
+			
+			if (resultHandler != null) resultHandler.onFullDataDownloaded();
+			exportTimetable(context);
+			Log.i(logTag, "Timetable successfully downloaded");
+			lastUpdated = new Date();
+		}
+
 		return result;
 	}
 	
@@ -422,9 +474,14 @@ public class Timetable
 		return result;
 	}
 	
+	public AppSettings getSettings()
+	{
+		return settings;
+	}
+	
 	private void reportProgress(int progress, int max)
 	{
-		((TimetableActivity)parentActivity).reportProgress(progress, Math.max(max, progress));
+		if (parentActivity != null) ((TimetableActivity)parentActivity).reportProgress(progress, Math.max(max, progress));
 	}
 	
 	/**
@@ -451,6 +508,7 @@ public class Timetable
 		
 		for (Element entry : entries)
 		{
+			if (disposed) return false;
 			String id = entry.id();
 			if (id.equalsIgnoreCase("r0")) 
 			{
@@ -479,7 +537,7 @@ public class Timetable
 			else if (currentDay != null)
 			{
 				nEvents += currentDay.parseHtmlEvent(entry, parentActivity.getApplicationContext(), allowCache);
-					reportProgress(nEvents, max);
+				reportProgress(nEvents, max);
 			}
 			else
 			{
@@ -497,6 +555,16 @@ public class Timetable
 		return valid;
 	}
 	
+	public int getNumDays()
+	{
+		return days.length;
+	}
+	
+	public Activity getParentActivity()
+	{
+		return parentActivity;
+	}
+	
 	void sortGroups()
 	{
 		Collections.sort(groupsInTimetable);
@@ -507,6 +575,7 @@ public class Timetable
 		return String.format(Locale.getDefault(), "%s_%d_%s_%s.txt", course, year, weeks, key);
 	}
 	
+	@Deprecated
 	public void saveToFile(Context context, String content) throws IOException
 	{
 		String filename = getFilename();
@@ -573,7 +642,7 @@ public class Timetable
 		return;
 	}
 	
-	@Deprecated
+	/*@Deprecated
 	public void loadFromFile(Context context)
 	{
 		String filename = getFilename();			
@@ -621,9 +690,9 @@ public class Timetable
 		}
 		else resultHandler.onTimetableLoadFinish(ErrorCode.noLocalCopy);
 		return;
-	}
+	}*/
 	
-	@Deprecated
+	/*@Deprecated
 	public boolean loadSettings(Context context)
 	{
 		String [] settings = null;
@@ -670,7 +739,7 @@ public class Timetable
 		
 		
 		return true;
-	}
+	}*/
 	
 	public static void writeSettings(Context context, String[] settingString) throws IOException
 	{
@@ -693,45 +762,6 @@ public class Timetable
 	{
 		settings.saveSettings();
 	}
-	
-/*	@Deprecated
-	public void loadGroups(Context context)
-	{
-		try
-		{
-			final int BUFFER_SIZE = 500;
-			FileInputStream f = context.openFileInput(GROUPS_FILE_NAME);
-			
-			byte[] buffer = new byte[BUFFER_SIZE];				
-			
-			StringBuffer sb = new StringBuffer();
-			while (f.read(buffer) > 0)
-			{
-				String line = new String(buffer);
-				sb.append(line);
-				
-				buffer = new byte[BUFFER_SIZE];
-			}
-			f.close();
-			
-			String [] groups = sb.toString().split(groupSplitter);
-			ArrayList<String> hiddenGroups = new ArrayList<String>(groups.length);
-			for (String s : groups)
-			{
-				hiddenGroups.add(s);
-			}
-			
-			if (settings.getHiddenGroups().isEmpty()) 
-			{
-				settings.getHiddenGroups().addAll(hiddenGroups);
-				settings.saveSettings();
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}*/
 	
 	public static String [] readSettings(Context context) throws IOException
 	{
@@ -757,7 +787,6 @@ public class Timetable
 	 * Saves timetable locally
 	 */
 	final String daySeparator = ":day:";
-	String exportFileName = "timetable.txt";
 	
 	public void exportTimetable(Context context)
 	{
@@ -871,6 +900,22 @@ public class Timetable
 		file.write(buffer);
 		file.flush();
 		file.close();
+	}
+	
+	public boolean isDisposed()
+	{
+		return disposed;
+	}
+	
+	/**
+	 * Cancel current tasks and remove listeners.
+	 */
+	public void dispose()
+	{
+		resultHandler = null;
+		parentActivity = null;
+		disposed=true;
+		Log.d("Timetable", "Timetable disposed "+describe());
 	}
 	
 }
