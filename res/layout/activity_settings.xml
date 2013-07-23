@@ -43,6 +43,7 @@
             android:layout_below="@+id/editCourseCode"
             android:ems="10"
             android:hint="@string/week_edit_hint"
+            android:inputType="textVisiblePassword"
             android:singleLine="true" >
         </EditText>
 
@@ -97,7 +98,7 @@
             android:layout_toLeftOf="@+id/spinner_year_selector"
             android:ems="10"
             android:hint="@string/course_code"
-            android:inputType="textCapCharacters"
+            android:inputType="textCapCharacters|textNoSuggestions|textVisiblePassword"
             android:singleLine="true" >
 
             <requestFocus />
@@ -119,7 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/editPassword"
-            android:text="Need password?" />
+            android:text="Get password" />
 
         <CheckBox
             android:id="@+id/checkBoxSetCurrentWeekOnly"

@@ -13,8 +13,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import screens.EventDetailsActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -28,6 +26,7 @@ import android.widget.TextView;
 
 import com.mick88.dittimetable.Connection;
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.screens.EventDetailsActivity;
 
 
 /*Holds information about a single event*/
@@ -63,7 +62,9 @@ public class TimetableEvent implements Comparable<TimetableEvent>
 	 */
 	List<Integer> weekList;
 	
-	boolean valid=true;
+	boolean valid=true, complete =false;
+	
+	// reference to the tile:
 	
 	String StripNbsp(String string)
 	{
@@ -186,20 +187,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>
 	static final String colStart = "<td class=\"gridData\">",
 			colEnd = "</td>";		
 	
-//	int duration; //duration of the class (hours)
-	
-/*	@Deprecated
-	public TimetableEvent(String name, String room, int startTime, int endTime)
-	{
-		this.name = name;
-		this.room = room;
-		
-		this.startTime = startTime;
-		this.endTime = endTime;
-		
-		this.duration = endTime-startTime;
-	}*/
-	
 	private TimetableEvent(Timetable timetable)
 	{
 		this.timetable = timetable;
@@ -277,32 +264,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>
 		return groupStr;
 	}
 	
-	/*private void parseGroups(String g)
-	{
-		String [] groupsArray = g.split(",");
-		
-//		String code = timetable.getCourseYearCode();
-		
-		for (String s : groupsArray)
-		{
-			Log.d(logTag, s);
-			groups.add(s);
-			timetable.addClassGroup(s);
-		}
-		
-//		if (groups.size() > 0)
-		{
-			StringBuilder builder = new StringBuilder();
-			int n=0;
-			for (String s : groups)
-			{
-				if (n++ > 0) builder.append(',');
-				builder.append(s);				
-			}
-			group = builder.toString();
-		}
-	}*/
-	
 	private void parseType(String s)
 	{
 		if (s.contains("Lecture")) type = ClassType.Lecture;
@@ -315,7 +276,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>
 	/**
 	 * Loads additional information about event from web timetables.
 	 */
-	private void downloadAdditionalInfo(Context context)
+	public void downloadAdditionalInfo(Context context)
 	{
 		Connection connection = timetable.getConnection();
 		String uri = String.format(Locale.getDefault(), "?reqtype=eventdetails&eventId=%s%%7C%d", Timetable.getDataset(), id);
@@ -323,17 +284,23 @@ public class TimetableEvent implements Comparable<TimetableEvent>
 		String content = connection.getContent(uri);
 		if (parseAdditionalInfo(content))
 		{
-			/*try
+			complete = true;
+			try
 			{
 				saveAdditionalInfo(context, content);
-			} catch (Exception e)
+			} catch (IOException e)
 			{
+			
 				e.printStackTrace();
-			}*/
+			}
 		}
 	}
 	
-	@Deprecated
+	public boolean isComplete()
+	{
+		return complete;
+	}
+
 	private boolean loadAdditionalInfo(Context context)
 	{
 		String filename = getFileName();	
@@ -377,9 +344,9 @@ public class TimetableEvent implements Comparable<TimetableEvent>
 		return false;
 	}
 	
-	@Deprecated
 	private void saveAdditionalInfo(Context context, String content) throws IOException
 	{
+		// TOOD: use this to cache lectures
 		String filename = getFileName();
 		FileOutputStream file = context.openFileOutput(filename, Context.MODE_PRIVATE);			
 		byte[] buffer = content.getBytes();
@@ -468,6 +435,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>
 		}
 			
 		Elements elements = table.select("td");
+
 		for (Element element : elements)
 		{
 			EventElement e = new EventElement(element);
@@ -487,11 +455,13 @@ public class TimetableEvent implements Comparable<TimetableEvent>
 			{
 				Log.e(logTag, "Event id is incorrect: "+id);
 			}
-			else if (allowCache==false || loadAdditionalInfo(context) == false)
+			else if (allowCache==false)
 			{
-				downloadAdditionalInfo(context);
+				if (loadAdditionalInfo(context)==false)
+				{
+					downloadAdditionalInfo(context);
+				}
 			}
-			//valid = (TextUtils.isEmpty(name) == false) && (TextUtils.isEmpty(room) == false) && (startHour > 0) && (endHour > 0);
 		}
 		
 	}
@@ -527,7 +497,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>
 	
 	private void decodeWeeks()
 	{
-		// TODO: implement decode string weeks to list
 		weekList = new ArrayList<Integer>();
 		String [] sections = weeks.split(",");
 		for (String section : sections)
@@ -599,7 +568,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>
 					addGroup(s);
 				}
 			}
-			
+			complete=true;
 			decodeWeeks();
 			
 			valid=true;
@@ -618,9 +587,9 @@ public class TimetableEvent implements Comparable<TimetableEvent>
 		return valid;
 	}
 	
-	public View getTile(final Context context, boolean small)
+	private View inflateTile(final Context context, boolean small, LayoutInflater inflater)
 	{
-		ViewGroup tile = (ViewGroup) LayoutInflater.from(context).inflate(small?R.layout.timetable_event_tiny:R.layout.timetable_event_small, null);
+		ViewGroup tile = (ViewGroup) inflater.inflate(small?R.layout.timetable_event_tiny:R.layout.timetable_event_small, null);
 		
 		((TextView) tile.findViewById(R.id.eventTitle)).setText(this.getName());
 		((TextView) tile.findViewById(R.id.eventTime)).setText(String.format(Locale.getDefault(), "%s - %s", this.getStartTime(), this.getEndTime()));
@@ -681,10 +650,10 @@ public class TimetableEvent implements Comparable<TimetableEvent>
 				intent.putExtra("weeks", TimetableEvent.this.getWeeks());
 				intent.putExtra("type", TimetableEvent.this.getType().toString());
 				intent.putExtra("groups", TimetableEvent.this.getGroupStr());
+				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				context.startActivity(intent);
 			}
 		};
-		// set onclick listener
 		
 		if (small == false)
 			((RelativeLayout) tile.findViewById(R.id.timetable_event_small)).setOnClickListener(eventClickedListener);
@@ -692,6 +661,11 @@ public class TimetableEvent implements Comparable<TimetableEvent>
 			((LinearLayout) tile.findViewById(R.id.timetable_event_tiny)).setOnClickListener(eventClickedListener);
 		
 		return tile;
+	}
+	
+	public View getTile(Context context, boolean small, LayoutInflater inflater)
+	{
+		return inflateTile(context, small, inflater);
 	}
 
 	@Override

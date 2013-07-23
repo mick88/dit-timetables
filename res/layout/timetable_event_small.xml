@@ -21,7 +21,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:text="00:00 - 00:00"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="@style/BigText" />
 
         <TextView
             android:id="@+id/eventLocation"
@@ -31,7 +31,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:text="Room"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="@style/BigText" />
 
         <TextView
             android:id="@+id/eventTitle"

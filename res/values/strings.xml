@@ -28,16 +28,6 @@
     <string name="menu_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
 
-    <color name="color_group">#FF0000</color>
-    <color name="color_lecture">#0000FF</color>
-    <color name="color_laboratory">#FF8800</color>
-    <color name="color_tutorial">#008888</color>
-    <color name="color_background">#E5E5E5</color>
-    <color name="color_item_current">#33B5E5</color>
-    <color name="color_item_upcoming">#ADD1DD</color>
-    <color name="color_item_background">#FFFFFF</color>
-    <color name="color_item_border">#FFFFFF</color>
-
     <string name="login_cretentials">Timetables login:</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -47,7 +37,7 @@
     <string name="action_settings">Settings</string>
     <string name="web_view">View in browser</string>
     <string name="about_text">This is an unofficial timetable app for Dublin Institute of Technology students. It was created by Michael Dabski, a DT211 student.
-        \n\nAuthor does not take responsibility for data data displayed in this app. Please compare with your actual timetable and report any errors by pressing \'Feedback\' below.</string>
+        \n\nAuthor does not take responsibility for data displayed in this app. Please compare with your actual timetable and report any errors by pressing \'Feedback\' below.</string>
     <string name="about">About</string>
 
 </resources>

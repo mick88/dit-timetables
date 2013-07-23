@@ -5,12 +5,13 @@
         android:orderInCategory="100"
         android:showAsAction="always"
         android:icon="@drawable/refresh"
-        android:title="@string/refresh"/>
+        android:title="@string/refresh"
+        />
 
     <item
         android:id="@+id/menu_download_pdf"
         android:orderInCategory="101"
-        android:showAsAction="ifRoom"
+        android:showAsAction="never"
          android:icon="@drawable/download"
         android:title="@string/menu_download_pdf" 
         android:visible="true"/>
@@ -19,13 +20,13 @@
         android:orderInCategory="200"
         android:title="@string/settings" 
        android:icon="@drawable/settings"
-        android:showAsAction="ifRoom"></item>
+        android:showAsAction="ifRoom"/>
     
     <item android:id="@+id/menu_groups"
         android:orderInCategory="103"
         android:title="@string/menu_groups"
-        android:icon="@drawable/rating_not_important"
-        android:showAsAction="ifRoom"
+        android:icon="@drawable/grid"
+        android:showAsAction="never"
         android:visible="true"/>
     
     <item android:id="@+id/share_timetable"
@@ -45,7 +46,7 @@
     <item android:id="@+id/menu_about"
         android:orderInCategory="201"
         android:title="@string/about"
-        android:showAsAction="ifRoom"
-        android:icon="@drawable/help"
+        android:showAsAction="never"
+        android:icon="@drawable/about"
         android:visible="true"/>
 </menu>
