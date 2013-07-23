@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/settings_save"
+        android:orderInCategory="11"
+        android:showAsAction="always"
+        android:title="Save settings"
+        android:titleCondensed="Save"
+        android:icon="@drawable/accept"/>
+    <item
+        android:id="@+id/settings_cancel"
+        android:orderInCategory="10"
+        android:showAsAction="always"
+        android:title="Abandon changes"
+        android:titleCondensed="Cancel"
+        android:icon="@drawable/cancel"/>
+
+</menu>

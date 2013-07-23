@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/timetable_event_frame"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:padding="@dimen/tile_padding_outside" >
+
+    <RelativeLayout
+        android:id="@+id/timetable_event_small"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp"
+        android:background="@drawable/event_item_selector"
+        android:clickable="true" >
+
+        <TextView
+            android:id="@+id/eventTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="00:00 - 00:00"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/eventLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="Room"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/eventTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/eventTime"
+            android:layout_toLeftOf="@+id/eventType"
+            android:text="Module name"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/eventType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/eventTitle"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/eventLocation"
+            android:text="Type"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/eventLecturer"
+            style="@android:style/TextAppearance.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/eventTitle"
+            android:text="Lecturer"
+            android:textColor="#AAA"
+             android:lines="1"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/eventGroup"
+            style="@android:style/TextAppearance.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/eventType"
+            android:layout_toRightOf="@+id/eventLecturer"
+            android:gravity="end"
+            android:lines="1"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="Group A"
+            android:textColor="@color/color_group"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+</FrameLayout>
