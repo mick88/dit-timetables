@@ -6,17 +6,19 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TableLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.mick88.dittimetable.R;
 
-public class EventDetailsActivity extends SherlockActivity
+public class EventDetailsActivity extends ActionBarActivity
 {
 
 	@Override
@@ -82,14 +84,14 @@ public class EventDetailsActivity extends SherlockActivity
 	}
 	
 	@Override
-	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu)
+	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		return false;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(
-			com.actionbarsherlock.view.MenuItem item)
+			MenuItem item)
 	{
 		switch (item.getItemId())
 		{

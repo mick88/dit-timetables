@@ -10,7 +10,10 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -20,14 +23,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Menu;
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.timetable.Timetable;
 
-public class SettingsActivity extends SherlockActivity
+public class SettingsActivity extends ActionBarActivity
 {	
 	Spinner yearSelector, 
 		semesterSelector;
@@ -175,7 +176,7 @@ public class SettingsActivity extends SherlockActivity
 	
 	@Override
 	public boolean onOptionsItemSelected(
-			com.actionbarsherlock.view.MenuItem item)
+			MenuItem item)
 	{
 		switch(item.getItemId())
 		{
@@ -196,7 +197,7 @@ public class SettingsActivity extends SherlockActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		getSupportMenuInflater().inflate(R.menu.activity_settings, menu);
+		getMenuInflater().inflate(R.menu.activity_settings, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	

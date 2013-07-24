@@ -1,52 +1,52 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    
-    <item
-        android:id="@+id/menu_refresh_timetable"
-        android:orderInCategory="100"
-        android:showAsAction="always"
-        android:icon="@drawable/refresh"
-        android:title="@string/refresh"
-        />
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:appCompat="http://schemas.android.com/apk/res-auto" >
 
     <item
+        android:id="@+id/menu_refresh_timetable"
+        android:icon="@drawable/refresh"
+        android:orderInCategory="100"
+        android:title="@string/refresh"
+        appCompat:showAsAction="always"/>
+    <item
         android:id="@+id/menu_download_pdf"
+        android:icon="@drawable/download"
         android:orderInCategory="101"
-        android:showAsAction="never"
-         android:icon="@drawable/download"
-        android:title="@string/menu_download_pdf" 
-        android:visible="true"/>
-    
-    <item android:id="@+id/menu_settings" 
+        android:title="@string/menu_download_pdf"
+        android:visible="true"
+        appCompat:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/settings"
         android:orderInCategory="200"
-        android:title="@string/settings" 
-       android:icon="@drawable/settings"
-        android:showAsAction="ifRoom"/>
-    
-    <item android:id="@+id/menu_groups"
+        android:title="@string/settings"
+        appCompat:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_groups"
+        android:icon="@drawable/grid"
         android:orderInCategory="103"
         android:title="@string/menu_groups"
-        android:icon="@drawable/grid"
-        android:showAsAction="never"
-        android:visible="true"/>
-    
-    <item android:id="@+id/share_timetable"
+        android:visible="true"
+        appCompat:showAsAction="never"/>
+    <item
+        android:id="@+id/share_timetable"
+        android:icon="@drawable/share"
         android:orderInCategory="105"
         android:title="Share timetable"
         android:titleCondensed="Share"
-        android:showAsAction="ifRoom"
-        android:icon="@drawable/share"
-        android:visible="true"/>
-    
-    <item android:id="@+id/menu_web"
+        android:visible="true"
+        appCompat:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_web"
         android:orderInCategory="104"
         android:title="@string/web_view"
-        android:showAsAction="ifRoom"
-        android:visible="false"/>
-    
-    <item android:id="@+id/menu_about"
+        android:visible="false"
+        appCompat:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_about"
+        android:icon="@drawable/about"
         android:orderInCategory="201"
         android:title="@string/about"
-        android:showAsAction="never"
-        android:icon="@drawable/about"
-        android:visible="true"/>
+        android:visible="true"
+        appCompat:showAsAction="never"/>
+
 </menu>

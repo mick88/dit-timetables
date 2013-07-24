@@ -22,9 +22,15 @@ import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.Tab;
+import android.support.v7.app.ActionBar.TabListener;
+import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
@@ -34,10 +40,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.ActionBar.TabListener;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.flurry.android.FlurryAgent;
 import com.mick88.dittimetable.Connection;
 import com.mick88.dittimetable.GroupSelectionDialog;
@@ -49,7 +51,7 @@ import com.mick88.dittimetable.swipable_tabs.TimetablePageAdapter;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.Timetable.ErrorCode;
 
-public class TimetableActivity extends SherlockFragmentActivity 
+public class TimetableActivity extends ActionBarActivity 
 									implements Timetable.ResultHandler, GroupSelectionListener, TabListener
 {
 
@@ -672,8 +674,7 @@ public class TimetableActivity extends SherlockFragmentActivity
 	}
 	
 	@Override
-	public boolean onMenuItemSelected(int featureId,
-			com.actionbarsherlock.view.MenuItem item)
+	public boolean onOptionsItemSelected(MenuItem item)
 	{
 		switch (item.getItemId())
 		{
@@ -782,7 +783,7 @@ public class TimetableActivity extends SherlockFragmentActivity
 			FlurryAgent.onEvent("About Screen");
 			return true;
 		}
-		return super.onMenuItemSelected(featureId, item);
+		return super.onOptionsItemSelected(item);
 	}
 	
 	void onBtnRefreshPressed()
@@ -792,9 +793,9 @@ public class TimetableActivity extends SherlockFragmentActivity
 	}
 	
 	@Override
-	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu)
+	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		getSupportMenuInflater().inflate(R.menu.activity_timetable, menu);
+		getMenuInflater().inflate(R.menu.activity_timetable, menu);
 		return true;
 	}
 	

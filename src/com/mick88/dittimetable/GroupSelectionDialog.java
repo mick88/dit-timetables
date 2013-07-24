@@ -3,8 +3,6 @@ package com.mick88.dittimetable;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,8 +10,9 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 
-public class GroupSelectionDialog extends SherlockDialogFragment implements OnMultiChoiceClickListener, OnClickListener
+public class GroupSelectionDialog extends DialogFragment implements OnMultiChoiceClickListener, OnClickListener
 {
 	public interface GroupSelectionListener
 	{
