@@ -3,15 +3,14 @@
     android:id="@+id/timetable_event_frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal"
-    android:padding="@dimen/tile_padding_outside" >
+    android:layout_gravity="center_horizontal">
 
     <RelativeLayout
         android:id="@+id/timetable_event_small"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="1dp"
         android:background="@drawable/event_selector"
+        android:layout_margin="@dimen/tile_padding_outside"
         android:clickable="true" >
 
         <TextView

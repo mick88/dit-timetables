@@ -27,10 +27,12 @@ import android.widget.TextView;
 import com.mick88.dittimetable.Connection;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.screens.EventDetailsActivity;
+import com.mick88.dittimetable.swipable_tabs.EventAdapter;
+import com.mick88.dittimetable.swipable_tabs.EventAdapter.EventItem;
 
 
 /*Holds information about a single event*/
-public class TimetableEvent implements Comparable<TimetableEvent>
+public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 {	
 	private final String htmlNbspChar = "\u00A0";	
 	public enum ClassType {Other, Lecture, Laboratory, Tutorial};
@@ -587,6 +589,12 @@ public class TimetableEvent implements Comparable<TimetableEvent>
 		return valid;
 	}
 	
+	public CharSequence getEventTimeString()
+	{
+		return new StringBuilder(getStartTime()).append(" - ").append(getEndTime());
+//		return String.format(Locale.getDefault(), "%s - %s", this.getStartTime(), this.getEndTime());
+	}
+	
 	private View inflateTile(final Context context, boolean small, LayoutInflater inflater)
 	{
 		ViewGroup tile = (ViewGroup) inflater.inflate(small?R.layout.timetable_event_tiny:R.layout.timetable_event_small, null);
@@ -675,5 +683,11 @@ public class TimetableEvent implements Comparable<TimetableEvent>
 		else if (another.startHour < this.startHour) return 1;
 		
 		return groupStr.compareTo(another.groupStr);
+	}
+
+	@Override
+	public int getViewType()
+	{
+		return EventAdapter.ITEM_TYPE_EVENT;
 	}
 }

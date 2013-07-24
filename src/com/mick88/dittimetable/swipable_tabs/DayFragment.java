@@ -1,55 +1,64 @@
 package com.mick88.dittimetable.swipable_tabs;
 
-import android.content.Context;
+import java.util.ArrayList;
+import java.util.List;
+
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.screens.TimetableActivity;
-import com.mick88.dittimetable.timetable.Timetable;
+import com.mick88.dittimetable.swipable_tabs.EventAdapter.EventItem;
 import com.mick88.dittimetable.timetable.TimetableDay;
 
 public class DayFragment extends Fragment
 {
-	TimetableActivity activity=null;
-
-	public DayFragment()
-	{
-	
-	}
+	TimetableDay timetableDay = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		this.activity = (TimetableActivity) getActivity();
+		
+	}
+	
+	@Override
+	public void onAttach(Activity activity)
+	{
+		super.onAttach(activity);
+		int dayId =  getArguments().getInt("day_id");
+		
+		if (activity instanceof TimetableActivity)
+		{
+			this.timetableDay = ((TimetableActivity) activity).getTimetable().getDay(dayId);
+		}
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState)
 	{
-		Context context = new ContextThemeWrapper(activity, R.style.AppTheme);
-		inflater = inflater.cloneInContext(context);
-
-		int day_id = getArguments().getInt("day_id");
+		return inflater.inflate(R.layout.day_layout, container, false);
+	}
+	
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState)
+	{
+		super.onViewCreated(view, savedInstanceState);
 		
-		try
+		if (timetableDay != null)
 		{
-			Timetable timetable = activity.getTimetable();
-			TimetableDay timetableDay = timetable.getDayTimetable(day_id);
-			return timetableDay.getView(inflater, activity.getApplicationContext());
-		}
-		catch (Exception e)
-		{
-			Log.e("DayFragment", e.getMessage(), e);
-			e.printStackTrace();
-			return null;
+			ListView listView = (ListView) view.findViewById(android.R.id.list);
+			List<EventItem> items = new ArrayList<EventAdapter.EventItem>();
+			items.addAll(timetableDay.getClasses());
+			listView.setAdapter(new EventAdapter(getActivity(), items));
 		}
 	}
+	
+	
 }
