@@ -392,7 +392,7 @@ public class TimetableActivity extends ActionBarActivity
 		for (int i=0; i < num; i++)
 		{
 			ImageView imageView = new ImageView(this);
-			imageView.setImageResource((i == highligh)?R.drawable.separator_dot_selected:R.drawable.separator_dot);
+			imageView.setImageResource((i == highligh)?R.drawable.dot_selected:R.drawable.dot);
 			imageView.setPadding(5,5,5,5);
 			
 			container.addView(imageView);

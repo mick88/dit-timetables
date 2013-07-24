@@ -9,7 +9,7 @@
         android:id="@+id/timetable_event_tiny"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/event_item_selector"
+        android:background="@drawable/event_selector"
         android:clickable="true"
         android:orientation="vertical" >
 

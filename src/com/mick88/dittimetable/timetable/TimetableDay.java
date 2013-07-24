@@ -189,7 +189,7 @@ public class TimetableDay
 		for (int i=0; i < num; i++)
 		{
 			ImageView imageView = new ImageView(context);
-			imageView.setImageResource((i == highligh)?R.drawable.separator_dot_selected:R.drawable.separator_dot);
+			imageView.setImageResource((i == highligh)?R.drawable.dot_selected:R.drawable.dot);
 			imageView.setPadding(5,5,5,5);
 			
 			container.addView(imageView);
@@ -238,7 +238,7 @@ public class TimetableDay
 						|| (selectedEvent != null && (event.getStartHour() == selectedEvent.getStartHour())))
 				{
 					selectedEvent = event;
-					int rDrawable = event.isEventOn(hour)?R.drawable.selected_item_selector:R.drawable.upcoming_item_selector;
+					int rDrawable = event.isEventOn(hour)?R.drawable.event_selected_selector:R.drawable.event_upcoming_selector;
 					
 					if (isSingleEvent)
 						((RelativeLayout) tile.findViewById(R.id.timetable_event_small)).setBackgroundResource(rDrawable);
