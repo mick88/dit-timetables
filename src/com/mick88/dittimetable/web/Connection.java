@@ -1,21 +1,16 @@
 package com.mick88.dittimetable.web;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-
-import com.mick88.dittimetable.AppSettings;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
@@ -29,10 +24,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
+import com.mick88.dittimetable.AppSettings;
+import com.mick88.dittimetable.utils.HttpUtils;
+
 public class Connection
 {	
 	String receivedHtml;
-	DefaultHttpClient httpClient=null;
+	
 	private Cookie cookie=null;
 	public static String downloadsFolder = "Download";
 	final AppSettings settings;
@@ -40,20 +38,11 @@ public class Connection
 		ROOT_ADDRESS = "https://www.dit.ie/timetables/",
 		ROOT_ADDRESS_PDF = "http://www.dit.ie/timetables/",
 		WEBSITE_ADDRESS = ROOT_ADDRESS+"PortalServ",
-			//"http://webtimetables.dit.ie/TTSuiteRBLIVE/PortalServ",
 		LOGIN_ADDRESS = WEBSITE_ADDRESS;
-	
-/*	@Deprecated
-	String username="",
-			password="";*/
+
 	
 	final String logName = "TimetableConnection";
-	
-	@Deprecated
-	public void setPassword(String password)
-	{
-//		this.password = password;
-	}
+
 	
 	public boolean areCredentialsPresent()
 	{
@@ -87,6 +76,7 @@ public class Connection
 			post.setEntity(new UrlEncodedFormEntity(loginDetails));
 			
 			/*Execute request*/
+			HttpClient httpClient = new DefaultHttpClient();
 			HttpResponse response = httpClient.execute(post);
 
 			if (response.getStatusLine().getStatusCode() < 400)
@@ -94,7 +84,6 @@ public class Connection
 				Header h = response.getFirstHeader("Set-Cookie");
 				if (h == null) cookie = new Cookie("");
 				else cookie = new Cookie(h.getValue());
-//				Log.d(logName, "Cookie: "+result.toString());
 			}
 			else 
 			{
@@ -154,31 +143,15 @@ public class Connection
 		
 		try
 		{
-			HttpGet get = new HttpGet(query);
-			get.setHeader("Cookie", cookie.cookie);
-			HttpResponse response = httpClient.execute(get);
-			InputStream stream = response.getEntity().getContent();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-			
-			StringBuilder builder = new StringBuilder();
-			String line;
-			while ((line = reader.readLine()) != null)
-			{
-				builder.append(line);
-			}
-			
-			reader.close();
-			stream.close();
-			response.getEntity().consumeContent();
-			return builder.toString();
+			return HttpUtils.get(query, cookie);
 			
 		} 
 		catch (Exception e)
 		{
 			e.printStackTrace();
-		} 
+			return null;
+		} 		
 		
-		return null;
 	}
 	
 	
@@ -191,6 +164,5 @@ public class Connection
 		{
 			downloadsFolder = Environment.DIRECTORY_DOWNLOADS;
 		}
-		httpClient = new DefaultHttpClient();
 	}
 }

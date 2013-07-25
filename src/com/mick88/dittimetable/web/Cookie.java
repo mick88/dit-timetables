@@ -5,7 +5,7 @@ import android.util.Log;
 
 public class Cookie
 {
-	String cookie;
+	private String cookie;
 	final String logTag = "Cookie";
 	
 	public Cookie(String cookie)
