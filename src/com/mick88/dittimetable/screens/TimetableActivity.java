@@ -177,7 +177,6 @@ public class TimetableActivity extends ActionBarActivity
 		{
 			viewPager.setPageTransformer(true, new CustomPageTransformer());
 		}
-//    	viewPager.setOffscreenPageLimit(1);
 
     	viewPager.setAdapter(timetablePageAdapter);
     	viewPager.setOnPageChangeListener(new OnPageChangeListener()
@@ -186,8 +185,7 @@ public class TimetableActivity extends ActionBarActivity
 			@Override
 			public void onPageSelected(int arg0)
 			{
-				actionBar.setSelectedNavigationItem(arg0);
-				
+				actionBar.setSelectedNavigationItem(arg0);				
 			}
 			
 			@Override
