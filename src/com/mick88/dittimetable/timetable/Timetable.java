@@ -25,9 +25,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.mick88.dittimetable.AppSettings;
-import com.mick88.dittimetable.Connection;
 import com.mick88.dittimetable.screens.TimetableActivity;
 import com.mick88.dittimetable.utils.FileUtils;
+import com.mick88.dittimetable.web.Connection;
 
 /**
  * Class containing a timetable divided into days

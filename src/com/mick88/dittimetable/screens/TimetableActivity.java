@@ -42,7 +42,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
-import com.mick88.dittimetable.Connection;
 import com.mick88.dittimetable.GroupSelectionDialog;
 import com.mick88.dittimetable.GroupSelectionDialog.GroupSelectionListener;
 import com.mick88.dittimetable.R;
@@ -51,6 +50,7 @@ import com.mick88.dittimetable.swipable_tabs.CustomPageTransformer;
 import com.mick88.dittimetable.swipable_tabs.TimetablePageAdapter;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.Timetable.ErrorCode;
+import com.mick88.dittimetable.web.Connection;
 
 public class TimetableActivity extends ActionBarActivity 
 									implements Timetable.ResultHandler, GroupSelectionListener, TabListener

@@ -1,24 +1,21 @@
 package com.mick88.dittimetable;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.text.TextUtils;
 import android.util.Log;
 
-public class AppSettings implements OnSharedPreferenceChangeListener
+public class AppSettings 
 {
 	private static final String 
 		DEFAULT_USERNAME = "students",
 		DEFAULT_PASSWORD = "timetables";
-	SharedPreferences sharedPreferences;
-	public static final String sharedPrefNameTag = "com.mick88.dittimetable";
-	final static String GROUP_SEPARATOR = ",";
+	private final SharedPreferences sharedPreferences;
+	private static final String sharedPrefNameTag = "com.mick88.dittimetable";
+	public static final String GROUP_SEPARATOR = ",";
 	
 	String username, 
 		password;	
@@ -31,7 +28,6 @@ public class AppSettings implements OnSharedPreferenceChangeListener
 	public AppSettings(Context context)
 	{
 		sharedPreferences = context.getSharedPreferences(sharedPrefNameTag, Context.MODE_PRIVATE);
-		sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 		
 		username = new String();
 		password = new String();
@@ -86,14 +82,6 @@ public class AppSettings implements OnSharedPreferenceChangeListener
 			
 			.commit();
 		Log.i(toString(), "App settings saved");
-	}
-
-	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key)
-	{
-		Log.d(toString(), "Shared preference key value changed: "+key);
-		
 	}
 	
 	private String getHiddenGroupsString()
