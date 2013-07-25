@@ -419,7 +419,7 @@ public class Timetable
 			for (TimetableDay day : days)
 			{
 				if (disposed) break;
-				day.downloadAccitionalInfo(context);
+				day.downloadAdditionalInfo(context);
 			}
 			
 			if (resultHandler != null) resultHandler.onFullDataDownloaded();

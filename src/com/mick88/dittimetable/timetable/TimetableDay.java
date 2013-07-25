@@ -25,7 +25,7 @@ import com.mick88.dittimetable.R;
 public class TimetableDay
 {
 	Timetable timetable=null;
-	String name = "";
+	final String name;
 	int id=-1;
 	final String logTag = "TimetableDay";
 	private List<TimetableEvent> events = new ArrayList<TimetableEvent>();
@@ -67,12 +67,6 @@ public class TimetableDay
 	{
 		return name.subSequence(0, 3);
 	}
-	
-/*	@Deprecated
-	public int getNumClassesAt(int hour, int week)
-	{
-		return getNumClasses(hour, timetable.getHiddenGroups(), week);
-	}*/
 	
 	public int getNumClasses(int hour, Set<String> hiddenGroups, int week)
 	{
@@ -136,13 +130,13 @@ public class TimetableDay
 		else return builder.toString();
 	}
 	
-	private final String exportItemSeparator = "\n";
+	private final String EXPORT_DAY_SEPARATOR = "\n";
 	public CharSequence export()
 	{
 		StringBuilder builder = new StringBuilder();
 		for (TimetableEvent event : events)
 		{
-			builder.append(event.export()).append(exportItemSeparator);
+			builder.append(event.export()).append(EXPORT_DAY_SEPARATOR);
 		}
 		return builder;
 	}
@@ -150,7 +144,7 @@ public class TimetableDay
 	public int importFromString(String string)
 	{
 		int n=0;
-		String [] events = string.split(exportItemSeparator);
+		String [] events = string.split(EXPORT_DAY_SEPARATOR);
 		for (String eventString : events)
 		{
 			TimetableEvent event = new TimetableEvent(eventString, timetable);
@@ -163,16 +157,12 @@ public class TimetableDay
 		return n;
 	}
 	
-	public void setName(String name)
-	{
-		this.name = name;
-	}	
-	
 	public boolean isToday()
 	{
 		return timetable.getToday(false) == this;
 	}
 	
+	@Deprecated
 	public View getView(LayoutInflater inflater, Context context)
 	{
 		View view = inflater.inflate(R.layout.day_layout, null);
@@ -198,6 +188,7 @@ public class TimetableDay
 		return space;
 	}
 	
+	@Deprecated
 	void drawTimetable(ViewGroup parentLayout, LayoutInflater inflater, Context context)
 	{		
 		int hour=0;
@@ -299,7 +290,7 @@ public class TimetableDay
 		}
 	}
 	
-	public void downloadAccitionalInfo(Context context)
+	public void downloadAdditionalInfo(Context context)
 	{
 		for (TimetableEvent event : events) if (event.isComplete() == false)
 		{
