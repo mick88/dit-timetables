@@ -27,7 +27,7 @@ public class TimetableDay
 	String name = "";
 	int id=-1;
 	final String logTag = "TimetableDay";
-	private ArrayList<TimetableEvent> classes = new ArrayList<TimetableEvent>();
+	private List<TimetableEvent> events = new ArrayList<TimetableEvent>();
 	
 	public TimetableDay(String name, Timetable timetable)
 	{
@@ -37,22 +37,22 @@ public class TimetableDay
 	
 	public void clearEvents()
 	{
-		classes.clear();
+		events.clear();
 	}
 	
 	public void sortEvents()
 	{
-		synchronized (classes)
+		synchronized (events)
 		{
-			Collections.sort(classes);
+			Collections.sort(events);
 		}		
 	}
 	
 	public void addClass(TimetableEvent c)
 	{
-		synchronized (classes)
+		synchronized (events)
 		{
-			classes.add(c);
+			events.add(c);
 		}
 		
 	}
@@ -76,16 +76,16 @@ public class TimetableDay
 	public int getNumClasses(int hour, List<String> hiddenGroups, int week)
 	{
 		int n=0;
-		for (TimetableEvent event : classes) if (event.getStartHour() == hour && event.isInWeek(week))
+		for (TimetableEvent event : events) if (event.getStartHour() == hour && event.isInWeek(week))
 		{
 			if (event.isGroup(hiddenGroups)) n++;
 		}
 		return n;
 	}
 	
-	public ArrayList<TimetableEvent> getClasses()
+	public List<TimetableEvent> getClasses()
 	{
-		return classes;
+		return events;
 	}
 	
 	public int parseHtmlEvent(Element element, Context context, boolean allowCache)
@@ -105,11 +105,11 @@ public class TimetableDay
 	@Override
 	public String toString()
 	{
-		if (classes.isEmpty()) return new String();
+		if (events.isEmpty()) return new String();
 		
 		StringBuilder builder = new StringBuilder(name);
 		
-		for (TimetableEvent c : classes)
+		for (TimetableEvent c : events)
 		{
 			builder.append('\n');
 			builder.append(c.toString());
@@ -120,11 +120,11 @@ public class TimetableDay
 	
 	public String toString(List<String> hiddenGroups, int week)
 	{
-		if (classes.isEmpty()) return new String();
+		if (events.isEmpty()) return new String();
 		int n=0;
 		StringBuilder builder = new StringBuilder(name);
 		
-		for (TimetableEvent event : classes) if (event.isInWeek(week) && event.isGroup(hiddenGroups))
+		for (TimetableEvent event : events) if (event.isInWeek(week) && event.isGroup(hiddenGroups))
 		{
 			builder.append('\n');
 			builder.append(event.toString());
@@ -139,7 +139,7 @@ public class TimetableDay
 	public CharSequence export()
 	{
 		StringBuilder builder = new StringBuilder();
-		for (TimetableEvent event : classes)
+		for (TimetableEvent event : events)
 		{
 			builder.append(event.export()).append(exportItemSeparator);
 		}
@@ -224,9 +224,9 @@ public class TimetableDay
 		ViewPager viewPager = activity.getViewPager();*/
 		
 		
-		synchronized (classes)
+		synchronized (events)
 		{
-			for (TimetableEvent event : classes) 
+			for (TimetableEvent event : events) 
 				if (event.isGroup(settings.getHiddenGroups()) && event.isInWeek(settings.getOnlyCurrentWeek() ? currentWeek:0))
 			{			
 				int numClassesAtCurrentHour = this.getNumClasses(event.getStartHour(), settings.getHiddenGroups(), showWeek);
@@ -300,7 +300,7 @@ public class TimetableDay
 	
 	public void downloadAccitionalInfo(Context context)
 	{
-		for (TimetableEvent event : classes) if (event.isComplete() == false)
+		for (TimetableEvent event : events) if (event.isComplete() == false)
 		{
 			if (timetable.isDisposed()) break;
 			event.downloadAdditionalInfo(context);

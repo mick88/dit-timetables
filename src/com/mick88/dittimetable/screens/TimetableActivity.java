@@ -165,7 +165,7 @@ public class TimetableActivity extends ActionBarActivity
     	
     	final ActionBar actionBar = getSupportActionBar();
     	actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-    	for (int i=0; i < Timetable.dayNames.length-2; i++)
+    	for (int i=0; i < Timetable.DAY_NAMES.length-2; i++)
     	{
     		actionBar.addTab(actionBar.newTab().setText(timetable.getDay(i).getShortName())
     				.setTabListener(this));
