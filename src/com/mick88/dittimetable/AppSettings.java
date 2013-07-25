@@ -1,7 +1,9 @@
 package com.mick88.dittimetable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -24,7 +26,7 @@ public class AppSettings implements OnSharedPreferenceChangeListener
 		course, weeks;
 	int year;
 	boolean onlyCurrentWeek;
-	List<String> hiddenGroups;
+	Set<String> hiddenGroups;
 	
 	public AppSettings(Context context)
 	{
@@ -39,7 +41,7 @@ public class AppSettings implements OnSharedPreferenceChangeListener
 		year = 0;
 		
 		onlyCurrentWeek = false;
-		hiddenGroups = new ArrayList<String>();
+		hiddenGroups = new HashSet<String>();
 	}
 	
 	public boolean isCourseDataSpecified()
@@ -110,7 +112,7 @@ public class AppSettings implements OnSharedPreferenceChangeListener
 	private void setHiddenGroupsString(String groupString)
 	{
 		String [] groups = groupString.split(GROUP_SEPARATOR);
-		this.hiddenGroups = new ArrayList<String>(groups.length);
+		this.hiddenGroups = new HashSet<String>(groups.length);
 		for (String group : groups)
 		{
 			this.hiddenGroups.add(group);
@@ -176,7 +178,7 @@ public class AppSettings implements OnSharedPreferenceChangeListener
 		this.weeks = weeks;
 	}
 	
-	public List<String> getHiddenGroups()
+	public Set<String> getHiddenGroups()
 	{
 		return hiddenGroups;
 	}

@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -637,7 +638,7 @@ public class TimetableActivity extends ActionBarActivity
 	
 	void showGroupSelectionDialog()
 	{
-		ArrayList<String> gList = timetable.getGroupsInTimetable();
+		Set<String> gList = timetable.getGroupsInTimetable();
 		
 		if (gList.isEmpty())
 		{
@@ -663,7 +664,7 @@ public class TimetableActivity extends ActionBarActivity
 			String[] gArray = new String[gList.size()];
 			gList.toArray(gArray);
 			
-			gList = (ArrayList<String>) application.getSettings().getHiddenGroups();
+			gList = (Set<String>) application.getSettings().getHiddenGroups();
 			String[] hgArray = new String[gList.size()];
 			gList.toArray(hgArray);
 			

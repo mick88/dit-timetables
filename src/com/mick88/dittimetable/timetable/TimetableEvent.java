@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -234,7 +235,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 		}
 	}
 	
-	public boolean isGroup(List<String> hiddenGroups)
+	public boolean isGroup(Set<String> hiddenGroups)
 	{
 		if (groups.isEmpty()) return true;
 		/*Returns true if class should be shown to user.

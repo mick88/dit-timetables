@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.jsoup.nodes.Element;
 
@@ -73,7 +74,7 @@ public class TimetableDay
 		return getNumClasses(hour, timetable.getHiddenGroups(), week);
 	}*/
 	
-	public int getNumClasses(int hour, List<String> hiddenGroups, int week)
+	public int getNumClasses(int hour, Set<String> hiddenGroups, int week)
 	{
 		int n=0;
 		for (TimetableEvent event : events) if (event.getStartHour() == hour && event.isInWeek(week))
@@ -118,7 +119,7 @@ public class TimetableDay
 		return builder.toString();
 	}
 	
-	public String toString(List<String> hiddenGroups, int week)
+	public String toString(Set<String> hiddenGroups, int week)
 	{
 		if (events.isEmpty()) return new String();
 		int n=0;
