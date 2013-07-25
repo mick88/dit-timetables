@@ -3,9 +3,8 @@ package com.mick88.dittimetable.timetable;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
@@ -32,38 +31,41 @@ import com.mick88.dittimetable.swipable_tabs.EventAdapter;
 import com.mick88.dittimetable.swipable_tabs.EventAdapter.EventItem;
 
 
-/*Holds information about a single event*/
+/**
+ * Holds information about a single event (lecture)
+ * */
 public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 {	
-	private final String htmlNbspChar = "\u00A0";	
+	private final String CHAR_NBSP = "\u00A0";	
 	public enum ClassType {Other, Lecture, Laboratory, Tutorial};
 	
-	final String groupSeparator = ", ";
-	Timetable timetable=null;
-	final String logTag = "TimetableClass";
+	private static final String GROUP_SEPARATOR = ", ";
+	private final Timetable timetable;
+	final String logTag = "TimetableEvent";
 	final static String 
-			color_name = "#987E06", //987E06 - how nice of them to not change colors
-			color_group = "#987E06",
-			color_type = "#E32198", //E32198
-			color_location = "#062F98", //062F98
-			color_lecturer = "#069810", //069810
-			color_time = "#940AA8", //940AA8
-			color_weeks = "#177F23";
+			COLOR_NAME = "#987E06", 
+			COLOR_GROUP = "#987E06",
+			COLOR_TYPE = "#E32198", //E32198
+			COLOR_LOCATION = "#062F98", //062F98
+			COLOR_LECTURER = "#069810", //069810
+			COLOR_TIME = "#940AA8", //940AA8
+			COLOR_WEEKS = "#177F23";
 			;
 	
 	/*Main event data*/
-	private String name="", room="", lecturer = "", weeks="", groupStr="";
+	private String name="", room="", lecturer = "", weekRange="", groupStr="";
 	private int id=0,
 			 startHour=0,
 				startMin=0,
 				endMin=0,
 			endHour=0;
 	private ClassType type=ClassType.Other;
-	ArrayList<String> groups = new ArrayList<String>();
+	Set<String> groups = new HashSet<String>();
+	
 	/**
 	 * Stores parsed list of weeks when event is on
 	 */
-	List<Integer> weekList;
+	final Set<Integer> weeks;
 	
 	boolean valid=true, complete =false;
 	
@@ -71,7 +73,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 	
 	String StripNbsp(String string)
 	{
-		return string.replaceAll(htmlNbspChar, "");
+		return string.replaceAll(CHAR_NBSP, "");
 	}
 	
 	private String getFileName()
@@ -106,7 +108,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 	
 	public String getWeeks()
 	{
-		return weeks;
+		return weekRange;
 	}
 	
 	private String groupToString()
@@ -115,7 +117,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 		int n=0;
 		for (String g : groups)
 		{
-			if (n++ > 0) builder.append(groupSeparator);
+			if (n++ > 0) builder.append(GROUP_SEPARATOR);
 			builder.append(g);
 		}
 		return builder.toString();
@@ -163,56 +165,34 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 	
 	public boolean isInWeek(int week)
 	{
-		return week == 0 || weekList.isEmpty() || weekList.contains(week);
+		return week == 0 || weeks.isEmpty() || weeks.contains(week);
 	}
 	
-	@Deprecated
-	void shortenRoom()
-	{
-		/*StringBuilder builder = new StringBuilder();
-		for (int i=0; i < room.length(); i++)
-		{
-			char c = room.charAt(i);
-			if (c >= 'a' && c <= 'z') continue; //lower case
-			if (c == ' ') continue;
-			builder.append(c);
-		}
-		roomShort = builder.toString();*/
-	}
-	
-	static final int ID_DAY = 2,
-			ID_START = 3,
-			ID_FINISH = 4,
-			ID_ROOM = 5,
-			ID_NAME = 8,
-			ID_TYPE = 9;
-	
-	static final String colStart = "<td class=\"gridData\">",
-			colEnd = "</td>";		
+	static final int 
+		ID_DAY = 2,
+		ID_START = 3,
+		ID_FINISH = 4,
+		ID_ROOM = 5,
+		ID_NAME = 8,
+		ID_TYPE = 9;	
 	
 	private TimetableEvent(Timetable timetable)
 	{
 		this.timetable = timetable;
-		weekList = new ArrayList<Integer>();
+		weeks = new HashSet<Integer>();
 	}
 	
 	/**
 	 * Creates new object by parsing data and loading/downloading additional data
-	 * @param table
-	 * @param timetable
-	 * @param context
 	 */
 	public TimetableEvent(Element table, Timetable timetable, Context context, boolean allowCache)
 	{
 		this(timetable);
 		parseNewHtmlTable(table, context, allowCache);
-//		this.duration = this.endTime - this.startTime;
 	}
 	
 	/**
 	 * Creates new object by importing data from string
-	 * @param importString	exported string
-	 * @param timetable	Timetable object
 	 */
 	public TimetableEvent(String importString, Timetable timetable)
 	{
@@ -221,6 +201,9 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 //		this.duration = this.endTime - this.startTime;
 	}
 	
+	/**
+	 * Parse start/end time of the event
+	 */
 	private void parseTime(String s)
 	{
 		String[] hours = StripNbsp(s).split("-");
@@ -349,7 +332,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 	
 	private void saveAdditionalInfo(Context context, String content) throws IOException
 	{
-		// TOOD: use this to cache lectures
 		String filename = getFileName();
 		FileOutputStream file = context.openFileOutput(filename, Context.MODE_PRIVATE);			
 		byte[] buffer = content.getBytes();
@@ -404,7 +386,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 	
 				addGroup(group);
 			}
-			weeks = tableValues.get("Week numbers");
+			weekRange = tableValues.get("Week numbers");
 			decodeWeeks();
 		}
 		catch(Exception e)
@@ -434,7 +416,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 		}
 		catch (Exception e)
 		{
-			//valid=false;
+			e.printStackTrace();
 		}
 			
 		Elements elements = table.select("td");
@@ -442,14 +424,14 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 		for (Element element : elements)
 		{
 			EventElement e = new EventElement(element);
-			if (e.color.equalsIgnoreCase(color_name))
+			if (e.color.equalsIgnoreCase(COLOR_NAME))
 			{
 				if (TextUtils.isEmpty(name)) name = e.getText();
 			}
-			else if (e.color.equalsIgnoreCase(color_location)) setRoom(e.getText());
-			else if (e.color.equalsIgnoreCase(color_time)) parseTime(e.getText());
-			else if (e.color.equalsIgnoreCase(color_type)) parseType(e.getText());
-			else if (e.color.equalsIgnoreCase(color_lecturer)) lecturer = e.getText();
+			else if (e.color.equalsIgnoreCase(COLOR_LOCATION)) setRoom(e.getText());
+			else if (e.color.equalsIgnoreCase(COLOR_TIME)) parseTime(e.getText());
+			else if (e.color.equalsIgnoreCase(COLOR_TYPE)) parseType(e.getText());
+			else if (e.color.equalsIgnoreCase(COLOR_LECTURER)) lecturer = e.getText();
 		}
 		
 		if (valid == true)
@@ -491,7 +473,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 		builder.append(endHour).append(exportItemSeparator);
 		builder.append(endMin).append(exportItemSeparator);
 		
-		builder.append(weeks).append(exportItemSeparator);
+		builder.append(weekRange).append(exportItemSeparator);
 		builder.append(type.name()).append(exportItemSeparator);
 		builder.append(groupToString().replace(exportItemSeparator, "")).append(exportItemSeparator);		
 		
@@ -500,8 +482,8 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 	
 	private void decodeWeeks()
 	{
-		weekList = new ArrayList<Integer>();
-		String [] sections = weeks.split(",");
+		weeks.clear();
+		String [] sections = weekRange.split(",");
 		for (String section : sections)
 		{
 			String sectionTrimmed = section.trim();
@@ -514,7 +496,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 							max = Integer.parseInt(rangeValues[1]);
 					while (min <= max)
 					{
-						weekList.add(min++);
+						weeks.add(min++);
 					}
 				}
 				else
@@ -527,7 +509,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 				try
 				{
 					Integer week = Integer.parseInt(sectionTrimmed);
-					weekList.add(week);
+					weeks.add(week);
 				}
 				catch (Exception e)
 				{
@@ -536,9 +518,12 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 				}
 			}
 		}
-		Log.d(logTag, "Weeks decoded to "+weekList.size());
+		Log.d(logTag, "Weeks decoded to "+weeks.size());
 	}
 	
+	/**
+	 * imports saved event from file
+	 */
 	public void importFromString(String string)
 	{
 		if (TextUtils.isEmpty(string)) 
@@ -560,12 +545,12 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 			endHour = Integer.valueOf(fields[field++]);
 			endMin = Integer.valueOf(fields[field++]);
 			
-			weeks = fields[field++];
+			weekRange = fields[field++];
 			type = ClassType.valueOf(fields[field++]);
 			
 			if (fields.length >= field+1)
 			{
-				String [] g = fields[field++].split(groupSeparator);
+				String [] g = fields[field++].split(GROUP_SEPARATOR);
 				for (String s : g)
 				{
 					addGroup(s);
@@ -590,12 +575,18 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 		return valid;
 	}
 	
+	/**
+	 * Gets event human-readable string like 9:00 - 11:00
+	 * @return
+	 */
 	public CharSequence getEventTimeString()
 	{
-		return new StringBuilder(getStartTime()).append(" - ").append(getEndTime());
-//		return String.format(Locale.getDefault(), "%s - %s", this.getStartTime(), this.getEndTime());
+		return new StringBuilder(getStartTime())
+			.append(" - ")
+			.append(getEndTime());
 	}
 	
+	@Deprecated
 	private View inflateTile(final Context context, boolean small, LayoutInflater inflater)
 	{
 		ViewGroup tile = (ViewGroup) inflater.inflate(small?R.layout.timetable_event_tiny:R.layout.timetable_event_small, null);
@@ -672,6 +663,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 		return tile;
 	}
 	
+	@Deprecated
 	public View getTile(Context context, boolean small, LayoutInflater inflater)
 	{
 		return inflateTile(context, small, inflater);
