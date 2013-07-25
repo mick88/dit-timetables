@@ -21,7 +21,10 @@ import android.widget.RelativeLayout;
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
 
-/*Contains list of classes in a day*/
+/**
+ * ontains list of classes in a day
+ * 
+ */
 public class TimetableDay
 {
 	Timetable timetable=null;
@@ -54,8 +57,7 @@ public class TimetableDay
 		synchronized (events)
 		{
 			events.add(c);
-		}
-		
+		}		
 	}
 	
 	public String getName()
@@ -205,7 +207,7 @@ public class TimetableDay
 			null, null, null, null, null, null};
 		
 		int lastEndHour=0;
-		TimetableEvent selectedEvent=null;
+		TimetableEvent currentEvent=null;
 		
 		AppSettings settings = timetable.getSettings();
 		int currentWeek = Timetable.getCurrentWeek();
@@ -221,15 +223,15 @@ public class TimetableDay
 			for (TimetableEvent event : events) 
 				if (event.isGroup(settings.getHiddenGroups()) && event.isInWeek(settings.getOnlyCurrentWeek() ? currentWeek:0))
 			{			
-				int numClassesAtCurrentHour = this.getNumClasses(event.getStartHour(), settings.getHiddenGroups(), showWeek);
+				int numClassesAtCurrentHour = getNumClasses(event.getStartHour(), settings.getHiddenGroups(), showWeek);
 				boolean isSingleEvent = numClassesAtCurrentHour == 1;
 				View tile = event.getTile(context, isSingleEvent == false, inflater); 
 				
 				// mark current event
-				if ((isToday && selectedEvent == null && event.getEndHour() > hour)
-						|| (selectedEvent != null && (event.getStartHour() == selectedEvent.getStartHour())))
+				if ((isToday && currentEvent == null && event.getEndHour() > hour)
+						|| (currentEvent != null && (event.getStartHour() == currentEvent.getStartHour())))
 				{
-					selectedEvent = event;
+					currentEvent = event;
 					int rDrawable = event.isEventOn(hour)?R.drawable.event_selected_selector:R.drawable.event_upcoming_selector;
 					
 					if (isSingleEvent)

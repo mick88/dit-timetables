@@ -24,7 +24,14 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 	 */
 	public static interface EventItem
 	{
+		public static final int 
+			ITEM_TYPE_EVENT = 0,
+			ITEM_TYPE_MULTIEVENT = 1,
+			ITEM_TYPE_SEPARATOR = 2,
+			NUM_TYPES = 3;
+		
 		int getViewType();
+		View getView(LayoutInflater layoutInflater, ViewGroup parent);
 	}
 	
 	private static class EventViewHolder
@@ -42,12 +49,6 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 			this.tvEventGroup = tvEventGroup;
 		}
 	}
-	
-	public static final int 
-		ITEM_TYPE_EVENT = 0,
-		ITEM_TYPE_MULTIEVENT = 1,
-		ITEM_TYPE_SEPARATOR = 2,
-		NUM_TYPES = 3;
 	
 	FontApplicator fontApplicator;
 
@@ -69,7 +70,7 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 	
 		switch (getItemViewType(position))
 		{
-			case ITEM_TYPE_EVENT:
+			case EventItem.ITEM_TYPE_EVENT:
 				final EventViewHolder viewHolder;
 				final TimetableEvent event = (TimetableEvent) getItem(position);
 				
@@ -93,6 +94,9 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 				viewHolder.tvEventType.setText(event.getClassType().toString());
 				viewHolder.tvEventTitle.setText(event.getName());
 				break;
+				
+			default:
+				return getItem(position).getView(getLayoutInflater(), parent);
 		}
 		return view;
 	}
@@ -106,6 +110,6 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 	@Override
 	public int getViewTypeCount()
 	{
-		return NUM_TYPES;
+		return EventItem.NUM_TYPES;
 	}
 }

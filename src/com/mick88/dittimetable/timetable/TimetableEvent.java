@@ -26,7 +26,6 @@ import android.widget.TextView;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.screens.EventDetailsActivity;
-import com.mick88.dittimetable.swipable_tabs.EventAdapter;
 import com.mick88.dittimetable.swipable_tabs.EventAdapter.EventItem;
 import com.mick88.dittimetable.web.Connection;
 
@@ -68,8 +67,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 	final Set<Integer> weeks;
 	
 	boolean valid=true, complete =false;
-	
-	// reference to the tile:
 	
 	String StripNbsp(String string)
 	{
@@ -146,6 +143,14 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 	public CharSequence getStartTime()
 	{
 		return String.format(Locale.getDefault(),  "%d:%02d", startHour, startMin);
+	}
+	
+	/**
+	 * Gets duration of this event in hours
+	 */
+	public int getLength()
+	{
+		return endHour - endMin;
 	}
 	
 	public boolean isEventOn(int hour)
@@ -681,6 +686,29 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 	@Override
 	public int getViewType()
 	{
-		return EventAdapter.ITEM_TYPE_EVENT;
+		return ITEM_TYPE_EVENT;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return id;
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o instanceof TimetableEvent)
+		{
+			return ((TimetableEvent) o).id == this.id;
+		}
+		else return false;
+	}
+
+	@Override
+	public View getView(LayoutInflater layoutInflater, ViewGroup parent)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
