@@ -12,8 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.list.EventAdapter;
+import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.screens.TimetableActivity;
-import com.mick88.dittimetable.swipable_tabs.EventAdapter.EventItem;
 import com.mick88.dittimetable.timetable.TimetableDay;
 
 public class DayFragment extends Fragment

@@ -1,4 +1,4 @@
-package com.mick88.dittimetable.timetable;
+package com.mick88.dittimetable.list;
 
 import java.util.Calendar;
 
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.mick88.dittimetable.R;
-import com.mick88.dittimetable.swipable_tabs.EventAdapter.EventItem;
+import com.mick88.dittimetable.list.EventAdapter.EventItem;
 
 /**
  * Represents space between events

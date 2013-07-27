@@ -1,4 +1,4 @@
-package com.mick88.dittimetable.swipable_tabs;
+package com.mick88.dittimetable.list;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.mick88.dittimetable.R;
-import com.mick88.dittimetable.swipable_tabs.EventAdapter.EventItem;
+import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.utils.FontApplicator;
 

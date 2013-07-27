@@ -1,4 +1,4 @@
-package com.mick88.dittimetable.timetable;
+package com.mick88.dittimetable.list;
 
 import java.util.Collection;
 
@@ -7,7 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mick88.dittimetable.R;
-import com.mick88.dittimetable.swipable_tabs.EventAdapter.EventItem;
+import com.mick88.dittimetable.list.EventAdapter.EventItem;
+import com.mick88.dittimetable.timetable.TimetableEvent;
 
 public class MultiEvent implements EventItem
 {

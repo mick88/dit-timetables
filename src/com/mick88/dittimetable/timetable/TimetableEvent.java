@@ -25,8 +25,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.screens.EventDetailsActivity;
-import com.mick88.dittimetable.swipable_tabs.EventAdapter.EventItem;
 import com.mick88.dittimetable.web.Connection;
 
 
