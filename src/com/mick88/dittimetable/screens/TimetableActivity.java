@@ -284,6 +284,7 @@ public class TimetableActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_timetable);
+
 		application = (TimetableApp) getApplication();
 		processIntent();
 				
