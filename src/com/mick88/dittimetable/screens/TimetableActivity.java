@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -41,7 +42,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
-import com.mick88.dittimetable.Connection;
 import com.mick88.dittimetable.GroupSelectionDialog;
 import com.mick88.dittimetable.GroupSelectionDialog.GroupSelectionListener;
 import com.mick88.dittimetable.R;
@@ -50,6 +50,7 @@ import com.mick88.dittimetable.swipable_tabs.CustomPageTransformer;
 import com.mick88.dittimetable.swipable_tabs.TimetablePageAdapter;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.Timetable.ErrorCode;
+import com.mick88.dittimetable.web.Connection;
 
 public class TimetableActivity extends ActionBarActivity 
 									implements Timetable.ResultHandler, GroupSelectionListener, TabListener
@@ -162,10 +163,15 @@ public class TimetableActivity extends ActionBarActivity
     void setupTabs()
     {
     	timetablePageAdapter = new TimetablePageAdapter(getSupportFragmentManager(), timetable, getApplicationContext());
-    	
+
 //    	final ActionBar actionBar = getSupportActionBar();
 /*    	actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
     	for (int i=0; i < Timetable.dayNames.length-2; i++)
+=======
+    	final ActionBar actionBar = getSupportActionBar();
+    	actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+    	for (int i=0; i < Timetable.DAY_NAMES.length-2; i++)
+>>>>>>> listview
     	{
     		actionBar.addTab(actionBar.newTab().setText(timetable.getDay(i).getShortName())
     				.setTabListener(this));
@@ -176,7 +182,6 @@ public class TimetableActivity extends ActionBarActivity
 		{
 			viewPager.setPageTransformer(true, new CustomPageTransformer());
 		}
-//    	viewPager.setOffscreenPageLimit(1);
 
     	viewPager.setAdapter(timetablePageAdapter);
     	viewPager.setOnPageChangeListener(new OnPageChangeListener()
@@ -185,8 +190,7 @@ public class TimetableActivity extends ActionBarActivity
 			@Override
 			public void onPageSelected(int arg0)
 			{
-//				actionBar.setSelectedNavigationItem(arg0);
-				
+
 			}
 			
 			@Override
@@ -638,7 +642,7 @@ public class TimetableActivity extends ActionBarActivity
 	
 	void showGroupSelectionDialog()
 	{
-		ArrayList<String> gList = timetable.getGroupsInTimetable();
+		Set<String> gList = timetable.getGroupsInTimetable();
 		
 		if (gList.isEmpty())
 		{
@@ -664,7 +668,7 @@ public class TimetableActivity extends ActionBarActivity
 			String[] gArray = new String[gList.size()];
 			gList.toArray(gArray);
 			
-			gList = (ArrayList<String>) application.getSettings().getHiddenGroups();
+			gList = (Set<String>) application.getSettings().getHiddenGroups();
 			String[] hgArray = new String[gList.size()];
 			gList.toArray(hgArray);
 			

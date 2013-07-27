@@ -12,20 +12,6 @@
         android:id="@+id/separator_dot_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" 
-        android:layout_centerHorizontal="true">
-
-       <!--  <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/separator_dot"
-            android:visibility="visible" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/separator_dot"
-            android:visibility="visible" /> -->
-    </LinearLayout>
-
-</RelativeLayout>
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal" />
+</RelativeLayout>

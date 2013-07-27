@@ -18,17 +18,7 @@ public class CustomPageTransformer
 	@Override
 	public void transformPage(View view, float position)
 	{
-		// animate each child separately
-		/*if (view instanceof ViewGroup && ((ViewGroup) view).getChildAt(0) instanceof ViewGroup)
-		{
-			ViewGroup viewGroup = (ViewGroup) ((ViewGroup) view).getChildAt(0);
-			for (int i=0; i  < viewGroup.getChildCount(); i++)
-			{
-				transformView(viewGroup.getChildAt(i), position);
-			}
-		}
-		else */
-			transformView(view.findViewById(R.id.dayContent), position);		
+		transformView(view.findViewById(R.id.dayContent), position);		
 		
 	}
 	

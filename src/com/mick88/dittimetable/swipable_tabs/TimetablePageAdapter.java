@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.mick88.dittimetable.timetable.Timetable;
 
 /**
- * This class handles swiping pages in the main screen.
+ * This class handles pages in the main screen.
  *
  */
 public class TimetablePageAdapter extends FragmentPagerAdapter
@@ -55,11 +55,4 @@ public class TimetablePageAdapter extends FragmentPagerAdapter
 		return POSITION_NONE; // allows refreshing
 //		return super.getItemPosition(object);
 	}
-	
-	@Override
-	public void notifyDataSetChanged()
-	{
-		super.notifyDataSetChanged();
-	}
-	
 }

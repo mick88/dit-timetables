@@ -3,7 +3,9 @@ package com.mick88.dittimetable.timetable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import org.jsoup.nodes.Element;
 
@@ -19,15 +21,21 @@ import android.widget.RelativeLayout;
 
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.list.EventAdapter.EventItem;
+import com.mick88.dittimetable.list.MultiEvent;
+import com.mick88.dittimetable.list.Space;
 
-/*Contains list of classes in a day*/
+/**
+ * ontains list of classes in a day
+ * 
+ */
 public class TimetableDay
 {
 	Timetable timetable=null;
-	String name = "";
+	final String name;
 	int id=-1;
 	final String logTag = "TimetableDay";
-	private ArrayList<TimetableEvent> classes = new ArrayList<TimetableEvent>();
+	private List<TimetableEvent> events = new ArrayList<TimetableEvent>();
 	
 	public TimetableDay(String name, Timetable timetable)
 	{
@@ -37,24 +45,23 @@ public class TimetableDay
 	
 	public void clearEvents()
 	{
-		classes.clear();
+		events.clear();
 	}
 	
 	public void sortEvents()
 	{
-		synchronized (classes)
+		synchronized (events)
 		{
-			Collections.sort(classes);
+			Collections.sort(events);
 		}		
 	}
 	
 	public void addClass(TimetableEvent c)
 	{
-		synchronized (classes)
+		synchronized (events)
 		{
-			classes.add(c);
-		}
-		
+			events.add(c);
+		}		
 	}
 	
 	public String getName()
@@ -67,25 +74,19 @@ public class TimetableDay
 		return name.subSequence(0, 3);
 	}
 	
-/*	@Deprecated
-	public int getNumClassesAt(int hour, int week)
-	{
-		return getNumClasses(hour, timetable.getHiddenGroups(), week);
-	}*/
-	
-	public int getNumClasses(int hour, List<String> hiddenGroups, int week)
+	public int getNumEvents(int hour, Set<String> hiddenGroups, int week)
 	{
 		int n=0;
-		for (TimetableEvent event : classes) if (event.getStartHour() == hour && event.isInWeek(week))
+		for (TimetableEvent event : events) if (event.getStartHour() == hour && event.isInWeek(week))
 		{
 			if (event.isGroup(hiddenGroups)) n++;
 		}
 		return n;
 	}
 	
-	public ArrayList<TimetableEvent> getClasses()
+	public List<TimetableEvent> getClasses()
 	{
-		return classes;
+		return events;
 	}
 	
 	public int parseHtmlEvent(Element element, Context context, boolean allowCache)
@@ -105,11 +106,11 @@ public class TimetableDay
 	@Override
 	public String toString()
 	{
-		if (classes.isEmpty()) return new String();
+		if (events.isEmpty()) return new String();
 		
 		StringBuilder builder = new StringBuilder(name);
 		
-		for (TimetableEvent c : classes)
+		for (TimetableEvent c : events)
 		{
 			builder.append('\n');
 			builder.append(c.toString());
@@ -118,13 +119,13 @@ public class TimetableDay
 		return builder.toString();
 	}
 	
-	public String toString(List<String> hiddenGroups, int week)
+	public String toString(Set<String> hiddenGroups, int week)
 	{
-		if (classes.isEmpty()) return new String();
+		if (events.isEmpty()) return new String();
 		int n=0;
 		StringBuilder builder = new StringBuilder(name);
 		
-		for (TimetableEvent event : classes) if (event.isInWeek(week) && event.isGroup(hiddenGroups))
+		for (TimetableEvent event : events) if (event.isInWeek(week) && event.isGroup(hiddenGroups))
 		{
 			builder.append('\n');
 			builder.append(event.toString());
@@ -135,13 +136,13 @@ public class TimetableDay
 		else return builder.toString();
 	}
 	
-	private final String exportItemSeparator = "\n";
+	private final String EXPORT_DAY_SEPARATOR = "\n";
 	public CharSequence export()
 	{
 		StringBuilder builder = new StringBuilder();
-		for (TimetableEvent event : classes)
+		for (TimetableEvent event : events)
 		{
-			builder.append(event.export()).append(exportItemSeparator);
+			builder.append(event.export()).append(EXPORT_DAY_SEPARATOR);
 		}
 		return builder;
 	}
@@ -149,7 +150,7 @@ public class TimetableDay
 	public int importFromString(String string)
 	{
 		int n=0;
-		String [] events = string.split(exportItemSeparator);
+		String [] events = string.split(EXPORT_DAY_SEPARATOR);
 		for (String eventString : events)
 		{
 			TimetableEvent event = new TimetableEvent(eventString, timetable);
@@ -162,16 +163,12 @@ public class TimetableDay
 		return n;
 	}
 	
-	public void setName(String name)
-	{
-		this.name = name;
-	}	
-	
 	public boolean isToday()
 	{
 		return timetable.getToday(false) == this;
 	}
 	
+	@Deprecated
 	public View getView(LayoutInflater inflater, Context context)
 	{
 		View view = inflater.inflate(R.layout.day_layout, null);
@@ -197,6 +194,59 @@ public class TimetableDay
 		return space;
 	}
 	
+	public List<EventItem> getTimetableEntries() throws Exception
+	{
+		List<EventItem> entries = new ArrayList<EventItem>(events.size());
+		
+		int lastEndHour=0;
+		TimetableEvent lastEvent=null;
+		
+		AppSettings settings = timetable.getSettings();
+		int currentWeek = Timetable.getCurrentWeek();
+		List<TimetableEvent> sameHourEvents = new ArrayList<TimetableEvent>();
+		
+		synchronized (events)
+		{
+			for (TimetableEvent event : events)
+			{
+				if (lastEvent != null)
+				{
+					// add space if there was a time off between the events
+					if (lastEndHour < event.getStartHour())
+					{
+						entries.add(new Space(event.getStartHour() - lastEndHour, lastEndHour));
+					}
+				}
+				
+				int numEvents = getNumEvents(event.getStartHour(), settings.getHiddenGroups(), 0);
+				boolean singleEvent = (numEvents == 1);
+				
+				if (singleEvent)
+				{
+					entries.add(event);
+				}
+				else
+				{
+					if (sameHourEvents.isEmpty()) entries.add(new MultiEvent(sameHourEvents));
+					else if (sameHourEvents.get(0).getStartHour() != event.getStartHour())
+					{
+						sameHourEvents = new ArrayList<TimetableEvent>();
+						entries.add(new MultiEvent(sameHourEvents));
+					}
+						
+					sameHourEvents.add(event);
+				}
+				
+				lastEvent = event;
+				lastEndHour = event.getEndHour();
+			}
+
+		}
+
+		return entries;
+	}
+	
+	@Deprecated
 	void drawTimetable(ViewGroup parentLayout, LayoutInflater inflater, Context context)
 	{		
 		int hour=0;
@@ -213,7 +263,7 @@ public class TimetableDay
 			null, null, null, null, null, null};
 		
 		int lastEndHour=0;
-		TimetableEvent selectedEvent=null;
+		TimetableEvent currentEvent=null;
 		
 		AppSettings settings = timetable.getSettings();
 		int currentWeek = Timetable.getCurrentWeek();
@@ -224,20 +274,20 @@ public class TimetableDay
 		ViewPager viewPager = activity.getViewPager();*/
 		
 		
-		synchronized (classes)
+		synchronized (events)
 		{
-			for (TimetableEvent event : classes) 
+			for (TimetableEvent event : events) 
 				if (event.isGroup(settings.getHiddenGroups()) && event.isInWeek(settings.getOnlyCurrentWeek() ? currentWeek:0))
 			{			
-				int numClassesAtCurrentHour = this.getNumClasses(event.getStartHour(), settings.getHiddenGroups(), showWeek);
+				int numClassesAtCurrentHour = getNumEvents(event.getStartHour(), settings.getHiddenGroups(), showWeek);
 				boolean isSingleEvent = numClassesAtCurrentHour == 1;
 				View tile = event.getTile(context, isSingleEvent == false, inflater); 
 				
 				// mark current event
-				if ((isToday && selectedEvent == null && event.getEndHour() > hour)
-						|| (selectedEvent != null && (event.getStartHour() == selectedEvent.getStartHour())))
+				if ((isToday && currentEvent == null && event.getEndHour() > hour)
+						|| (currentEvent != null && (event.getStartHour() == currentEvent.getStartHour())))
 				{
-					selectedEvent = event;
+					currentEvent = event;
 					int rDrawable = event.isEventOn(hour)?R.drawable.event_selected_selector:R.drawable.event_upcoming_selector;
 					
 					if (isSingleEvent)
@@ -298,9 +348,9 @@ public class TimetableDay
 		}
 	}
 	
-	public void downloadAccitionalInfo(Context context)
+	public void downloadAdditionalInfo(Context context)
 	{
-		for (TimetableEvent event : classes) if (event.isComplete() == false)
+		for (TimetableEvent event : events) if (event.isComplete() == false)
 		{
 			if (timetable.isDisposed()) break;
 			event.downloadAdditionalInfo(context);

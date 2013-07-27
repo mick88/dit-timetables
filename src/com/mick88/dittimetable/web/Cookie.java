@@ -1,11 +1,11 @@
-package com.mick88.dittimetable;
+package com.mick88.dittimetable.web;
 
 import android.os.Bundle;
 import android.util.Log;
 
 public class Cookie
 {
-	String cookie;
+	private String cookie;
 	final String logTag = "Cookie";
 	
 	public Cookie(String cookie)
