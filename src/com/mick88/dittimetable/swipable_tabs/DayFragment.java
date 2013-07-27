@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,8 +58,12 @@ public class DayFragment extends Fragment
 	
 	public void refresh()
 	{
-		this.eventAdapter = new EventAdapter(getActivity(), new ArrayList<EventAdapter.EventItem>(timetableDay.getTimetableEntries()));
-		listView.setAdapter(eventAdapter);
+		if (timetableDay != null)
+		{
+			Log.d(toString(), "Refreshing "+getDayName());
+			eventAdapter = new EventAdapter(getActivity(), new ArrayList<EventAdapter.EventItem>(timetableDay.getTimetableEntries()));
+			listView.setAdapter(eventAdapter);
+		}
 	}
 	
 	@Override

@@ -1,11 +1,10 @@
 package com.mick88.dittimetable.swipable_tabs;
 
-import com.mick88.dittimetable.timetable.Timetable;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 
 /**
  * This class handles pages in the main screen.
@@ -62,17 +61,12 @@ public class TimetablePageAdapter extends FragmentPagerAdapter
 	public void notifyDataSetChanged()
 	{
 		super.notifyDataSetChanged();
-		try
-		{
-			refresh();
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		refresh();
 	}
 	
 	public void refresh()
 	{
+		Log.d(toString(), "Refreshing Timetable pages...");
 		for (DayFragment fragment : fragments)
 			fragment.refresh();
 	}
