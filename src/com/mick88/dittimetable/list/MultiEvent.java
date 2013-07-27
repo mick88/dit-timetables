@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout.LayoutParams;
 
@@ -18,9 +17,8 @@ public class MultiEvent implements EventItem
 	private final Collection<TimetableEvent> events;
 	private final static int MARGIN_INCREMENT = 25;
 	
-	public MultiEvent(Collection<TimetableEvent> events) throws Exception
+	public MultiEvent(Collection<TimetableEvent> events)
 	{
-//		if (events.isEmpty()) throw new Exception("Multiview must have at least 1 event.");
 		this.events = events;
 	}
 	

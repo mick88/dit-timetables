@@ -194,7 +194,7 @@ public class TimetableDay
 		return space;
 	}
 	
-	public List<EventItem> getTimetableEntries() throws Exception
+	public List<EventItem> getTimetableEntries()
 	{
 		List<EventItem> entries = new ArrayList<EventItem>(events.size());
 		

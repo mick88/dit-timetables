@@ -71,7 +71,7 @@ public class TimetablePageAdapter extends FragmentPagerAdapter
 		}
 	}
 	
-	public void refresh() throws Exception
+	public void refresh()
 	{
 		for (DayFragment fragment : fragments)
 			fragment.refresh();

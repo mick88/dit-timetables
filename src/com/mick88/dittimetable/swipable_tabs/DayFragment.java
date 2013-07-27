@@ -55,7 +55,7 @@ public class DayFragment extends Fragment
 		return Timetable.DAY_NAMES[dayId];
 	}
 	
-	public void refresh() throws Exception
+	public void refresh()
 	{
 		this.eventAdapter = new EventAdapter(getActivity(), new ArrayList<EventAdapter.EventItem>(timetableDay.getTimetableEntries()));
 		listView.setAdapter(eventAdapter);
