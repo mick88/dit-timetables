@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
+import com.mick88.dittimetable.utils.FontApplicator;
 
 /**
  * Represents space between events
@@ -33,7 +34,7 @@ public class Space implements EventItem
 	}
 
 	@Override
-	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent)
+	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator)
 	{
 		final int current = getCurrentSpace();
 		

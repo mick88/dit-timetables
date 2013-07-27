@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.screens.EventDetailsActivity;
+import com.mick88.dittimetable.utils.FontApplicator;
 import com.mick88.dittimetable.web.Connection;
 
 
@@ -732,13 +733,14 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 	}
 
 	@Override
-	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent)
+	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator)
 	{
 		View view = convertView;
 		EventViewHolder viewHolder;
 		if (view == null)
 		{
 			view = layoutInflater.inflate(R.layout.timetable_event_small, parent, false);
+			if (fontApplicator != null) fontApplicator.applyFont(view);
 			viewHolder = new EventViewHolder(view);
 			view.setTag(viewHolder);
 		}

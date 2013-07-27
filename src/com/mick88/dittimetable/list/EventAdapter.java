@@ -31,12 +31,12 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 			NUM_TYPES = 3;
 		
 		int getViewType();
-		View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent);
+		View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator);
 	}
 	
 	
 	
-	FontApplicator fontApplicator;
+	private FontApplicator fontApplicator;
 
 	public EventAdapter(Context context, List<EventItem> objects) 
 	{
@@ -52,7 +52,7 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		return getItem(position).getView(getLayoutInflater(), convertView, parent);
+		return getItem(position).getView(getLayoutInflater(), convertView, parent, fontApplicator);
 		/*View view = convertView;
 	
 		switch (getItemViewType(position))

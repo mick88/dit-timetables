@@ -11,6 +11,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.timetable.TimetableEvent;
+import com.mick88.dittimetable.utils.FontApplicator;
 
 public class MultiEvent implements EventItem
 {
@@ -30,7 +31,7 @@ public class MultiEvent implements EventItem
 	}
 
 	@Override
-	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent)
+	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator)
 	{
 		int dp = (int)(layoutInflater.getContext().getResources().getDisplayMetrics().density * MARGIN_INCREMENT);
 		
@@ -39,7 +40,7 @@ public class MultiEvent implements EventItem
 		for (TimetableEvent event : events)
 		{
 			margin -= dp;
-			View eventTile = event.getView(layoutInflater, null, viewGroup);
+			View eventTile = event.getView(layoutInflater, null, viewGroup, fontApplicator);
 			LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			params.setMargins(0, margin, 0, 0);
 			eventTile.setLayoutParams(params);
