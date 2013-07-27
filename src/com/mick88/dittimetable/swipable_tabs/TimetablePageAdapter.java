@@ -40,7 +40,7 @@ public class TimetablePageAdapter extends FragmentPagerAdapter
 	@Override
 	public CharSequence getPageTitle(int position)
 	{
-		return timetable.getDayTimetable(position).getShortName();
+		return timetable.getDayTimetable(position).getName();
 	}
 	
 	@Override
