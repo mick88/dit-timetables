@@ -163,13 +163,13 @@ public class TimetableActivity extends ActionBarActivity
     {
     	timetablePageAdapter = new TimetablePageAdapter(getSupportFragmentManager(), timetable, getApplicationContext());
     	
-    	final ActionBar actionBar = getSupportActionBar();
-    	actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+//    	final ActionBar actionBar = getSupportActionBar();
+/*    	actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
     	for (int i=0; i < Timetable.dayNames.length-2; i++)
     	{
     		actionBar.addTab(actionBar.newTab().setText(timetable.getDay(i).getShortName())
     				.setTabListener(this));
-    	}
+    	}*/
     	viewPager  = (ViewPager) findViewById(R.id.pager);
 
     	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) 
@@ -185,7 +185,7 @@ public class TimetableActivity extends ActionBarActivity
 			@Override
 			public void onPageSelected(int arg0)
 			{
-				actionBar.setSelectedNavigationItem(arg0);
+//				actionBar.setSelectedNavigationItem(arg0);
 				
 			}
 			
@@ -201,8 +201,8 @@ public class TimetableActivity extends ActionBarActivity
 				
 			}
 		});
-    	
-    	actionBar.setSelectedNavigationItem(Timetable.getTodayId(true));
+    	viewPager.setCurrentItem(Timetable.getTodayId(true));
+//    	actionBar.setSelectedNavigationItem(Timetable.getTodayId(true));
     }
     
     public Map<String, String> parseQuery(String query)
