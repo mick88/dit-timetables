@@ -46,7 +46,6 @@ import com.mick88.dittimetable.GroupSelectionDialog;
 import com.mick88.dittimetable.GroupSelectionDialog.GroupSelectionListener;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
-import com.mick88.dittimetable.swipable_tabs.CustomPageTransformer;
 import com.mick88.dittimetable.swipable_tabs.TimetablePageAdapter;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.Timetable.ErrorCode;
@@ -163,7 +162,7 @@ public class TimetableActivity extends ActionBarActivity
     
     void setupTabs()
     {
-    	timetablePageAdapter = new TimetablePageAdapter(getSupportFragmentManager());
+    	timetablePageAdapter = new TimetablePageAdapter(getSupportFragmentManager(), timetable);
 
 //    	final ActionBar actionBar = getSupportActionBar();
 /*    	actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);

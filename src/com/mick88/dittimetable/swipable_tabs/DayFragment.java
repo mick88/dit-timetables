@@ -1,6 +1,7 @@
 package com.mick88.dittimetable.swipable_tabs;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.list.EventAdapter;
+import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.screens.TimetableActivity;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableDay;
@@ -25,23 +27,24 @@ public class DayFragment extends Fragment
 	EventAdapter eventAdapter = null;
 	int dayId;
 	private ListView listView;
+	private List<EventItem> events = new ArrayList<EventAdapter.EventItem>();
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);	
-		dayId =  getArguments().getInt(EXTRA_DAY_ID);
 	}
 	
 	@Override
 	public void onAttach(Activity activity)
 	{
 		super.onAttach(activity);		
-		
-		if (activity instanceof TimetableActivity)
-		{
-			this.timetableDay = ((TimetableActivity) activity).getTimetable().getDay(dayId);
-		}
+	}
+	
+	public DayFragment setTimetableDay(TimetableDay timetableDay)
+	{
+		this.timetableDay = timetableDay;
+		return this;
 	}
 	
 	@Override
@@ -53,16 +56,16 @@ public class DayFragment extends Fragment
 	
 	public String getDayName()
 	{
-		return Timetable.DAY_NAMES[dayId];
+		return timetableDay.getName();
 	}
 	
 	public void refresh()
 	{
-		if (timetableDay != null)
+		if (timetableDay != null && eventAdapter != null)
 		{
-			Log.d(toString(), "Refreshing "+getDayName());
-			eventAdapter = new EventAdapter(getActivity(), new ArrayList<EventAdapter.EventItem>(timetableDay.getTimetableEntries()));
-			listView.setAdapter(eventAdapter);
+			events.clear();
+			events.addAll(timetableDay.getTimetableEntries());
+			eventAdapter.notifyDataSetChanged();
 		}
 	}
 	
@@ -71,14 +74,10 @@ public class DayFragment extends Fragment
 	{
 		super.onViewCreated(view, savedInstanceState);
 		listView = (ListView) view.findViewById(android.R.id.list);
-		try
-		{
-			refresh();
-		} catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		eventAdapter = new EventAdapter(getActivity(), events);
+		listView.setAdapter(eventAdapter);
+		
+		refresh();
 	}
 	
 	

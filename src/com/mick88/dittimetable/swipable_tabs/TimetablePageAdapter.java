@@ -1,10 +1,11 @@
 package com.mick88.dittimetable.swipable_tabs;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
+
+import com.mick88.dittimetable.timetable.Timetable;
 
 /**
  * This class handles pages in the main screen.
@@ -13,24 +14,20 @@ import android.util.Log;
 public class TimetablePageAdapter extends FragmentPagerAdapter
 {
 	DayFragment[] fragments;
+	final Timetable timetable;
 	
-	public TimetablePageAdapter(FragmentManager fm)
+	public TimetablePageAdapter(FragmentManager fm, Timetable timetable)
 	{
 		super(fm);
-		this.fragments = new DayFragment[] {
-				new DayFragment(),
-				new DayFragment(),
-				new DayFragment(),
-				new DayFragment(),
-				new DayFragment(),
-		};
+		this.timetable = timetable;
 		
-		for (int i=0; i < fragments.length; i++)
-		{
-			Bundle args = new Bundle();
-			args.putInt(DayFragment.EXTRA_DAY_ID, i);
-			fragments[i].setArguments(args);
-		}
+		this.fragments = new DayFragment[] {
+				new DayFragment().setTimetableDay(timetable.getDay(0)),
+				new DayFragment().setTimetableDay(timetable.getDay(1)),
+				new DayFragment().setTimetableDay(timetable.getDay(2)),
+				new DayFragment().setTimetableDay(timetable.getDay(3)),
+				new DayFragment().setTimetableDay(timetable.getDay(4)),
+		};
 	}
 
 	@Override
