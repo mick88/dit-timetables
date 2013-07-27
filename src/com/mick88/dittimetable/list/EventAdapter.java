@@ -31,24 +31,10 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 			NUM_TYPES = 3;
 		
 		int getViewType();
-		View getView(LayoutInflater layoutInflater, ViewGroup parent);
+		View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent);
 	}
 	
-	private static class EventViewHolder
-	{
-		protected final TextView tvEventTime, tvEventLocation, tvEventTitle, tvEventType, tvEventLecturer, tvEventGroup;
-		
-		public EventViewHolder(TextView tvEventTime, TextView tvEventLocation,
-				TextView tvEventTitle, TextView tvEventType,
-				TextView tvEventLecturer, TextView tvEventGroup) {
-			this.tvEventTime = tvEventTime;
-			this.tvEventLocation = tvEventLocation;
-			this.tvEventTitle = tvEventTitle;
-			this.tvEventType = tvEventType;
-			this.tvEventLecturer = tvEventLecturer;
-			this.tvEventGroup = tvEventGroup;
-		}
-	}
+	
 	
 	FontApplicator fontApplicator;
 
@@ -66,7 +52,8 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		View view = convertView;
+		return getItem(position).getView(getLayoutInflater(), convertView, parent);
+		/*View view = convertView;
 	
 		switch (getItemViewType(position))
 		{
@@ -76,29 +63,23 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 				
 				if (view == null)
 				{
-					view = getLayoutInflater().inflate(R.layout.timetable_event_small, parent, false);
+					view = getItem(position).getView(getLayoutInflater(), convertView, parent);
 					fontApplicator.applyFont(view);
-					viewHolder = new EventViewHolder((TextView)view.findViewById(R.id.eventTime), (TextView)view.findViewById(R.id.eventLocation), 
-							(TextView)view.findViewById(R.id.eventTitle), (TextView)view.findViewById(R.id.eventType), 
-							(TextView)view.findViewById(R.id.eventLecturer), (TextView)view.findViewById(R.id.eventGroup));
+					viewHolder = new EventViewHolder(view);
+
 					view.setTag(viewHolder);
 				}
 				else viewHolder = (EventViewHolder) view.getTag();
 				
 				if (event == null) return view;
 				
-				viewHolder.tvEventGroup.setText(event.getGroupStr());
-				viewHolder.tvEventLecturer.setText(event.getLecturer());
-				viewHolder.tvEventLocation.setText(event.getRoom());
-				viewHolder.tvEventTime.setText(event.getEventTimeString());
-				viewHolder.tvEventType.setText(event.getClassType().toString());
-				viewHolder.tvEventTitle.setText(event.getName());
+				
 				break;
 				
 			default:
-				return getItem(position).getView(getLayoutInflater(), parent);
+				return getItem(position).getView(getLayoutInflater(), null, parent);
 		}
-		return view;
+		return view;*/
 	}
 	
 	@Override

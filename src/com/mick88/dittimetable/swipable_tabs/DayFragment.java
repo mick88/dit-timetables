@@ -56,8 +56,15 @@ public class DayFragment extends Fragment
 		{
 			ListView listView = (ListView) view.findViewById(android.R.id.list);
 			List<EventItem> items = new ArrayList<EventAdapter.EventItem>();
-			items.addAll(timetableDay.getClasses());
-			listView.setAdapter(new EventAdapter(getActivity(), items));
+			try
+			{
+				items.addAll(timetableDay.getTimetableEntries());
+				listView.setAdapter(new EventAdapter(getActivity(), items));
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			
 		}
 	}
 	

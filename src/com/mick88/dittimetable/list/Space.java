@@ -33,7 +33,7 @@ public class Space implements EventItem
 	}
 
 	@Override
-	public View getView(LayoutInflater layoutInflater, ViewGroup parent)
+	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent)
 	{
 		final int current = getCurrentSpace();
 		

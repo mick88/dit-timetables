@@ -35,6 +35,32 @@ import com.mick88.dittimetable.web.Connection;
  * */
 public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 {	
+	private static class EventViewHolder
+	{
+		protected final TextView tvEventTime, tvEventLocation, tvEventTitle, tvEventType, tvEventLecturer, tvEventGroup;
+		
+		public EventViewHolder(TextView tvEventTime, TextView tvEventLocation,
+				TextView tvEventTitle, TextView tvEventType,
+				TextView tvEventLecturer, TextView tvEventGroup) {
+			this.tvEventTime = tvEventTime;
+			this.tvEventLocation = tvEventLocation;
+			this.tvEventTitle = tvEventTitle;
+			this.tvEventType = tvEventType;
+			this.tvEventLecturer = tvEventLecturer;
+			this.tvEventGroup = tvEventGroup;
+		}
+		
+		public EventViewHolder(View view)
+		{
+			this((TextView)view.findViewById(R.id.eventTime),
+					(TextView)view.findViewById(R.id.eventLocation),
+					(TextView)view.findViewById(R.id.eventTitle),
+					(TextView)view.findViewById(R.id.eventType),
+					(TextView)view.findViewById(R.id.eventLecturer),
+					(TextView)view.findViewById(R.id.eventGroup));
+		}
+	}
+	
 	private final String CHAR_NBSP = "\u00A0";	
 	public enum ClassType {Other, Lecture, Laboratory, Tutorial};
 	
@@ -706,9 +732,25 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 	}
 
 	@Override
-	public View getView(LayoutInflater layoutInflater, ViewGroup parent)
+	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		View view = convertView;
+		EventViewHolder viewHolder;
+		if (view == null)
+		{
+			view = layoutInflater.inflate(R.layout.timetable_event_small, parent, false);
+			viewHolder = new EventViewHolder(view);
+			view.setTag(viewHolder);
+		}
+		else viewHolder = (EventViewHolder) view.getTag();
+		
+		viewHolder.tvEventGroup.setText(getGroupStr());
+		viewHolder.tvEventLecturer.setText(getLecturer());
+		viewHolder.tvEventLocation.setText(getRoom());
+		viewHolder.tvEventTime.setText(getEventTimeString());
+		viewHolder.tvEventType.setText(getClassType().toString());
+		viewHolder.tvEventTitle.setText(getName());
+		
+		return view;		
 	}
 }

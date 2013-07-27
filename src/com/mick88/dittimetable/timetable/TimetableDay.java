@@ -3,6 +3,7 @@ package com.mick88.dittimetable.timetable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +21,9 @@ import android.widget.RelativeLayout;
 
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.list.EventAdapter.EventItem;
+import com.mick88.dittimetable.list.MultiEvent;
+import com.mick88.dittimetable.list.Space;
 
 /**
  * ontains list of classes in a day
@@ -70,7 +74,7 @@ public class TimetableDay
 		return name.subSequence(0, 3);
 	}
 	
-	public int getNumClasses(int hour, Set<String> hiddenGroups, int week)
+	public int getNumEvents(int hour, Set<String> hiddenGroups, int week)
 	{
 		int n=0;
 		for (TimetableEvent event : events) if (event.getStartHour() == hour && event.isInWeek(week))
@@ -190,6 +194,58 @@ public class TimetableDay
 		return space;
 	}
 	
+	public List<EventItem> getTimetableEntries() throws Exception
+	{
+		List<EventItem> entries = new ArrayList<EventItem>(events.size());
+		
+		int lastEndHour=0;
+		TimetableEvent lastEvent=null;
+		
+		AppSettings settings = timetable.getSettings();
+		int currentWeek = Timetable.getCurrentWeek();
+		List<TimetableEvent> sameHourEvents = new ArrayList<TimetableEvent>();
+		
+		synchronized (events)
+		{
+			for (TimetableEvent event : events)
+			{
+				if (lastEvent != null)
+				{
+					// add space if there was a time off between the events
+					if (lastEndHour < event.getStartHour())
+					{
+						entries.add(new Space(event.getStartHour() - lastEndHour, lastEndHour));
+					}
+				}
+				
+				int numEvents = getNumEvents(event.getStartHour(), settings.getHiddenGroups(), 0);
+				boolean singleEvent = (numEvents == 1);
+				
+				if (singleEvent)
+				{
+					entries.add(event);
+				}
+				else
+				{
+					if (sameHourEvents.isEmpty()) entries.add(new MultiEvent(sameHourEvents));
+					else if (sameHourEvents.get(0).getStartHour() != event.getStartHour())
+					{
+						sameHourEvents = new ArrayList<TimetableEvent>();
+						entries.add(new MultiEvent(sameHourEvents));
+					}
+						
+					sameHourEvents.add(event);
+				}
+				
+				lastEvent = event;
+				lastEndHour = event.getEndHour();
+			}
+
+		}
+
+		return entries;
+	}
+	
 	@Deprecated
 	void drawTimetable(ViewGroup parentLayout, LayoutInflater inflater, Context context)
 	{		
@@ -223,7 +279,7 @@ public class TimetableDay
 			for (TimetableEvent event : events) 
 				if (event.isGroup(settings.getHiddenGroups()) && event.isInWeek(settings.getOnlyCurrentWeek() ? currentWeek:0))
 			{			
-				int numClassesAtCurrentHour = getNumClasses(event.getStartHour(), settings.getHiddenGroups(), showWeek);
+				int numClassesAtCurrentHour = getNumEvents(event.getStartHour(), settings.getHiddenGroups(), showWeek);
 				boolean isSingleEvent = numClassesAtCurrentHour == 1;
 				View tile = event.getTile(context, isSingleEvent == false, inflater); 
 				
