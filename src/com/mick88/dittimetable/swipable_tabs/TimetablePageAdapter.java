@@ -1,12 +1,11 @@
 package com.mick88.dittimetable.swipable_tabs;
 
-import android.content.Context;
+import com.mick88.dittimetable.timetable.Timetable;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-
-import com.mick88.dittimetable.timetable.Timetable;
 
 /**
  * This class handles pages in the main screen.
@@ -14,45 +13,67 @@ import com.mick88.dittimetable.timetable.Timetable;
  */
 public class TimetablePageAdapter extends FragmentPagerAdapter
 {
-	Timetable timetable;
-	Context context;
-	private TimetablePageAdapter(FragmentManager fm)
+	DayFragment[] fragments;
+	
+	public TimetablePageAdapter(FragmentManager fm)
 	{
 		super(fm);
-	}
-	
-	public TimetablePageAdapter(FragmentManager fragmentManager, Timetable timetable, Context context)
-	{
-		this(fragmentManager);
-		this.timetable = timetable;
+		this.fragments = new DayFragment[] {
+				new DayFragment(),
+				new DayFragment(),
+				new DayFragment(),
+				new DayFragment(),
+				new DayFragment(),
+		};
+		
+		for (int i=0; i < fragments.length; i++)
+		{
+			Bundle args = new Bundle();
+			args.putInt(DayFragment.EXTRA_DAY_ID, i);
+			fragments[i].setArguments(args);
+		}
 	}
 
 	@Override
 	public Fragment getItem(int arg0)
 	{
-		DayFragment fragment = new DayFragment();
+		/*DayFragment fragment = new DayFragment();
 		Bundle args = new Bundle();
 		args.putInt("day_id", arg0);
 		fragment.setArguments(args);
-		return fragment;
+		return fragment;*/
+		return fragments[arg0];
 	}
 	
 	@Override
 	public CharSequence getPageTitle(int position)
 	{
-		return timetable.getDayTimetable(position).getName();
+		return fragments[position].getDayName();
+//		return timetable.getDayTimetable(position).getName();
 	}
 	
 	@Override
 	public int getCount()
 	{
-		return 5;
+		return fragments.length;
 	}
 	
 	@Override
-	public int getItemPosition(Object object)
+	public void notifyDataSetChanged()
 	{
-		return POSITION_NONE; // allows refreshing
-//		return super.getItemPosition(object);
+		super.notifyDataSetChanged();
+		try
+		{
+			refresh();
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void refresh() throws Exception
+	{
+		for (DayFragment fragment : fragments)
+			fragment.refresh();
 	}
 }

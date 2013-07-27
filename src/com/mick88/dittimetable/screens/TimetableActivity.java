@@ -163,7 +163,7 @@ public class TimetableActivity extends ActionBarActivity
     
     void setupTabs()
     {
-    	timetablePageAdapter = new TimetablePageAdapter(getSupportFragmentManager(), timetable, getApplicationContext());
+    	timetablePageAdapter = new TimetablePageAdapter(getSupportFragmentManager());
 
 //    	final ActionBar actionBar = getSupportActionBar();
 /*    	actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -532,6 +532,7 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		setTitle();
 		timetablePageAdapter.notifyDataSetChanged();
+//		timetablePageAdapter.refresh();
 //		viewPager.setAdapter(null);
 //		viewPager.setAdapter(timetablePageAdapter);
 	}

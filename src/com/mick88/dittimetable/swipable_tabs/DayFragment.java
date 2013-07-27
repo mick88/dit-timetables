@@ -1,7 +1,6 @@
 package com.mick88.dittimetable.swipable_tabs;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,26 +12,30 @@ import android.widget.ListView;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.list.EventAdapter;
-import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.screens.TimetableActivity;
+import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableDay;
 
 public class DayFragment extends Fragment
 {
+	public static final String EXTRA_DAY_ID = "day_id",
+			EXTRA_DAY_NAME = "day_name";
 	TimetableDay timetableDay = null;
+	EventAdapter eventAdapter = null;
+	int dayId;
+	private ListView listView;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		super.onCreate(savedInstanceState);
-		
+		super.onCreate(savedInstanceState);	
+		dayId =  getArguments().getInt(EXTRA_DAY_ID);
 	}
 	
 	@Override
 	public void onAttach(Activity activity)
 	{
-		super.onAttach(activity);
-		int dayId =  getArguments().getInt("day_id");
+		super.onAttach(activity);		
 		
 		if (activity instanceof TimetableActivity)
 		{
@@ -47,24 +50,29 @@ public class DayFragment extends Fragment
 		return inflater.inflate(R.layout.day_layout, container, false);
 	}
 	
+	public String getDayName()
+	{
+		return Timetable.DAY_NAMES[dayId];
+	}
+	
+	public void refresh() throws Exception
+	{
+		this.eventAdapter = new EventAdapter(getActivity(), new ArrayList<EventAdapter.EventItem>(timetableDay.getTimetableEntries()));
+		listView.setAdapter(eventAdapter);
+	}
+	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState)
 	{
 		super.onViewCreated(view, savedInstanceState);
-		
-		if (timetableDay != null)
+		listView = (ListView) view.findViewById(android.R.id.list);
+		try
 		{
-			ListView listView = (ListView) view.findViewById(android.R.id.list);
-			List<EventItem> items = new ArrayList<EventAdapter.EventItem>();
-			try
-			{
-				items.addAll(timetableDay.getTimetableEntries());
-				listView.setAdapter(new EventAdapter(getActivity(), items));
-			} catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-			
+			refresh();
+		} catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
