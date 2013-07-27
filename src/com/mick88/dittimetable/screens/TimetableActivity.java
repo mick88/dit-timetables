@@ -50,6 +50,7 @@ import com.mick88.dittimetable.swipable_tabs.CustomPageTransformer;
 import com.mick88.dittimetable.swipable_tabs.TimetablePageAdapter;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.Timetable.ErrorCode;
+import com.mick88.dittimetable.utils.FontApplicator;
 import com.mick88.dittimetable.web.Connection;
 
 public class TimetableActivity extends ActionBarActivity 
@@ -178,10 +179,10 @@ public class TimetableActivity extends ActionBarActivity
     	}*/
     	viewPager  = (ViewPager) findViewById(R.id.pager);
 
-    	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) 
+    	/*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) 
 		{
 			viewPager.setPageTransformer(true, new CustomPageTransformer());
-		}
+		}*/
 
     	viewPager.setAdapter(timetablePageAdapter);
     	viewPager.setOnPageChangeListener(new OnPageChangeListener()
@@ -289,6 +290,8 @@ public class TimetableActivity extends ActionBarActivity
 		
 		setContentView(R.layout.activity_timetable);
 
+		FontApplicator fontApplicator = new FontApplicator(getAssets(), "Roboto-Light.ttf");
+		fontApplicator.applyFont(findViewById(R.id.layout_timetable));
 		application = (TimetableApp) getApplication();
 		processIntent();
 				

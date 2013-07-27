@@ -18,7 +18,7 @@ public class CustomPageTransformer
 	@Override
 	public void transformPage(View view, float position)
 	{
-		transformView(view.findViewById(R.id.dayContent), position);		
+		transformView(view/*.findViewById(android.R.id.list)*/, position);		
 		
 	}
 	
