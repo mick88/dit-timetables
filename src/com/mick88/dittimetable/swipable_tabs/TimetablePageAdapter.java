@@ -14,13 +14,11 @@ import com.mick88.dittimetable.timetable.Timetable;
 public class TimetablePageAdapter extends FragmentPagerAdapter
 {
 	DayFragment[] fragments;
-	final Timetable timetable;
+	Timetable timetable;
 	
 	public TimetablePageAdapter(FragmentManager fm, Timetable timetable)
 	{
 		super(fm);
-		this.timetable = timetable;
-		
 		this.fragments = new DayFragment[] {
 				new DayFragment().setTimetableDay(timetable.getDay(0)),
 				new DayFragment().setTimetableDay(timetable.getDay(1)),
@@ -28,6 +26,16 @@ public class TimetablePageAdapter extends FragmentPagerAdapter
 				new DayFragment().setTimetableDay(timetable.getDay(3)),
 				new DayFragment().setTimetableDay(timetable.getDay(4)),
 		};
+		setTimetable(timetable);
+	}
+	
+	public TimetablePageAdapter setTimetable(Timetable timetable)
+	{
+		this.timetable = timetable;
+		int i=0;
+		for (DayFragment fragment : fragments)
+			fragment.setTimetableDay(timetable.getDay(i++));
+		return this;
 	}
 
 	@Override

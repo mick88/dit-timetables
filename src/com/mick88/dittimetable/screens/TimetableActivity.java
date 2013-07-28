@@ -530,7 +530,7 @@ public class TimetableActivity extends ActionBarActivity
 	void refresh()
 	{
 		setTitle();
-		timetablePageAdapter.notifyDataSetChanged();
+		timetablePageAdapter.setTimetable(timetable);
 //		timetablePageAdapter.refresh();
 //		viewPager.setAdapter(null);
 //		viewPager.setAdapter(timetablePageAdapter);

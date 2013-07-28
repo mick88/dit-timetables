@@ -44,6 +44,7 @@ public class DayFragment extends Fragment
 	public DayFragment setTimetableDay(TimetableDay timetableDay)
 	{
 		this.timetableDay = timetableDay;
+		refresh();
 		return this;
 	}
 	
