@@ -2,10 +2,18 @@ package com.mick88.dittimetable;
 
 import java.util.List;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 
 import com.mick88.dittimetable.timetable.TimetableEvent;
@@ -42,6 +50,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 			List<Integer> positions = getIntent().getExtras().getIntegerArrayList(EXTRA_POSITIONS);
 			if (events != null)
 			{
+				int i=0;
 				for (final TimetableEvent event : events)
 				{
 					View view = event.getView(getLayoutInflater(), null, container, fontApplicator);
@@ -55,12 +64,25 @@ public class UnfoldActivity extends Activity implements OnClickListener
 						}
 					});
 					container.addView(view);
+					animateTile(view, positions.get(i));										
+					i++;
 				}
 				
 			}
 		}
 		
 		container.setOnClickListener(this);
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	void animateTile(View view, int fromY)
+	{
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) return;
+		
+		AnimatorSet set = new AnimatorSet();
+		set.play(ObjectAnimator.ofFloat(view, View.Y, fromY));
+		set.setDuration(500);
+		set.start();
 	}
 
 	@Override
