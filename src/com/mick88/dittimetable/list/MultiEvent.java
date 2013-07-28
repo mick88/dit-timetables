@@ -2,6 +2,7 @@ package com.mick88.dittimetable.list;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Stack;
 
 import android.content.Context;
@@ -21,10 +22,10 @@ import com.mick88.dittimetable.utils.FontApplicator;
 
 public class MultiEvent implements EventItem, OnClickListener
 {
-	private final Collection<TimetableEvent> events;
+	private final List<TimetableEvent> events;
 	private final static int MARGIN_INCREMENT = 25;;
 	
-	public MultiEvent(Collection<TimetableEvent> events)
+	public MultiEvent(List<TimetableEvent> events)
 	{
 		this.events = events;
 	}
@@ -54,11 +55,12 @@ public class MultiEvent implements EventItem, OnClickListener
 
 		int margin = dp * events.size();
 
-		for (TimetableEvent event : events)
+//		for (TimetableEvent event : events)
+		for (int i=events.size()-1; i >= 0; i--)
 		{
 			margin -= dp;
 			View recycle = recyclableViews.isEmpty() ? null : recyclableViews.pop();
-			View eventTile = event.getView(layoutInflater, recycle, viewGroup, fontApplicator);
+			View eventTile = events.get(i).getView(layoutInflater, recycle, viewGroup, fontApplicator);
 			LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			params.setMargins(0, margin, 0, 0);
 			eventTile.setLayoutParams(params);
