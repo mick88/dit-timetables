@@ -44,7 +44,7 @@
                     android:pathPrefix="/timetables/PortalServ"
                     android:scheme="https" >
                 </data>
-            </intent-filter>
+            </intent-filter>
             -->
         </activity>
         <activity
@@ -66,13 +66,13 @@
             </intent-filter>
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info"/>
-        </receiver>
+        </receiver>
         -->
         <activity
             android:name="com.mick88.dittimetable.UnfoldActivity"
             android:label="@string/title_activity_unfold"
-            android:parentActivityName="com.mick88.dittimetable.screens.TimetableActivity" 
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+            android:parentActivityName="com.mick88.dittimetable.screens.TimetableActivity"
+            android:theme="@style/details_theme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mick88.dittimetable.screens.TimetableActivity" />
