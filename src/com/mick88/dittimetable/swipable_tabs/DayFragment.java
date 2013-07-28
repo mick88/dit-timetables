@@ -6,18 +6,17 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.list.EventAdapter;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
-import com.mick88.dittimetable.screens.TimetableActivity;
-import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableDay;
+import com.mick88.dittimetable.utils.FontApplicator;
 
 public class DayFragment extends Fragment
 {
@@ -25,9 +24,11 @@ public class DayFragment extends Fragment
 			EXTRA_DAY_NAME = "day_name";
 	TimetableDay timetableDay = null;
 	EventAdapter eventAdapter = null;
+	TextView tvText;
 	int dayId;
 	private ListView listView;
 	private List<EventItem> events = new ArrayList<EventAdapter.EventItem>();
+	FontApplicator fontApplicator = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
@@ -39,6 +40,7 @@ public class DayFragment extends Fragment
 	public void onAttach(Activity activity)
 	{
 		super.onAttach(activity);		
+		fontApplicator = new FontApplicator(activity.getAssets(), "Roboto-Light.ttf");
 	}
 	
 	public DayFragment setTimetableDay(TimetableDay timetableDay)
@@ -65,8 +67,20 @@ public class DayFragment extends Fragment
 		if (timetableDay != null && eventAdapter != null)
 		{
 			events.clear();
-			events.addAll(timetableDay.getTimetableEntries());
-			eventAdapter.notifyDataSetChanged();
+			List<EventItem> items = timetableDay.getTimetableEntries();
+			if (items.isEmpty())
+			{
+				listView.setVisibility(View.GONE);
+				tvText.setVisibility(View.VISIBLE);
+				tvText.setText("No events");				
+			}
+			else
+			{
+				events.addAll(items);
+				eventAdapter.notifyDataSetChanged();
+				listView.setVisibility(View.VISIBLE);
+				tvText.setVisibility(View.GONE);
+			}
 		}
 	}
 	
@@ -74,9 +88,12 @@ public class DayFragment extends Fragment
 	public void onViewCreated(View view, Bundle savedInstanceState)
 	{
 		super.onViewCreated(view, savedInstanceState);
+		if (fontApplicator != null) fontApplicator.applyFont(view);
+		
 		listView = (ListView) view.findViewById(android.R.id.list);
 		eventAdapter = new EventAdapter(getActivity(), events);
 		listView.setAdapter(eventAdapter);
+		tvText = (TextView) view.findViewById(R.id.tvDayMessage);
 		
 		refresh();
 	}
