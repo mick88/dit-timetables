@@ -2,14 +2,16 @@ package com.mick88.dittimetable;
 
 import java.util.Collection;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
+
 import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.utils.FontApplicator;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.widget.LinearLayout;
-
-public class UnfoldActivity extends Activity
+public class UnfoldActivity extends Activity implements OnClickListener
 {
 	/**
 	 * Extra argument containing a Collection of TimetableEvents
@@ -23,7 +25,6 @@ public class UnfoldActivity extends Activity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 		setContentView(R.layout.activity_unfold);
 		FontApplicator fontApplicator = new FontApplicator(getAssets(), "Roboto-Light.ttf");
 		LinearLayout container = (LinearLayout) findViewById(R.id.container);
@@ -34,12 +35,35 @@ public class UnfoldActivity extends Activity
 			events = (Collection<TimetableEvent>) getIntent().getSerializableExtra(EXTRA_EVENTS);
 			if (events != null)
 			{
-				for (TimetableEvent event : events)
-					container.addView(event.getView(getLayoutInflater(), null, container, fontApplicator));
+				for (final TimetableEvent event : events)
+				{
+					View view = event.getView(getLayoutInflater(), null, container, fontApplicator);
+					view.setOnClickListener(new OnClickListener()
+					{
+						
+						@Override
+						public void onClick(View v)
+						{
+							// TODO Auto-generated method stub							
+						}
+					});
+					container.addView(view);
+				}
+				
 			}
 		}
 		
-//		fontApplicator.applyFont(container);
+		container.setOnClickListener(this);
+	}
+
+	@Override
+	public void onClick(View v)
+	{
+		if (v.getId() == R.id.container)
+		{
+			finish();
+		}
+		
 	}
 
 }

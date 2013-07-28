@@ -36,7 +36,9 @@ import com.mick88.dittimetable.web.Connection;
  * Holds information about a single event (lecture)
  * */
 public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Serializable
-{	
+{
+	private static final long serialVersionUID = 2900289895051796020L;
+
 	private static class EventViewHolder
 	{
 		protected final TextView tvEventTime, tvEventLocation, tvEventTitle, tvEventType, tvEventLecturer, tvEventGroup;

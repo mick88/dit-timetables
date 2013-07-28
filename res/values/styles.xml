@@ -19,13 +19,25 @@
 
     <style name="Text" parent="@android:style/TextAppearance.Medium"></style>
     
-    <style name="details_theme" parent="@android:style/Theme.NoTitleBar">
+    <style name="details_theme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowIsTranslucent">true</item>
 	    <item name="android:windowBackground">@color/semi_transparent</item>
 	    <item name="android:windowContentOverlay">@null</item>
 	    <item name="android:windowNoTitle">true</item>
 	    <!-- <item name="android:windowIsFloating">true</item> -->
 	    <item name="android:backgroundDimEnabled">false</item>
+	    <item name="android:windowAnimationStyle">@style/CustomAnimation</item>
+    </style>
+    
+    <style name="CustomAnimation">
+        <item name="android:activityOpenEnterAnimation">@null</item>
+        <!-- When opening a new activity, this is the animation that is run on the next activity -->
+        <item name="android:activityOpenExitAnimation">@null</item>
+        <!-- When opening a new activity, this is the animation that is run on the previous activity (which is exiting the screen) -->
+        <item name="android:activityCloseEnterAnimation">@null</item>
+        <!-- When closing the current activity, this is the animation that is run on the next activity (which is entering the screen). -->
+        <item name="android:activityCloseExitAnimation">@null</item>
+        <!-- When closing the current activity, this is the animation that is run on the current activity (which is exiting the screen). -->
     </style>
 
 </resources>
