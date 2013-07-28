@@ -57,7 +57,6 @@ public class TimetableActivity extends ActionBarActivity
 {
 
 	final int SETTINGS_REQUEST_CODE = 1;
-//	final String AD_UNIT_ID = "a150fece64db26c";
 	
 	final String logTag = "Timetable";
 	String html;
@@ -263,20 +262,10 @@ public class TimetableActivity extends ActionBarActivity
 			}
 		}
 		
-		findViewById(R.id.pager).setOnTouchListener(new OnTouchListener()
-		{
-			
-			@Override
-			public boolean onTouch(View arg0, MotionEvent arg1)
-			{
-				// TODO Return true for GB devices to prevent swiping
-				// TODO fix slow swiping!
-				return false;
-			}
-		});
-		
 		setupViewPager();
+
 	}
+	
 	/*
 	 * Schedules updated for the next full hour
 	 */
@@ -367,166 +356,12 @@ public class TimetableActivity extends ActionBarActivity
 		return space;
 	}
 	
-/*	@Deprecated
-	private Animation makeTileAnimation(int n)
-	{
-		Animation tileAnimation = 
-				new TranslateAnimation(0,0,1000,0);
-		tileAnimation.setDuration(250);
-		tileAnimation.setStartOffset(n*30);
-		tileAnimation.setFillAfter(true);
-		
-		return tileAnimation;
-	}*/
-	/*@Deprecated
-	void drawTimetable(ViewGroup parentLayout, boolean animate)
-	{
-		setTitle(timetable.getCourseYearCode());
-		LayoutInflater inflater = getLayoutInflater();
-		int currentTab = 0;
-				//tabHost.getCurrentTab();
-		
-		int hour=0;
-		boolean isToday = (getDay(false) == currentTab);
-		if (isToday)
-		{
-			hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-		}
-		
-		TimetableDay day = timetable.getDayTimetable(currentTab);
-		
-		ViewGroup hsViews[] = new ViewGroup[] {
-			null, null, null, null, null, null, 
-			null, null, null, null, null, null,
-			null, null, null, null, null, null, 
-			null, null, null, null, null, null};
-		
-		int n=0,
-				lastEndHour=0;
-		TimetableEvent selectedEvent=null;
-
-		int showWeek = application.getSettings().getOnlyCurrentWeek()?currentWeek : 0;
-		for (TimetableEvent event : day.getClasses()) if (event.isGroup(application.getSettings().getHiddenGroups()) && event.isInWeek(application.getSettings().getOnlyCurrentWeek()?this.currentWeek:0))
-		{
-//			if (application.getSettings().getOnlyCurrentWeek() == true && event.isInWeek(this.currentWeek) == false) continue;
-			
-			int numClassesAtCurrentHour = day.getNumClasses(event.getStartHour(), application.getSettings().getHiddenGroups(), showWeek);
-			boolean isSingleEvent = numClassesAtCurrentHour == 1;
-			View tile = event.getTile(this, isSingleEvent == false, LayoutInflater.from(getApplicationContext())); 
-			
-			// mark current event
-			if ((isToday && selectedEvent == null && event.getEndHour() > hour)
-					|| (selectedEvent != null && (event.getStartHour() == selectedEvent.getStartHour())))
-			{
-				selectedEvent = event;
-				int rDrawable = event.isEventOn(hour)?R.drawable.selected_item_selector:R.drawable.upcoming_item_selector;
-				
-				if (isSingleEvent)
-					((RelativeLayout) tile.findViewById(R.id.timetable_event_small)).setBackgroundResource(rDrawable);
-				else
-					((LinearLayout) tile.findViewById(R.id.timetable_event_tiny)).setBackgroundResource(rDrawable);
-				
-			}
-			
-			Animation tileAnimation = makeTileAnimation(n);
-				
-			
-			if (lastEndHour > 0)
-			{
-				int hours = event.getStartHour()-lastEndHour;
-				if (hours > 0) 
-				{
-					parentLayout.addView(getSpacer(inflater, hours,animate?tileAnimation:null, isToday?(hour-lastEndHour):(-1)));
-					if (animate) n++;
-				}
-			}
-			lastEndHour=event.getEndHour();
-			
-			Add to layout
-			if (isSingleEvent) 
-			{
-				if (animate) tile.setAnimation(tileAnimation);
-				parentLayout.addView(tile);
-			}
-			else
-			{
-//				tile.setMinimumWidth(width / numClassesAtCurrentHour);
-				int startTime = event.getStartHour();
-				ViewGroup sameHourEventContainer = hsViews[startTime];
-				
-				// create scroller if doesnt exist
-				if (sameHourEventContainer == null)
-				{						
-					sameHourEventContainer = new HorizontalScrollView(this);
-					((HorizontalScrollView) sameHourEventContainer).setFillViewport(true);
-					
-					LayoutParams sameHourContainerParams = new LayoutParams(
-							LayoutParams.MATCH_PARENT,
-							LayoutParams.WRAP_CONTENT);
-					sameHourEventContainer.setLayoutParams(sameHourContainerParams);
-
-					if (animate) sameHourEventContainer.setAnimation(tileAnimation);
-						ViewGroup host = new LinearLayout(this);
-						host.setLayoutParams(new LayoutParams(
-							LayoutParams.MATCH_PARENT,
-							LayoutParams.WRAP_CONTENT));
-									
-					sameHourEventContainer.addView(host);
-//					sameHourEventContainer.setScrollbarFadingEnabled(false);
-					
-					hsViews[startTime] = sameHourEventContainer;
-					parentLayout.addView(sameHourEventContainer);
-				}
-				else n--;
-				
-				// casting container's inner layout
-				((ViewGroup) sameHourEventContainer.getChildAt(0)).addView(tile);
-			}
-			n++;
-		}
-	}*/
-	
 	void refresh()
 	{
 		setTitle();
 		timetablePageAdapter.setTimetable(timetable);
-//		timetablePageAdapter.refresh();
-//		viewPager.setAdapter(null);
-//		viewPager.setAdapter(timetablePageAdapter);
 	}
-	
-/*	@Deprecated
-	void updateTabContent(TabHost tabHost, boolean animate)
-	{
-		
-		if (timetable.isContentReady() == true)
-		{
-			refresh();
-			
-		}
-		LinearLayout layout  = (LinearLayout) findViewById(R.id.dayContent);
-		if (timetable.isContentReady() == true)
-		{
-			layout.removeAllViews();			
-			drawTimetable(layout, animate);
-			
-		}
-		else
-		{
-			layout.removeAllViews();
-		}	
-		Log.i(logTag, "Tab content updated.");
-	}*/
-	
-	/*@Override
-	public void onWindowFocusChanged(boolean hasFocus)
-	{
-		super.onWindowFocusChanged(hasFocus);
-		if (hasFocus)
-		{
-			if (lastUpdatedHour != Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) updateTabContent(tabHost, false);
-		}
-	}*/
+
 	
 	public void setTimetable(Timetable timetable)
 	{
@@ -714,7 +549,6 @@ public class TimetableActivity extends ActionBarActivity
 				.setIcon(R.drawable.ic_launcher)
 				.setTitle("About Timetables")
 				.setMessage(R.string.about_text)
-//				.setView(LayoutInflater.from(this).inflate(R.layout.timetable_event_small, null))
 				.setPositiveButton(android.R.string.ok, null)
 				.setNeutralButton("Feedback", new OnClickListener()
 				{
@@ -799,7 +633,6 @@ public class TimetableActivity extends ActionBarActivity
 		progressDialog.setMessage(message); 
 		progressDialog.setIcon(R.drawable.ic_launcher);
 		progressDialog.setCancelable(false);
-//		progressDialog.setOnDismissListener(listener);
 		
 		progressDialog.show();
 	}
@@ -934,7 +767,6 @@ public class TimetableActivity extends ActionBarActivity
 		for (String s : selected) application.getSettings().unhideGroup(s);
 		for (String s : unselected) application.getSettings().hideGroup(s);
 		application.getSettings().saveSettings();
-//		loadTimetable();
 		refresh();
 	}
 
