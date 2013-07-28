@@ -202,12 +202,15 @@ public class TimetableDay
 		TimetableEvent lastEvent=null;
 		
 		AppSettings settings = timetable.getSettings();
-		int currentWeek = Timetable.getCurrentWeek();
+		int currentWeek = Timetable.getCurrentWeek(),
+			showWeek = settings.getOnlyCurrentWeek()?currentWeek : 0;
+		
 		List<TimetableEvent> sameHourEvents = new ArrayList<TimetableEvent>();
 		
 		synchronized (events)
 		{
-			for (TimetableEvent event : events)
+			for (TimetableEvent event : events) 
+				if (event.isGroup(settings.getHiddenGroups()) && event.isInWeek(showWeek))
 			{
 				if (lastEvent != null)
 				{
@@ -218,7 +221,7 @@ public class TimetableDay
 					}
 				}
 				
-				int numEvents = getNumEvents(event.getStartHour(), settings.getHiddenGroups(), 0);
+				int numEvents = getNumEvents(event.getStartHour(), settings.getHiddenGroups(), showWeek);
 				boolean singleEvent = (numEvents == 1);
 				
 				if (singleEvent)
