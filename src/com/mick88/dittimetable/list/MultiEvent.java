@@ -1,12 +1,14 @@
 package com.mick88.dittimetable.list;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,8 +76,21 @@ public class MultiEvent implements EventItem, OnClickListener
 	public void onClick(View v)
 	{
 		Log.d("Multiview", "Multiview clicked "+v.toString());
-		Context context = v.getContext();
-		context.startActivity(new Intent(context, UnfoldActivity.class).putExtra(UnfoldActivity.EXTRA_EVENTS, (Serializable)this.events));
+		if (v instanceof ViewGroup)
+		{
+			Context context = v.getContext();
+			ArrayList<Integer> positions = new ArrayList<Integer>(events.size());
+			ViewGroup viewGroup = (ViewGroup) v;
+			for (int i=0; i  < viewGroup.getChildCount(); i++)
+			{
+				Rect rect = new Rect();
+				viewGroup.getChildAt(i).getGlobalVisibleRect(rect);
+				positions.add(rect.top);
+			}
+			context.startActivity(new Intent(context, UnfoldActivity.class)
+				.putExtra(UnfoldActivity.EXTRA_EVENTS, (Serializable)this.events)
+				.putExtra(UnfoldActivity.EXTRA_POSITIONS, positions));
+		}
 	}
 
 }

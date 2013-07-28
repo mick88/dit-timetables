@@ -1,6 +1,6 @@
 package com.mick88.dittimetable;
 
-import java.util.Collection;
+import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -14,11 +14,17 @@ import com.mick88.dittimetable.utils.FontApplicator;
 public class UnfoldActivity extends Activity implements OnClickListener
 {
 	/**
-	 * Extra argument containing a Collection of TimetableEvents
+	 * Extra argument containing a List of TimetableEvents
 	 * as a Serializable object
 	 */
 	public static final String EXTRA_EVENTS = "events";
-	private Collection<TimetableEvent> events = null;
+	
+	/**
+	 * Extra argument containing a List starting positions to all events
+	 */
+	public static final String EXTRA_POSITIONS = "positions";
+	
+	private List<TimetableEvent> events = null;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -32,7 +38,8 @@ public class UnfoldActivity extends Activity implements OnClickListener
 		
 		if (getIntent() != null)
 		{
-			events = (Collection<TimetableEvent>) getIntent().getSerializableExtra(EXTRA_EVENTS);
+			events = (List<TimetableEvent>) getIntent().getSerializableExtra(EXTRA_EVENTS);
+			List<Integer> positions = getIntent().getExtras().getIntegerArrayList(EXTRA_POSITIONS);
 			if (events != null)
 			{
 				for (final TimetableEvent event : events)
