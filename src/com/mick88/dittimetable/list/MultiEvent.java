@@ -1,5 +1,6 @@
 package com.mick88.dittimetable.list;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Stack;
 
@@ -21,7 +22,7 @@ import com.mick88.dittimetable.utils.FontApplicator;
 public class MultiEvent implements EventItem, OnClickListener
 {
 	private final Collection<TimetableEvent> events;
-	private final static int MARGIN_INCREMENT = 25;
+	private final static int MARGIN_INCREMENT = 25;;
 	
 	public MultiEvent(Collection<TimetableEvent> events)
 	{
@@ -52,6 +53,7 @@ public class MultiEvent implements EventItem, OnClickListener
 		viewGroup.setOnClickListener(this);
 
 		int margin = dp * events.size();
+
 		for (TimetableEvent event : events)
 		{
 			margin -= dp;
@@ -71,7 +73,7 @@ public class MultiEvent implements EventItem, OnClickListener
 	{
 		Log.d("Multiview", "Multiview clicked "+v.toString());
 		Context context = v.getContext();
-		context.startActivity(new Intent(context, UnfoldActivity.class));
+		context.startActivity(new Intent(context, UnfoldActivity.class).putExtra(UnfoldActivity.EXTRA_EVENTS, (Serializable)this.events));
 	}
 
 }

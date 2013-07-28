@@ -3,6 +3,7 @@ package com.mick88.dittimetable.timetable;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
@@ -34,7 +35,7 @@ import com.mick88.dittimetable.web.Connection;
 /**
  * Holds information about a single event (lecture)
  * */
-public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
+public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Serializable
 {	
 	private static class EventViewHolder
 	{
@@ -62,12 +63,12 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 		}
 	}
 	
-	private final String CHAR_NBSP = "\u00A0";	
-	public enum ClassType {Other, Lecture, Laboratory, Tutorial};
+	private static final String CHAR_NBSP = "\u00A0";	
+	public static enum ClassType {Other, Lecture, Laboratory, Tutorial};
 	
 	private static final String GROUP_SEPARATOR = ", ";
-	private final Timetable timetable;
-	final String logTag = "TimetableEvent";
+	private transient final Timetable timetable;
+	final static String logTag = "TimetableEvent";
 	final static String 
 			COLOR_NAME = "#987E06", 
 			COLOR_GROUP = "#987E06",
