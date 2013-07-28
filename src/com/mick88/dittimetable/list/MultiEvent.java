@@ -1,6 +1,7 @@
 package com.mick88.dittimetable.list;
 
 import java.util.Collection;
+import java.util.Stack;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,13 +33,23 @@ public class MultiEvent implements EventItem
 	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator)
 	{
 		int dp = (int)(layoutInflater.getContext().getResources().getDisplayMetrics().density * MARGIN_INCREMENT);
+		final ViewGroup viewGroup;
+		Stack<View> recyclableViews = new Stack<View>();
+		if (convertView != null)
+		{
+			viewGroup = (ViewGroup) convertView;
+			for (int i=0; i < viewGroup.getChildCount(); i++)
+				recyclableViews.push(viewGroup.getChildAt(i));
+			viewGroup.removeAllViews();
+		}
+		else viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.timetable_event_multi, parent, false);
 		
-		ViewGroup viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.timetable_event_multi, parent, false);
 		int margin = dp * events.size();
 		for (TimetableEvent event : events)
 		{
 			margin -= dp;
-			View eventTile = event.getView(layoutInflater, null, viewGroup, fontApplicator);
+			View recycle = recyclableViews.isEmpty() ? null : recyclableViews.pop();
+			View eventTile = event.getView(layoutInflater, recycle, viewGroup, fontApplicator);
 			LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			params.setMargins(0, margin, 0, 0);
 			eventTile.setLayoutParams(params);
