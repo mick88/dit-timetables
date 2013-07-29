@@ -9,6 +9,7 @@ New screens:
 support for http errors
 
 Changelog for update:
+2.0
 + fixed PDF download freezing when button was pressed more than once
 + added download progress
 + About screen + feedback + share app
@@ -23,7 +24,7 @@ Changelog for update:
 + more weeks available
 + changed settings behavious, ability to cancel settings, pressing back will prompt to save/abandon changes
 + share timetable
-
+2.1
 + predefined credentials
 + swipe timetable tabs
 + tabs on actionbar in landscape
