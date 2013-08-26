@@ -98,7 +98,7 @@ public class Timetable
 	public static int getCurrentWeek()
 	{
 		Calendar cal = Calendar.getInstance();
-		int startYear = (cal.get(Calendar.MONTH) >= START_MONTH) ? cal.get(Calendar.YEAR) : (cal.get(Calendar.YEAR)-1);
+		int startYear = (getSemester() == 1) ? cal.get(Calendar.YEAR) : (cal.get(Calendar.YEAR)-1);
 		
 		Date yearStart = new GregorianCalendar(startYear, START_MONTH, START_DAY).getTime();
 		Date today = new GregorianCalendar().getTime();
