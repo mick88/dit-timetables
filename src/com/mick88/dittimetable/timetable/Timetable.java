@@ -74,7 +74,7 @@ public class Timetable
 		NUM_DAYS = DAY_SATURDAY+1,
 		INVALID_WEEK_RANGE = -1,
 		START_MONTH = Calendar.AUGUST,
-		START_DAY = 27,
+		START_DAY = 26,
 		
 		SETTINGS_ID_COURSE = 0,
 		SETTINGS_ID_YEAR=1,
