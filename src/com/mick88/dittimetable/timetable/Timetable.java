@@ -192,7 +192,7 @@ public class Timetable
 	public static int getCurrentWeek()
 	{
 		Calendar cal = Calendar.getInstance();
-		int startYear = (cal.get(Calendar.MONTH) >= startMonth) ? cal.get(Calendar.YEAR) : (cal.get(Calendar.YEAR)-1);
+		int startYear = (getSemester() == 1) ? cal.get(Calendar.YEAR) : (cal.get(Calendar.YEAR)-1);
 		
 		Date yearStart = new GregorianCalendar(startYear, startMonth, startDay).getTime();
 		Date today = new GregorianCalendar().getTime();
@@ -200,7 +200,7 @@ public class Timetable
 		long milisBetween = today.getTime() - yearStart.getTime();
 		int daysBetween = (int) (milisBetween / 1000 / 60 / 60 / 24);
 		
-		return (daysBetween / 7)+1;		
+		return (daysBetween / 7)+1;	
 	}
 	
 	public static final int dayMonday = 0,
