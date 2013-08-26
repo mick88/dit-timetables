@@ -161,28 +161,24 @@ public class Timetable
 	public static int getSemester()
 	{
 		Calendar c = Calendar.getInstance();
-		if ((c.get(Calendar.MONTH) >= startMonth) && (c.get(Calendar.DAY_OF_MONTH) >= startDay))
-		{
+		int month = c.get(Calendar.MONTH),
+				day = c.get(Calendar.DAY_OF_MONTH);
+		if ((month > startMonth) || (month >= startMonth) && (day >= startDay))
 			return 1;
-		}
-		else 
-		{
+		else
 			return 2;
-		}
 	}
 	
 	public static String getDataset()
 	{
 		Calendar c = Calendar.getInstance();
 		int startYear=0;
-		if ((c.get(Calendar.MONTH) >= startMonth) && (c.get(Calendar.DAY_OF_MONTH) >= startDay))
-		{
+		
+		if (getSemester() == 1)
 			startYear = c.get(Calendar.YEAR);
-		}
-		else 
-		{
+		else
 			startYear = c.get(Calendar.YEAR)-1;
-		}
+		
 		StringBuilder builder = new StringBuilder(6);
 		builder.append(startYear);
 		builder.append((startYear+1) % 100);
