@@ -69,6 +69,7 @@ public class Timetable
 	final AppSettings settings;
 	boolean disposed=false;
 	
+
 	String sourceString = "";
 	public static final String [] dayNames = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 	static final String tableStart = "<table width=\"100%\" class=\"gridTable\" summary=\"Timetable Grid View\" >",
@@ -78,7 +79,7 @@ public class Timetable
 			rowStart = "<tr>",
 			rowEnd = "</tr>";
 	static final int startMonth = Calendar.AUGUST,
-			startDay = 27;
+			startDay = 26;
 	
 	static final String settingsSplitter = "\n",
 			groupSplitter = ",";
