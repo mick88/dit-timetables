@@ -52,6 +52,7 @@ public class DayFragment extends Fragment
 	
 	private boolean isToday()
 	{
+		if (timetableDay == null) return false;
 		return timetableDay.isToday();
 	}
 	
