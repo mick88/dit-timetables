@@ -15,7 +15,7 @@ import com.mick88.dittimetable.utils.ViewTraverser.ForeachAction;
  */
 public class FontApplicator
 {
-	private static LruCache<String, Typeface> fontCache = new LruCache<String, Typeface>(1);
+	private static LruCache<String, Typeface> fontCache = new LruCache<String, Typeface>(2);
 	private Typeface font;
 	
 	public FontApplicator(Typeface font)
