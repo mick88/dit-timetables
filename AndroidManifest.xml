@@ -52,7 +52,10 @@
         </activity>
         <activity
             android:name="com.mick88.dittimetable.UnfoldActivity"
-            android:label="@string/title_activity_unfold" >
+            android:label="@string/title_activity_unfold" 
+            android:parentActivityName="com.mick88.dittimetable.screens.TimetableActivity"
+            android:theme="@style/details_theme"
+            >
         </activity>
         <activity
             android:name="com.mick88.dittimetable.screens.EventDetailsActivity"
