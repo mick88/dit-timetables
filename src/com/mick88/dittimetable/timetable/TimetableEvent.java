@@ -3,6 +3,7 @@ package com.mick88.dittimetable.timetable;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,8 +37,13 @@ import com.mick88.dittimetable.web.Connection;
 /**
  * Holds information about a single event (lecture)
  * */
-public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
+public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Serializable
 {	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static class EventViewHolder
 	{
 		protected final TextView tvEventTime, tvEventLocation, tvEventTitle, tvEventType, tvEventLecturer, tvEventGroup;
@@ -71,7 +77,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 	public enum ClassType {Other, Lecture, Laboratory, Tutorial};
 	
 	private static final String GROUP_SEPARATOR = ", ";
-	private final Timetable timetable;
+	private transient final Timetable timetable;
 	final String logTag = "TimetableEvent";
 	final static String 
 			COLOR_NAME = "#987E06", 
@@ -770,6 +776,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 				Context context = v.getContext().getApplicationContext();
 				Intent intent = new Intent(context, EventDetailsActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				intent.putExtra(EventDetailsActivity.EXTRA_EVENT, TimetableEvent.this);
 				context.startActivity(intent);				
 			}
 		});
