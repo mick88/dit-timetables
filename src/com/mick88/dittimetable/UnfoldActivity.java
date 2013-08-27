@@ -60,7 +60,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 						}
 					});
 					container.addView(view);
-					animateTile(view, positions.get(i));										
+//					animateTile(view, positions.get(i));										
 					i++;
 				}
 				
