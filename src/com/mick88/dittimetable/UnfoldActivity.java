@@ -6,12 +6,14 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 
+import com.mick88.dittimetable.screens.EventDetailsActivity;
 import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.utils.FontApplicator;
 
@@ -56,7 +58,9 @@ public class UnfoldActivity extends Activity implements OnClickListener
 						@Override
 						public void onClick(View v)
 						{
-							// TODO Auto-generated method stub							
+							Intent intent = new Intent(getApplicationContext(), EventDetailsActivity.class);
+							intent.putExtra(EventDetailsActivity.EXTRA_EVENT, event);
+							startActivity(intent);
 						}
 					});
 					container.addView(view);
