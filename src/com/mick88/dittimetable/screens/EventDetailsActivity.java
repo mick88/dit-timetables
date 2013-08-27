@@ -1,5 +1,6 @@
 package com.mick88.dittimetable.screens;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 import android.annotation.TargetApi;
@@ -17,10 +18,13 @@ import android.widget.TableLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.timetable.TimetableEvent;
 
 public class EventDetailsActivity extends ActionBarActivity
 {
 
+	public static final String EXTRA_EVENT = "event";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -30,11 +34,12 @@ public class EventDetailsActivity extends ActionBarActivity
 		setupActionBar();
 		
 		Intent intent = this.getIntent();
-		int eventId = intent.getExtras().getInt("event_id");
+		Serializable serializable = intent.getSerializableExtra(EXTRA_EVENT);
 		
-		if (eventId == 0) finish();
-		
-		displayData(intent.getExtras());
+		if (serializable instanceof TimetableEvent)
+			displayData((TimetableEvent) serializable);
+		else  
+			finish();		
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -61,19 +66,19 @@ public class EventDetailsActivity extends ActionBarActivity
 		return result;
 	}
 	
-	private void displayData(Bundle bundle)
+	private void displayData(TimetableEvent event)
 	{
 		ViewGroup parent = (ViewGroup) findViewById(R.id.eventDetailsContainer);
 		
-		String name = bundle.getString("name");
+		String name = event.getName();
 		
 		parent.addView(newKeyValueView("Module:", name));
-		parent.addView(newKeyValueView("Time:", String.format(Locale.getDefault(), "%s - %s", bundle.getString("startTime"), bundle.getString("endTime"))));
-		parent.addView(newKeyValueView("Room:", bundle.getString("room")));
-		parent.addView(newKeyValueView("Lecturer:", bundle.getString("lecturer")));
-		parent.addView(newKeyValueView("Type:", bundle.getString("type")));
-		parent.addView(newKeyValueView("Group:", bundle.getString("groups")));
-		parent.addView(newKeyValueView("Weeks:", bundle.getString("weeks")));
+		parent.addView(newKeyValueView("Time:", String.format(Locale.getDefault(), "%s - %s", event.getStartTime(), event.getEndTime())));
+		parent.addView(newKeyValueView("Room:", event.getRoom()));
+		parent.addView(newKeyValueView("Lecturer:",event.getLecturer()));
+		parent.addView(newKeyValueView("Type:", event.getType().toString()));
+		parent.addView(newKeyValueView("Group:", event.getGroupStr()));
+		parent.addView(newKeyValueView("Weeks:", event.getWeeks()));
 		this.setTitle(name);
 	}
 
