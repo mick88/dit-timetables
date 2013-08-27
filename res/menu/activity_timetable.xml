@@ -34,13 +34,13 @@
         android:title="Share timetable"
         android:titleCondensed="Share"
         android:visible="true"
-        appCompat:showAsAction="ifRoom"/>
+        appCompat:showAsAction="never"/>
     <item
         android:id="@+id/menu_web"
         android:orderInCategory="104"
         android:title="@string/web_view"
         android:visible="false"
-        appCompat:showAsAction="ifRoom"/>
+        appCompat:showAsAction="never"/>
     <item
         android:id="@+id/menu_about"
         android:icon="@drawable/about"
