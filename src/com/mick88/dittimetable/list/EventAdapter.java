@@ -7,11 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
-import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class EventAdapter extends ArrayAdapter<EventItem>
@@ -53,33 +51,6 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
 		return getItem(position).getView(getLayoutInflater(), convertView, parent, fontApplicator);
-		/*View view = convertView;
-	
-		switch (getItemViewType(position))
-		{
-			case EventItem.ITEM_TYPE_EVENT:
-				final EventViewHolder viewHolder;
-				final TimetableEvent event = (TimetableEvent) getItem(position);
-				
-				if (view == null)
-				{
-					view = getItem(position).getView(getLayoutInflater(), convertView, parent);
-					fontApplicator.applyFont(view);
-					viewHolder = new EventViewHolder(view);
-
-					view.setTag(viewHolder);
-				}
-				else viewHolder = (EventViewHolder) view.getTag();
-				
-				if (event == null) return view;
-				
-				
-				break;
-				
-			default:
-				return getItem(position).getView(getLayoutInflater(), null, parent);
-		}
-		return view;*/
 	}
 	
 	@Override
