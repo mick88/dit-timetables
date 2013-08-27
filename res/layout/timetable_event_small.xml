@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/event_selector"
         android:layout_margin="@dimen/tile_padding_outside"
-        android:clickable="true" >
+        android:clickable="false" >
 
         <TextView
             android:id="@+id/eventTime"

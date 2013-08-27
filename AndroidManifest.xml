@@ -51,6 +51,13 @@
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
+            android:name="com.mick88.dittimetable.UnfoldActivity"
+            android:label="@string/title_activity_unfold" 
+            android:parentActivityName="com.mick88.dittimetable.screens.TimetableActivity"
+            android:theme="@style/details_theme"
+            >
+        </activity>
+        <activity
             android:name="com.mick88.dittimetable.screens.EventDetailsActivity"
             android:label="@string/title_activity_event_details"
             android:parentActivityName="com.mick88.dittimetable.screens.TimetableActivity" >
@@ -66,5 +73,4 @@
                 android:resource="@xml/widget_info"/>
         </receiver> -->
     </application>
-
 </manifest>

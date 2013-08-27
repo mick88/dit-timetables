@@ -38,11 +38,8 @@ import com.mick88.dittimetable.web.Connection;
  * Holds information about a single event (lecture)
  * */
 public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Serializable
-{	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+{
+	private static final long serialVersionUID = 2900289895051796020L;
 
 	private static class EventViewHolder
 	{
@@ -73,12 +70,12 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		}
 	}
 	
-	private final String CHAR_NBSP = "\u00A0";	
-	public enum ClassType {Other, Lecture, Laboratory, Tutorial};
+	private static final String CHAR_NBSP = "\u00A0";	
+	public static enum ClassType {Other, Lecture, Laboratory, Tutorial};
 	
 	private static final String GROUP_SEPARATOR = ", ";
 	private transient final Timetable timetable;
-	final String logTag = "TimetableEvent";
+	final static String logTag = "TimetableEvent";
 	final static String 
 			COLOR_NAME = "#987E06", 
 			COLOR_GROUP = "#987E06",
@@ -767,7 +764,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		else
 			viewHolder.background.setBackgroundResource(R.drawable.event_selector);
 		
-		viewHolder.background.setOnClickListener(new OnClickListener()
+		view.setOnClickListener(new OnClickListener()
 		{
 			
 			@Override

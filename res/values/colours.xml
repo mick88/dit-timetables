@@ -11,6 +11,7 @@
     <color name="color_item_upcoming">#ADD1DD</color>
     <color name="color_item_background">#FFFFFF</color>
     <color name="color_item_border">#FFFFFF</color>
+    <color name="semi_transparent">#C000</color>
     
     <!-- DIT Colours -->
     <color name="dit_dark_blue">#0060A9</color>
