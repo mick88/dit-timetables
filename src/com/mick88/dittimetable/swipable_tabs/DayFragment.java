@@ -50,6 +50,11 @@ public class DayFragment extends Fragment
 		return this;
 	}
 	
+	private boolean isToday()
+	{
+		return timetableDay.isToday();
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState)
