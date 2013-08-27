@@ -63,6 +63,7 @@ public class MultiEvent implements EventItem, OnClickListener
 			margin -= dp;
 			View recycle = recyclableViews.isEmpty() ? null : recyclableViews.pop();
 			View eventTile = events.get(i).getView(layoutInflater, recycle, viewGroup, fontApplicator, allowHighlight);
+			eventTile.setClickable(false);
 			LayoutParams params = (LayoutParams) eventTile.getLayoutParams();
 			params.setMargins(0, margin, 0, 0);
 			eventTile.setLayoutParams(params);
