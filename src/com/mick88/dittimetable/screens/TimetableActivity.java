@@ -158,7 +158,12 @@ public class TimetableActivity extends ActionBarActivity
     	timetablePageAdapter = new TimetablePageAdapter(getSupportFragmentManager(), timetable);
     	viewPager  = (ViewPager) findViewById(R.id.pager);
     	viewPager.setAdapter(timetablePageAdapter);
-    	viewPager.setCurrentItem(Timetable.getTodayId(true), false);
+    	showToday(false);
+    }
+    
+    void showToday(boolean smooth)
+    {
+    	viewPager.setCurrentItem(Timetable.getTodayId(true), smooth);
     }
     
     public Map<String, String> parseQuery(String query)
