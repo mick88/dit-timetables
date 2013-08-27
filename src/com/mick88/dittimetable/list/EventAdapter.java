@@ -32,8 +32,6 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 		View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator);
 	}
 	
-	
-	
 	private FontApplicator fontApplicator;
 
 	public EventAdapter(Context context, List<EventItem> objects) 
