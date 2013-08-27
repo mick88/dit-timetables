@@ -50,6 +50,12 @@ public class DayFragment extends Fragment
 		return this;
 	}
 	
+	private boolean isToday()
+	{
+		if (timetableDay == null) return false;
+		return timetableDay.isToday();
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState)
@@ -91,7 +97,7 @@ public class DayFragment extends Fragment
 		if (fontApplicator != null) fontApplicator.applyFont(view);
 		
 		listView = (ListView) view.findViewById(android.R.id.list);
-		eventAdapter = new EventAdapter(getActivity(), events);
+		eventAdapter = new EventAdapter(getActivity(), events, timetableDay);
 		listView.setAdapter(eventAdapter);
 		tvText = (TextView) view.findViewById(R.id.tvDayMessage);
 		

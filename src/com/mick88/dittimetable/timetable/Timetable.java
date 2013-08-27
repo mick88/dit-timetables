@@ -74,7 +74,7 @@ public class Timetable
 		NUM_DAYS = DAY_SATURDAY+1,
 		INVALID_WEEK_RANGE = -1,
 		START_MONTH = Calendar.AUGUST,
-		START_DAY = 27,
+		START_DAY = 26,
 		
 		SETTINGS_ID_COURSE = 0,
 		SETTINGS_ID_YEAR=1,
@@ -98,7 +98,7 @@ public class Timetable
 	public static int getCurrentWeek()
 	{
 		Calendar cal = Calendar.getInstance();
-		int startYear = (cal.get(Calendar.MONTH) >= START_MONTH) ? cal.get(Calendar.YEAR) : (cal.get(Calendar.YEAR)-1);
+		int startYear = (getSemester() == 1) ? cal.get(Calendar.YEAR) : (cal.get(Calendar.YEAR)-1);
 		
 		Date yearStart = new GregorianCalendar(startYear, START_MONTH, START_DAY).getTime();
 		Date today = new GregorianCalendar().getTime();
@@ -113,14 +113,12 @@ public class Timetable
 	{
 		Calendar c = Calendar.getInstance();
 		int startYear=0;
-		if ((c.get(Calendar.MONTH) >= START_MONTH) && (c.get(Calendar.DAY_OF_MONTH) >= START_DAY))
-		{
+		
+		if (getSemester() == 1)
 			startYear = c.get(Calendar.YEAR);
-		}
-		else 
-		{
+		else
 			startYear = c.get(Calendar.YEAR)-1;
-		}
+		
 		StringBuilder builder = new StringBuilder(6);
 		builder.append(startYear);
 		builder.append((startYear+1) % 100);
@@ -142,14 +140,13 @@ public class Timetable
 	public static int getSemester()
 	{
 		Calendar c = Calendar.getInstance();
-		if ((c.get(Calendar.MONTH) >= START_MONTH) && (c.get(Calendar.DAY_OF_MONTH) >= START_DAY))
-		{
+		int month = c.get(Calendar.MONTH),
+			day = c.get(Calendar.DAY_OF_MONTH);
+		
+		if ((month > START_MONTH) || (month >= START_MONTH) && (day >= START_DAY))
 			return 1;
-		}
-		else 
-		{
+		else
 			return 2;
-		}
 	}
 	
 	/**

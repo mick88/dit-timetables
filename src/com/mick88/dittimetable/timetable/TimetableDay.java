@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -87,6 +88,22 @@ public class TimetableDay
 	public List<TimetableEvent> getClasses()
 	{
 		return events;
+	}
+	
+	/**
+	 * Get Set of lectures at this time
+	 * @return
+	 */
+	public Set<TimetableEvent> getCurrentEvents()
+	{
+		Set<TimetableEvent> result = new HashSet<TimetableEvent>();
+		if (isToday())
+		{
+			int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+			for (TimetableEvent event : events)
+				if (event.isEventOn(hour)) result.add(event);
+		}
+		return result;
 	}
 	
 	public int parseHtmlEvent(Element element, Context context, boolean allowCache)

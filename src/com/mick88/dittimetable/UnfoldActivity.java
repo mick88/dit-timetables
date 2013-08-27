@@ -4,16 +4,12 @@ import java.util.List;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 
 import com.mick88.dittimetable.timetable.TimetableEvent;
@@ -53,7 +49,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 				int i=0;
 				for (final TimetableEvent event : events)
 				{
-					View view = event.getView(getLayoutInflater(), null, container, fontApplicator);
+					View view = event.getView(getLayoutInflater(), null, container, fontApplicator, false);
 					view.setOnClickListener(new OnClickListener()
 					{
 						

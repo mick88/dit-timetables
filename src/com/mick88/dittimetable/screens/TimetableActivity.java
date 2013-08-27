@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBar.TabListener;
@@ -32,12 +31,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -164,7 +158,12 @@ public class TimetableActivity extends ActionBarActivity
     	timetablePageAdapter = new TimetablePageAdapter(getSupportFragmentManager(), timetable);
     	viewPager  = (ViewPager) findViewById(R.id.pager);
     	viewPager.setAdapter(timetablePageAdapter);
-    	viewPager.setCurrentItem(Timetable.getTodayId(true), false);
+    	showToday(false);
+    }
+    
+    void showToday(boolean smooth)
+    {
+    	viewPager.setCurrentItem(Timetable.getTodayId(true), smooth);
     }
     
     public Map<String, String> parseQuery(String query)
@@ -336,24 +335,6 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		super.onPause();
 		timedUpdateTimer.cancel();
-	};
-	
-
-	@Deprecated
-	View getSpacer(LayoutInflater inflater, int num, Animation animation, int highligh)
-	{
-		ViewGroup space = (ViewGroup) inflater.inflate(R.layout.timetable_event_empty, null);
-		ViewGroup container = (ViewGroup) space.findViewById(R.id.separator_dot_container);
-		for (int i=0; i < num; i++)
-		{
-			ImageView imageView = new ImageView(this);
-			imageView.setImageResource((i == highligh)?R.drawable.dot_selected:R.drawable.dot);
-			imageView.setPadding(5,5,5,5);
-			
-			container.addView(imageView);
-		}
-		if (animation != null) space.setAnimation(animation);
-		return space;
 	}
 	
 	void refresh()

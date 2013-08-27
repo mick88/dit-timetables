@@ -2,6 +2,7 @@ package com.mick88.dittimetable.utils;
 
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
+import android.support.v4.util.LruCache;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,7 +15,8 @@ import com.mick88.dittimetable.utils.ViewTraverser.ForeachAction;
  */
 public class FontApplicator
 {
-	final private Typeface font;
+	private static LruCache<String, Typeface> fontCache = new LruCache<String, Typeface>(2);
+	private Typeface font;
 	
 	public FontApplicator(Typeface font)
 	{
@@ -23,7 +25,12 @@ public class FontApplicator
 	
 	public FontApplicator(AssetManager assets, String assetFontName)
 	{
-		this.font = Typeface.createFromAsset(assets, assetFontName);
+		font = fontCache.get(assetFontName); 
+		if (font == null) 
+		{
+			font = Typeface.createFromAsset(assets, assetFontName);
+			fontCache.put(assetFontName, font);
+		}
 	}
 	
 	/**
