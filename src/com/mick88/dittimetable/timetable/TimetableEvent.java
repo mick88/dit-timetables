@@ -764,7 +764,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		else
 			viewHolder.background.setBackgroundResource(R.drawable.event_selector);
 		
-		viewHolder.background.setOnClickListener(new OnClickListener()
+		view.setOnClickListener(new OnClickListener()
 		{
 			
 			@Override
