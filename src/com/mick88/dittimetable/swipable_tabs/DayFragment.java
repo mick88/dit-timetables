@@ -97,7 +97,7 @@ public class DayFragment extends Fragment
 		if (fontApplicator != null) fontApplicator.applyFont(view);
 		
 		listView = (ListView) view.findViewById(android.R.id.list);
-		eventAdapter = new EventAdapter(getActivity(), events);
+		eventAdapter = new EventAdapter(getActivity(), events, timetableDay);
 		listView.setAdapter(eventAdapter);
 		tvText = (TextView) view.findViewById(R.id.tvDayMessage);
 		

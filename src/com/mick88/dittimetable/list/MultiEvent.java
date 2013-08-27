@@ -29,7 +29,7 @@ public class MultiEvent implements EventItem
 	}
 
 	@Override
-	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator)
+	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator, boolean allowHighlight)
 	{
 		int dp = (int)(layoutInflater.getContext().getResources().getDisplayMetrics().density * MARGIN_INCREMENT);
 		
@@ -38,7 +38,7 @@ public class MultiEvent implements EventItem
 		for (TimetableEvent event : events)
 		{
 			margin -= dp;
-			View eventTile = event.getView(layoutInflater, null, viewGroup, fontApplicator);
+			View eventTile = event.getView(layoutInflater, null, viewGroup, fontApplicator, allowHighlight);
 			LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 			params.setMargins(0, margin, 0, 0);
 			eventTile.setLayoutParams(params);

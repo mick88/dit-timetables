@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
+import com.mick88.dittimetable.timetable.TimetableDay;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class EventAdapter extends ArrayAdapter<EventItem>
@@ -29,15 +30,17 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 			NUM_TYPES = 3;
 		
 		int getViewType();
-		View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator);
+		View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator, boolean allowHighlight);
 	}
 	
 	private FontApplicator fontApplicator;
+	private final boolean isToday;
 
-	public EventAdapter(Context context, List<EventItem> objects) 
+	public EventAdapter(Context context, List<EventItem> objects, TimetableDay timetableDay) 
 	{
 		super(context, R.layout.timetable_event_small, objects);
 		fontApplicator = new FontApplicator(getContext().getAssets(), "Roboto-Light.ttf");
+		this.isToday = timetableDay.isToday();
 	}
 	
 	LayoutInflater getLayoutInflater()
@@ -48,7 +51,7 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		return getItem(position).getView(getLayoutInflater(), convertView, parent, fontApplicator);
+		return getItem(position).getView(getLayoutInflater(), convertView, parent, fontApplicator, isToday);
 	}
 	
 	@Override

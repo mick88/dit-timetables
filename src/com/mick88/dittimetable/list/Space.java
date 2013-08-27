@@ -34,7 +34,7 @@ public class Space implements EventItem
 	}
 
 	@Override
-	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator)
+	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator, boolean allowHighlight)
 	{
 		final int current = getCurrentSpace();
 		
@@ -44,8 +44,12 @@ public class Space implements EventItem
 		for (int i=0; i < numSpaces; i++)
 		{
 			ImageView imageView = new ImageView(layoutInflater.getContext());
-			imageView.setImageResource((i == current) ? 
-					R.drawable.dot_selected : R.drawable.dot);
+			
+			if (allowHighlight && (i == current))
+				imageView.setImageResource(R.drawable.dot_selected);
+			else
+				imageView.setImageResource(R.drawable.dot);
+			
 			imageView.setPadding(5, 5, 5, 5);
 			
 			container.addView(imageView);

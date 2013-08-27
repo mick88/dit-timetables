@@ -40,16 +40,18 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 	private static class EventViewHolder
 	{
 		protected final TextView tvEventTime, tvEventLocation, tvEventTitle, tvEventType, tvEventLecturer, tvEventGroup;
+		protected final View background;
 		
 		public EventViewHolder(TextView tvEventTime, TextView tvEventLocation,
 				TextView tvEventTitle, TextView tvEventType,
-				TextView tvEventLecturer, TextView tvEventGroup) {
+				TextView tvEventLecturer, TextView tvEventGroup, View background) {
 			this.tvEventTime = tvEventTime;
 			this.tvEventLocation = tvEventLocation;
 			this.tvEventTitle = tvEventTitle;
 			this.tvEventType = tvEventType;
 			this.tvEventLecturer = tvEventLecturer;
 			this.tvEventGroup = tvEventGroup;
+			this.background = background;
 		}
 		
 		public EventViewHolder(View view)
@@ -59,7 +61,8 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 					(TextView)view.findViewById(R.id.eventTitle),
 					(TextView)view.findViewById(R.id.eventType),
 					(TextView)view.findViewById(R.id.eventLecturer),
-					(TextView)view.findViewById(R.id.eventGroup));
+					(TextView)view.findViewById(R.id.eventGroup),
+					view.findViewById(R.id.timetable_event_small));
 		}
 	}
 	
@@ -739,7 +742,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 	}
 
 	@Override
-	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator)
+	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator, boolean allowHighlight)
 	{
 		View view = convertView;
 		EventViewHolder viewHolder;
@@ -751,6 +754,11 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 			view.setTag(viewHolder);
 		}
 		else viewHolder = (EventViewHolder) view.getTag();
+		
+		if (allowHighlight && isEventOn())
+			viewHolder.background.setBackgroundResource(R.drawable.event_selected_selector);
+		else
+			viewHolder.background.setBackgroundResource(R.drawable.event_selector);
 		
 		viewHolder.tvEventGroup.setText(getGroupStr());
 		viewHolder.tvEventLecturer.setText(getLecturer());
