@@ -2,7 +2,10 @@ package com.mick88.dittimetable.screens;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -443,8 +446,10 @@ public class TimetableActivity extends ActionBarActivity
 		}
 		else
 		{
-			String[] gArray = new String[groups.size()];
-			groups.toArray(gArray);
+			List<String> gList = new ArrayList<String>(groups);
+			Collections.sort(gList);
+			String[] gArray = new String[gList.size()];
+			gList.toArray(gArray);
 			
 			groups = application.getSettings().getHiddenGroups();
 			String[] hiddenGroups = new String[groups.size()];
