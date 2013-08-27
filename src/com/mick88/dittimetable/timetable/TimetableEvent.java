@@ -3,6 +3,7 @@ package com.mick88.dittimetable.timetable;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
@@ -178,6 +179,11 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem
 	public int getLength()
 	{
 		return endHour - endMin;
+	}
+	
+	public boolean isEventOn()
+	{
+		return isEventOn(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
 	}
 	
 	public boolean isEventOn(int hour)
