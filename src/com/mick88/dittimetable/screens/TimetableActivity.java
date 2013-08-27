@@ -420,9 +420,9 @@ public class TimetableActivity extends ActionBarActivity
 	
 	void showGroupSelectionDialog()
 	{
-		Set<String> gList = timetable.getGroupsInTimetable();
+		Set<String> groups = timetable.getGroupsInTimetable();
 		
-		if (gList.isEmpty())
+		if (groups.isEmpty())
 		{
 			new AlertDialog.Builder(this)
 			.setTitle(R.string.app_name)
@@ -443,15 +443,15 @@ public class TimetableActivity extends ActionBarActivity
 		}
 		else
 		{
-			String[] gArray = new String[gList.size()];
-			gList.toArray(gArray);
+			String[] gArray = new String[groups.size()];
+			groups.toArray(gArray);
 			
-			gList = (Set<String>) application.getSettings().getHiddenGroups();
-			String[] hgArray = new String[gList.size()];
-			gList.toArray(hgArray);
+			groups = application.getSettings().getHiddenGroups();
+			String[] hiddenGroups = new String[groups.size()];
+			groups.toArray(hiddenGroups);
 			
 			GroupSelectionDialog dialog = new GroupSelectionDialog();
-			dialog.setGroups(gArray, hgArray);
+			dialog.setGroups(gArray, hiddenGroups);
 			dialog.show(getSupportFragmentManager(), "GroupSelector");
 		}
 	}
