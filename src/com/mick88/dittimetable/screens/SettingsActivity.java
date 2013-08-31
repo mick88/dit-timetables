@@ -32,9 +32,8 @@ import com.mick88.dittimetable.utils.FontApplicator;
 
 public class SettingsActivity extends ActionBarActivity
 {	
-	/**
-	 * TODO: Don't allow back if data is incorrect
-	 */
+
+	public static final String EXTRA_ALLOW_CANCEL = "allow_cancel";
 	
 	FontApplicator fontApplicator;
 	Spinner yearSelector, 
@@ -45,6 +44,7 @@ public class SettingsActivity extends ActionBarActivity
 		editPassword,
 		editUsername;
 	AppSettings appSettings;
+	boolean allowCancel = true;
 	
 	final int SEM_1_ID=0,
 			SEM_2_ID=1,
@@ -56,6 +56,8 @@ public class SettingsActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
+		
+		this.allowCancel = getIntent().getBooleanExtra(EXTRA_ALLOW_CANCEL, true);
 		
 		this.fontApplicator = new FontApplicator(getAssets(), "Roboto-Light.ttf");
 		fontApplicator.applyFont(getWindow().getDecorView());
@@ -217,6 +219,10 @@ public class SettingsActivity extends ActionBarActivity
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		getMenuInflater().inflate(R.menu.activity_settings, menu);
+		if (allowCancel == false)
+		{
+			menu.findItem(R.id.settings_cancel).setVisible(false);
+		}
 		return super.onCreateOptionsMenu(menu);
 	}
 	
@@ -283,32 +289,39 @@ public class SettingsActivity extends ActionBarActivity
 	@Override
 	public void onBackPressed()
 	{
-		AlertDialog dialog = new AlertDialog.Builder(this)
-				.setTitle(R.string.app_name)
-				.setMessage("Would you like to save changes?")
-				.setPositiveButton("Yes", new OnClickListener()
-				{
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which)
+		if (allowCancel == false)
+		{
+			saveAndQuit();
+		}
+		else
+		{
+			AlertDialog dialog = new AlertDialog.Builder(this)
+					.setTitle(R.string.app_name)
+					.setMessage("Would you like to save changes?")
+					.setPositiveButton("Yes", new OnClickListener()
 					{
-						saveAndQuit();
-					}
-				})
-				.setNegativeButton("No", new OnClickListener()
-				{
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
-						cancelAndQuit();
 						
-					}
-				})
-				.setCancelable(false)
-				.setIcon(R.drawable.ic_launcher)
-				.create();
-		dialog.show();
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							saveAndQuit();
+						}
+					})
+					.setNegativeButton("No", new OnClickListener()
+					{
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							cancelAndQuit();
+							
+						}
+					})
+					.setCancelable(false)
+					.setIcon(R.drawable.ic_launcher)
+					.create();
+			dialog.show();
+		}
 	}
 
 }
