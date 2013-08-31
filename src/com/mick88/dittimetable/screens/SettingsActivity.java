@@ -25,11 +25,17 @@ import android.widget.Toast;
 
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.RobotoArrayAdapter;
 import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.timetable.Timetable;
+import com.mick88.dittimetable.utils.FontApplicator;
 
 public class SettingsActivity extends ActionBarActivity
 {	
+
+	public static final String EXTRA_ALLOW_CANCEL = "allow_cancel";
+	
+	FontApplicator fontApplicator;
 	Spinner yearSelector, 
 		semesterSelector;
 	CheckBox weekCheckBox;
@@ -38,6 +44,7 @@ public class SettingsActivity extends ActionBarActivity
 		editPassword,
 		editUsername;
 	AppSettings appSettings;
+	boolean allowCancel = true;
 	
 	final int SEM_1_ID=0,
 			SEM_2_ID=1,
@@ -50,6 +57,10 @@ public class SettingsActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 		
+		this.allowCancel = getIntent().getBooleanExtra(EXTRA_ALLOW_CANCEL, true);
+		
+		this.fontApplicator = new FontApplicator(getAssets(), "Roboto-Light.ttf");
+		fontApplicator.applyFont(getWindow().getDecorView());
 		appSettings = ((TimetableApp)getApplication()).getSettings();
 		
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -63,6 +74,12 @@ public class SettingsActivity extends ActionBarActivity
 		editPassword = (EditText) findViewById(R.id.editPassword);
 		weekCheckBox = (CheckBox) findViewById(R.id.checkBoxSetCurrentWeekOnly);
 		TextView tvInfo = (TextView) findViewById(R.id.textDatasetInfo);
+		
+		String [] years = getResources().getStringArray(R.array.year_values);
+		yearSelector.setAdapter(new RobotoArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, years));
+		
+		String [] presetWeeks = getResources().getStringArray(R.array.semester_predefines);
+		semesterSelector.setAdapter(new RobotoArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, presetWeeks));
 		
 		findViewById(R.id.btn_get_password).setOnClickListener(new View.OnClickListener()
 		{
@@ -89,15 +106,19 @@ public class SettingsActivity extends ActionBarActivity
 				{
 				case SEM_1_ID:
 					editWeeks.setText(Timetable.SEMESTER_1);
+					editWeeks.setError(null);
 					break;
 				case SEM_2_ID:
 					editWeeks.setText(Timetable.SEMESTER_2);
+					editWeeks.setError(null);
 					break;
 				case 2:
 					editWeeks.setText(Timetable.ALL_WEEKS);
+					editWeeks.setError(null);
 					break;
 				case 3:
 					editWeeks.setText(String.valueOf(currentWeek));
+					editWeeks.setError(null);
 					break;
 				case 4:
 					editWeeks.requestFocus();
@@ -127,7 +148,7 @@ public class SettingsActivity extends ActionBarActivity
 		appSettings.setUsername(editUsername.getText().toString().trim());
 		appSettings.setPassword(editPassword.getText().toString().trim());
 		
-		appSettings.setCourse(editCourse.getText().toString());
+		appSettings.setCourse(editCourse.getText().toString().toUpperCase());
 		appSettings.setWeeks(editWeeks.getText().toString());
 		appSettings.setYear((int) (yearSelector.getSelectedItemId()+1));
 		appSettings.setOnlyCurrentWeek(weekCheckBox.isChecked());
@@ -198,12 +219,39 @@ public class SettingsActivity extends ActionBarActivity
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		getMenuInflater().inflate(R.menu.activity_settings, menu);
+		if (allowCancel == false)
+		{
+			menu.findItem(R.id.settings_cancel).setVisible(false);
+		}
 		return super.onCreateOptionsMenu(menu);
 	}
 	
 	private boolean validate()
 	{
-		if (editCourse.getText().toString().matches("DT[0-9]{3}") == false)
+		boolean valid = true;
+		
+		if (TextUtils.isEmpty(editPassword.getText()))
+		{
+			editPassword.requestFocus();
+			editPassword.setError("Password cannot be empty");
+			valid = false;
+		}
+		
+		if (TextUtils.isEmpty(editUsername.getText()))
+		{
+			editUsername.requestFocus();
+			editUsername.setError("Username cannot be empty");
+			valid = false;
+		}
+		
+		if (editWeeks.getText().toString().matches("[0-9-,]+") == false) //any digit, space or ,. One or more times
+		{
+			editWeeks.requestFocus();
+			editWeeks.setError("Incorrect week range");
+			valid = false;
+		}
+		
+		if (editCourse.getText().toString().toUpperCase().matches("DT[0-9]{3}") == false)
 		{
 			if (editCourse.getText().toString().matches("[0-9]{3}") == true)
 			{
@@ -214,33 +262,12 @@ public class SettingsActivity extends ActionBarActivity
 			else
 			{
 				editCourse.requestFocus();
-				Toast.makeText(getApplicationContext(), "Please enter correct course code (like DT211)", Toast.LENGTH_LONG).show();
-				return false;
+				editCourse.setError("Invalid course code");
+				valid = false;
 			}
 		}
 		
-		if (editWeeks.getText().toString().matches("[0-9-,]+") == false) //any digit, space or ,. One or more times
-		{
-			editWeeks.requestFocus();
-			Toast.makeText(getApplicationContext(), "Please enter correct week range (use dropdown)", Toast.LENGTH_LONG).show();
-			return false;
-		}
-		
-		if (TextUtils.isEmpty(editUsername.getText()))
-		{
-			editUsername.requestFocus();
-			Toast.makeText(getApplicationContext(), "Please enter user name", Toast.LENGTH_LONG).show();
-			return false;
-		}
-		
-		if (TextUtils.isEmpty(editPassword.getText()))
-		{
-			editPassword.requestFocus();
-			Toast.makeText(getApplicationContext(), "Please enter password", Toast.LENGTH_LONG).show();
-			return false;
-		}
-		
-		return true;
+		return valid;
 	}
 	
 	void saveAndQuit()
@@ -262,32 +289,39 @@ public class SettingsActivity extends ActionBarActivity
 	@Override
 	public void onBackPressed()
 	{
-		AlertDialog dialog = new AlertDialog.Builder(this)
-				.setTitle(R.string.app_name)
-				.setMessage("Would you like to save changes?")
-				.setPositiveButton("Yes", new OnClickListener()
-				{
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which)
+		if (allowCancel == false)
+		{
+			saveAndQuit();
+		}
+		else
+		{
+			AlertDialog dialog = new AlertDialog.Builder(this)
+					.setTitle(R.string.app_name)
+					.setMessage("Would you like to save changes?")
+					.setPositiveButton("Yes", new OnClickListener()
 					{
-						saveAndQuit();
-					}
-				})
-				.setNegativeButton("No", new OnClickListener()
-				{
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
-						cancelAndQuit();
 						
-					}
-				})
-				.setCancelable(false)
-				.setIcon(R.drawable.ic_launcher)
-				.create();
-		dialog.show();
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							saveAndQuit();
+						}
+					})
+					.setNegativeButton("No", new OnClickListener()
+					{
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which)
+						{
+							cancelAndQuit();
+							
+						}
+					})
+					.setCancelable(false)
+					.setIcon(R.drawable.ic_launcher)
+					.create();
+			dialog.show();
+		}
 	}
 
 }

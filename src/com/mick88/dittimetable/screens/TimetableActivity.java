@@ -414,9 +414,10 @@ public class TimetableActivity extends ActionBarActivity
 		}
 	}
 	
-	void showSettingsScreen()
+	void showSettingsScreen(boolean allowCancel)
 	{
 		Intent settingsScreen = new Intent(TimetableActivity.this, SettingsActivity.class);
+		settingsScreen.putExtra(SettingsActivity.EXTRA_ALLOW_CANCEL, allowCancel);
 		startActivityForResult(settingsScreen, SETTINGS_REQUEST_CODE);
 	}
 	
@@ -484,7 +485,7 @@ public class TimetableActivity extends ActionBarActivity
 			return true;
 			
 		case R.id.menu_settings:
-			showSettingsScreen();
+			showSettingsScreen(true);
 			FlurryAgent.onEvent("Settings screen open");
 			return true;
 			
@@ -741,7 +742,7 @@ public class TimetableActivity extends ActionBarActivity
 	public void onSettingsNotComplete()
 	{
 		toast("Please fill the settings before using the app.");
-		showSettingsScreen();	
+		showSettingsScreen(false);	
 	}
 
 	@Override
