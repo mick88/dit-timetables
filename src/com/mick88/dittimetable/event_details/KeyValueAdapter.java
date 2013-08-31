@@ -18,6 +18,11 @@ public class KeyValueAdapter extends ArrayAdapter<KeyValue>
 	FontApplicator 
 		fontApplicator;
 	
+	private static class ViewHolder
+	{
+		TextView tvName, tvValue;
+	}
+	
 	public KeyValueAdapter(Context context, List<KeyValue> objects) {
 		super(context, 0, 0, objects);
 		this.fontApplicator = new FontApplicator(context.getAssets(), "Roboto-Light.ttf");
@@ -26,18 +31,29 @@ public class KeyValueAdapter extends ArrayAdapter<KeyValue>
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
-		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.list_item_detail, parent, false);
+		final View view;
+		final ViewHolder holder;
 		
-		TextView tvName, tvValue;
+		if (convertView == null)
+		{
+			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			view = inflater.inflate(R.layout.list_item_detail, parent, false);
+			fontApplicator.applyFont(view);
+			
+			holder = new ViewHolder();
+			holder.tvName = (TextView) view.findViewById(android.R.id.text1);
+			holder.tvValue = (TextView) view.findViewById(android.R.id.text2);
+			
+			view.setTag(holder);
+		}
+		else
+		{
+			view = convertView;
+			holder = (ViewHolder) view.getTag();
+		}
 		
-		tvName = (TextView) view.findViewById(android.R.id.text1);
-		tvValue = (TextView) view.findViewById(android.R.id.text2);
-		
-		fontApplicator.applyFont(view);
-		
-		tvName.setText(getItem(position).key);
-		tvValue.setText(getItem(position).value);
+		holder.tvName.setText(getItem(position).key);
+		holder.tvValue.setText(getItem(position).value);
 				
 		return view;
 	}
