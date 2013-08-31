@@ -31,7 +31,7 @@
         android:id="@+id/share_timetable"
         android:icon="@drawable/share"
         android:orderInCategory="105"
-        android:title="Share timetable"
+        android:title="@string/share_timetable"
         android:titleCondensed="Share"
         android:visible="true"
         appCompat:showAsAction="never"/>
