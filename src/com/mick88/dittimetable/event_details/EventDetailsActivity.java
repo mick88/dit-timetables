@@ -56,7 +56,14 @@ public class EventDetailsActivity extends ActionBarActivity
 		result.add(new KeyValue("Room:", event.getRoom()));
 		result.add(new KeyValue("Lecturer:",event.getLecturer()));
 		result.add(new KeyValue("Type:", event.getType().toString()));
-		result.add(new KeyValue("Group:", event.getGroupStr()));
+		StringBuilder groups = new StringBuilder();
+		String glue = "";
+		for (String group : event.getGroups())
+		{
+			groups.append(glue).append(group);
+			glue = "\n";
+		}
+		result.add(new KeyValue("Group:", groups.toString()));
 		result.add(new KeyValue("Weeks:", event.getWeeks()));
 		
 		return result;

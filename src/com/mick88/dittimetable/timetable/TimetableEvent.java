@@ -138,6 +138,11 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		return type;
 	}
 	
+	public Set<String> getGroups()
+	{
+		return groups;
+	}
+	
 	public String getWeeks()
 	{
 		return weekRange;
