@@ -2,6 +2,7 @@ package com.mick88.dittimetable.event_details;
 
 import java.util.List;
 
+import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 
@@ -26,7 +27,7 @@ public class KeyValueAdapter extends ArrayAdapter<KeyValue>
 	public View getView(int position, View convertView, ViewGroup parent)
 	{
 		LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(android.R.layout.two_line_list_item, parent, false);
+		View view = inflater.inflate(R.layout.list_item_detail, parent, false);
 		
 		TextView tvName, tvValue;
 		
