@@ -31,6 +31,11 @@ import com.mick88.dittimetable.utils.FontApplicator;
 
 public class SettingsActivity extends ActionBarActivity
 {	
+	/**
+	 * TODO: Roboto font in Spinners
+	 * TODO: Don't allow back if data is incorrect
+	 */
+	
 	FontApplicator fontApplicator;
 	Spinner yearSelector, 
 		semesterSelector;
@@ -93,15 +98,19 @@ public class SettingsActivity extends ActionBarActivity
 				{
 				case SEM_1_ID:
 					editWeeks.setText(Timetable.SEMESTER_1);
+					editWeeks.setError(null);
 					break;
 				case SEM_2_ID:
 					editWeeks.setText(Timetable.SEMESTER_2);
+					editWeeks.setError(null);
 					break;
 				case 2:
 					editWeeks.setText(Timetable.ALL_WEEKS);
+					editWeeks.setError(null);
 					break;
 				case 3:
 					editWeeks.setText(String.valueOf(currentWeek));
+					editWeeks.setError(null);
 					break;
 				case 4:
 					editWeeks.requestFocus();

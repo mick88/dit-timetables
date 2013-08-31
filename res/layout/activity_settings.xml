@@ -1,138 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:layout_margin="@dimen/settings_margin"
-    android:orientation="vertical">
+    android:layout_height="match_parent" >
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"        
-        android:background="@drawable/card" >
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:text="@string/timetable_settings"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+        <include layout="@layout/settings_timetable"  android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="@dimen/tile_padding_outside"/>
 
-        <View
-            android:id="@+id/centerStrut"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_centerHorizontal="true" />
+        <include layout="@layout/settings_credentials"  android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="@dimen/tile_padding_outside" android:layout_marginTop="5dp"/>
+    </LinearLayout>
 
-        <EditText
-            android:id="@+id/editCourseCode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/textView2"
-            android:layout_toLeftOf="@+id/spinner_year_selector"
-            android:ems="10"
-            android:hint="@string/course_code"
-            android:inputType="textCapCharacters|textNoSuggestions|textVisiblePassword"
-            android:singleLine="true" />
-
-        <Spinner
-            android:id="@+id/spinner_year_selector"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/editCourseCode"
-            android:layout_alignLeft="@+id/centerStrut"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/textView2"
-            android:entries="@array/year_values" />
-
-        <Spinner
-            android:id="@+id/spinner_semester_selector"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/edit_weeks"
-            android:layout_alignLeft="@+id/spinner_year_selector"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/editCourseCode"
-            android:entries="@array/semester_predefines" />
-
-        <EditText
-            android:id="@+id/edit_weeks"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignRight="@+id/editCourseCode"
-            android:layout_below="@+id/editCourseCode"
-            android:ems="10"
-            android:hint="@string/week_edit_hint"
-            android:inputType="textVisiblePassword"
-            android:singleLine="true" >
-        </EditText>
-
-        <CheckBox
-            android:id="@+id/checkBoxSetCurrentWeekOnly"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/edit_weeks"
-            android:text="Show only current week" />
-
-        <TextView
-            android:id="@+id/textDatasetInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/checkBoxSetCurrentWeekOnly"
-            android:text="Dataset"
-            android:textAppearance="@android:style/TextAppearance.Small" />
-        </RelativeLayout>
-        
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/card" >
-
-        <EditText
-            android:id="@+id/editUsername"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/textView1"
-            android:ems="10"
-            android:hint="@string/username"
-            android:inputType="text" >
-        </EditText>
-
-        <EditText
-            android:id="@+id/editPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/editUsername"
-            android:ems="10"
-            android:hint="@string/password"
-            android:inputType="textPassword" />
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:text="@string/login_cretentials"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <Button
-            android:id="@+id/btn_get_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/editPassword"
-            android:text="Get password" />
-    </RelativeLayout>
-
-</LinearLayout>
+</ScrollView>
