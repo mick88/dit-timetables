@@ -207,6 +207,7 @@ public class SettingsActivity extends ActionBarActivity
 	
 	private boolean validate()
 	{
+		boolean valid = true;
 		if (editCourse.getText().toString().matches("DT[0-9]{3}") == false)
 		{
 			if (editCourse.getText().toString().matches("[0-9]{3}") == true)
@@ -219,7 +220,7 @@ public class SettingsActivity extends ActionBarActivity
 			{
 				editCourse.requestFocus();
 				editCourse.setError("Invalid course code");
-				return false;
+				valid = false;
 			}
 		}
 		
@@ -227,24 +228,24 @@ public class SettingsActivity extends ActionBarActivity
 		{
 			editWeeks.requestFocus();
 			editWeeks.setError("Incorrect week range");
-			return false;
+			valid = false;
 		}
 		
 		if (TextUtils.isEmpty(editUsername.getText()))
 		{
 			editUsername.requestFocus();
 			editUsername.setError("Username cannot be empty");
-			return false;
+			valid = false;
 		}
 		
 		if (TextUtils.isEmpty(editPassword.getText()))
 		{
 			editPassword.requestFocus();
 			editPassword.setError("Password cannot be empty");
-			return false;
+			valid = false;
 		}
 		
-		return true;
+		return valid;
 	}
 	
 	void saveAndQuit()
