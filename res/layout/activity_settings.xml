@@ -6,14 +6,38 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/settings_margin" 
-        android:background="@drawable/card">
+        android:layout_margin="@dimen/settings_margin"
+        android:background="@drawable/card" >
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/timetable_settings"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <View
             android:id="@+id/centerStrut"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_centerHorizontal="true" />
+
+        <EditText
+            android:id="@+id/editCourseCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textView2"
+            android:layout_toLeftOf="@+id/spinner_year_selector"
+            android:ems="10"
+            android:hint="@string/course_code"
+            android:inputType="textCapCharacters|textNoSuggestions|textVisiblePassword"
+            android:singleLine="true" >
+
+            <requestFocus />
+        </EditText>
 
         <Spinner
             android:id="@+id/spinner_year_selector"
@@ -47,6 +71,14 @@
             android:inputType="textVisiblePassword"
             android:singleLine="true" >
         </EditText>
+
+        <CheckBox
+            android:id="@+id/checkBoxSetCurrentWeekOnly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/edit_weeks"
+            android:text="Show only current week" />
 
         <TextView
             android:id="@+id/textDatasetInfo"
@@ -82,30 +114,6 @@
             android:inputType="textPassword" />
 
         <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:text="@string/timetable_settings"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <EditText
-            android:id="@+id/editCourseCode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/textView2"
-            android:layout_toLeftOf="@+id/spinner_year_selector"
-            android:ems="10"
-            android:hint="@string/course_code"
-            android:inputType="textCapCharacters|textNoSuggestions|textVisiblePassword"
-            android:singleLine="true" >
-
-            <requestFocus />
-        </EditText>
-
-        <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -122,14 +130,6 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/editPassword"
             android:text="Get password" />
-
-        <CheckBox
-            android:id="@+id/checkBoxSetCurrentWeekOnly"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/edit_weeks"
-            android:text="Show only current week" />
     </RelativeLayout>
 
 </ScrollView>
