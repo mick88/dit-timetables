@@ -33,7 +33,6 @@ import com.mick88.dittimetable.utils.FontApplicator;
 public class SettingsActivity extends ActionBarActivity
 {	
 	/**
-	 * TODO: Roboto font in Spinners
 	 * TODO: Don't allow back if data is incorrect
 	 */
 	
