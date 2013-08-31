@@ -23,8 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mick88.dittimetable.R;
@@ -629,89 +627,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		return new StringBuilder(getStartTime())
 			.append(" - ")
 			.append(getEndTime());
-	}
-	
-	@Deprecated
-	private View inflateTile(final Context context, boolean small, LayoutInflater inflater)
-	{
-		ViewGroup tile = (ViewGroup) inflater.inflate(small?R.layout.timetable_event_tiny:R.layout.timetable_event_small, null);
-		
-		((TextView) tile.findViewById(R.id.eventTitle)).setText(this.getName());
-		((TextView) tile.findViewById(R.id.eventTime)).setText(String.format(Locale.getDefault(), "%s - %s", this.getStartTime(), this.getEndTime()));
-		((TextView) tile.findViewById(R.id.eventLocation)).setText(this.getRoomShort());
-		
-		TextView textGroup = (TextView) tile.findViewById(R.id.eventGroup);
-		if (TextUtils.isEmpty(this.getGroupStr()))
-		{
-			textGroup.setVisibility(View.GONE);
-		}
-		else
-		{
-			textGroup.setText(this.getGroupStr());
-			textGroup.setVisibility(View.VISIBLE);
-		}
-		
-		TextView textLecturer = (TextView) tile.findViewById(R.id.eventLecturer);
-		if (textLecturer != null)
-		{
-			textLecturer.setText(this.getLecturer());
-		}
-		
-		/*Set type and its color*/
-		TextView textEventType = (TextView) tile.findViewById(R.id.eventType);
-		ClassType type = this.getClassType();
-		int color = 0x000000;				
-		switch (type)
-		{
-			case Lecture:
-				color = context.getResources().getColor(R.color.color_lecture);
-				break;
-			case Laboratory:
-				color = context.getResources().getColor(R.color.color_laboratory);
-				break;
-			case Tutorial:
-				color = context.getResources().getColor(R.color.color_tutorial);
-				break;
-			default:
-				color = 0xFFFFFF;
-				break;
-		}
-		textEventType.setTextColor(color);
-		textEventType.setText(type.toString());
-		
-		View.OnClickListener eventClickedListener = new View.OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				Intent intent = new Intent(context.getApplicationContext(), EventDetailsActivity.class);
-				intent.putExtra("event_id", TimetableEvent.this.getId());
-				intent.putExtra("name", TimetableEvent.this.getName());
-				intent.putExtra("room", TimetableEvent.this.getRoom());
-				intent.putExtra("lecturer", TimetableEvent.this.getLecturer());
-				intent.putExtra("startTime", TimetableEvent.this.getStartTime());
-				intent.putExtra("endTime", TimetableEvent.this.getEndTime());
-				intent.putExtra("weeks", TimetableEvent.this.getWeeks());
-				intent.putExtra("type", TimetableEvent.this.getType().toString());
-				intent.putExtra("groups", TimetableEvent.this.getGroupStr());
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				context.startActivity(intent);
-			}
-		};
-		
-		if (small == false)
-			((RelativeLayout) tile.findViewById(R.id.timetable_event_small)).setOnClickListener(eventClickedListener);
-		else
-			((LinearLayout) tile.findViewById(R.id.timetable_event_tiny)).setOnClickListener(eventClickedListener);
-		
-		return tile;
-	}
-	
-	@Deprecated
-	public View getTile(Context context, boolean small, LayoutInflater inflater)
-	{
-		return inflateTile(context, small, inflater);
 	}
 
 	@Override
