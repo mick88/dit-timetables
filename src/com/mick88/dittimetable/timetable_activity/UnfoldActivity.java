@@ -9,8 +9,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.LinearLayout;
 
 import com.mick88.dittimetable.R;
@@ -23,12 +25,14 @@ import com.mick88.dittimetable.utils.FontApplicator;
 
 public class UnfoldActivity extends Activity implements OnClickListener
 {
+	private static final int ANIMATION_DURATION = 100;
 	/**
 	 * Extra argument containing a List of TimetableEvents
 	 * as a Serializable object
 	 */
 	public static final String EXTRA_EVENTS = "events";	
 	public static final String EXTRA_TIMETABLE = "timetable";
+	public static final String EXTRA_POSITIONS = "positions";
 	
 	private List<TimetableEvent> events = null;
 	private Timetable timetable = null;
@@ -47,8 +51,12 @@ public class UnfoldActivity extends Activity implements OnClickListener
 		if (getIntent() != null)
 		{
 			events = (List<TimetableEvent>) getIntent().getSerializableExtra(EXTRA_EVENTS);
+
+			List<Integer> positions = getIntent().getExtras().getIntegerArrayList(EXTRA_POSITIONS);
+			
 			if (events != null)
 			{
+				int i=0;
 				for (final TimetableEvent event : events)
 				{
 					View view = SingleEventItem.instantiateForEvent(event, timetable).getView(getLayoutInflater(), null, container, fontApplicator, false, timetable);
@@ -65,8 +73,10 @@ public class UnfoldActivity extends Activity implements OnClickListener
 						}
 					});
 					container.addView(view);
+
+					animateTile(view, positions.get(i));
+					i++;
 				}
-				
 			}
 		}
 		
@@ -74,14 +84,31 @@ public class UnfoldActivity extends Activity implements OnClickListener
 	}
 	
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-	void animateTile(View view, int fromY)
+	void animateTile(final View view, final int fromY)
 	{
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
+		Log.d("View from Y", String.valueOf(fromY));
+		view.getViewTreeObserver().addOnPreDrawListener(new OnPreDrawListener()
+		{
+			
+			@Override
+			public boolean onPreDraw()
+			{
+				view.getViewTreeObserver().removeOnPreDrawListener(this);
+				final int toY;
+				int[] location = new int[2];
+				view.getLocationOnScreen(location);
+				toY = location[1];
+				
+				AnimatorSet set = new AnimatorSet();
+				set.play(ObjectAnimator.ofFloat(view, View.Y, fromY, toY));
+				set.setDuration(ANIMATION_DURATION);
+				set.start();
+				return true;
+			}
+		});
+
 		
-		AnimatorSet set = new AnimatorSet();
-		set.play(ObjectAnimator.ofFloat(view, View.Y, fromY));
-		set.setDuration(500);
-		set.start();
 	}
 
 	@Override

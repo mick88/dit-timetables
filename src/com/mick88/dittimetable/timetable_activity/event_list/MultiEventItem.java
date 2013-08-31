@@ -1,6 +1,7 @@
 package com.mick88.dittimetable.timetable_activity.event_list;
 
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -27,6 +28,7 @@ public class MultiEventItem implements EventItem, OnClickListener
 {
 	private final List<SingleEventItem> events;
 	private final Timetable timetable;
+	WeakReference<ViewGroup> containeReference = null;
 	
 	public MultiEventItem(List<SingleEventItem> events, Timetable timetable)
 	{
@@ -57,6 +59,7 @@ public class MultiEventItem implements EventItem, OnClickListener
 		else viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.timetable_event_multi, parent, false);
 
 		viewGroup.setOnClickListener(this);
+		this.containeReference = new WeakReference<ViewGroup>(viewGroup);
 
 		int margin = (int)(offset * events.size());
 
@@ -85,14 +88,31 @@ public class MultiEventItem implements EventItem, OnClickListener
 	@Override
 	public void onClick(View v)
 	{
+		ViewGroup container = this.containeReference.get();
+		if (container == null) return;
+		
 		if (v instanceof ViewGroup)
 		{
 			Context context = v.getContext();
+			int space = (int) context.getResources().getDimension(R.dimen.multievent_offset);
+			
 			List<TimetableEvent> events = new ArrayList<TimetableEvent>(MultiEventItem.this.events.size());
+			List<Integer> positions = new ArrayList<Integer>(events.size());
 			for (SingleEventItem event : MultiEventItem.this.events)
+			{
 				events.add(event.getEvent());
+			}
+
+			for (int i=container.getChildCount()-1; i  >= 0 ; i--)
+			{
+				View child = container.getChildAt(i);
+				int[] location = new int[2];
+				child.getLocationOnScreen(location);
+				positions.add(location[1] - space);
+			}
 			context.startActivity(new Intent(context, UnfoldActivity.class)
 				.putExtra(UnfoldActivity.EXTRA_EVENTS, (Serializable)events)
+				.putExtra(UnfoldActivity.EXTRA_POSITIONS, (Serializable)positions)
 				.putExtra(UnfoldActivity.EXTRA_TIMETABLE, timetable));
 		}		
 	}
