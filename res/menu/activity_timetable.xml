@@ -17,16 +17,16 @@
     <item
         android:id="@+id/menu_settings"
         android:icon="@drawable/settings"
-        android:orderInCategory="200"
+        android:orderInCategory="101"
         android:title="@string/settings"
         appCompat:showAsAction="ifRoom"/>
     <item
         android:id="@+id/menu_groups"
-        android:icon="@drawable/grid"
+        android:icon="@drawable/ic_action_groups"
         android:orderInCategory="103"
         android:title="@string/menu_groups"
         android:visible="true"
-        appCompat:showAsAction="never"/>
+        appCompat:showAsAction="ifRoom"/>
     <item
         android:id="@+id/share_timetable"
         android:icon="@drawable/share"
