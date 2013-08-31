@@ -27,9 +27,11 @@ import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.timetable.Timetable;
+import com.mick88.dittimetable.utils.FontApplicator;
 
 public class SettingsActivity extends ActionBarActivity
 {	
+	FontApplicator fontApplicator;
 	Spinner yearSelector, 
 		semesterSelector;
 	CheckBox weekCheckBox;
@@ -50,6 +52,8 @@ public class SettingsActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 		
+		this.fontApplicator = new FontApplicator(getAssets(), "Roboto-Light.ttf");
+		fontApplicator.applyFont(getWindow().getDecorView());
 		appSettings = ((TimetableApp)getApplication()).getSettings();
 		
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
