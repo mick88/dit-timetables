@@ -131,7 +131,7 @@ public class SettingsActivity extends ActionBarActivity
 		appSettings.setUsername(editUsername.getText().toString().trim());
 		appSettings.setPassword(editPassword.getText().toString().trim());
 		
-		appSettings.setCourse(editCourse.getText().toString());
+		appSettings.setCourse(editCourse.getText().toString().toUpperCase());
 		appSettings.setWeeks(editWeeks.getText().toString());
 		appSettings.setYear((int) (yearSelector.getSelectedItemId()+1));
 		appSettings.setOnlyCurrentWeek(weekCheckBox.isChecked());
@@ -230,7 +230,7 @@ public class SettingsActivity extends ActionBarActivity
 			valid = false;
 		}
 		
-		if (editCourse.getText().toString().matches("DT[0-9]{3}") == false)
+		if (editCourse.getText().toString().toUpperCase().matches("DT[0-9]{3}") == false)
 		{
 			if (editCourse.getText().toString().matches("[0-9]{3}") == true)
 			{
