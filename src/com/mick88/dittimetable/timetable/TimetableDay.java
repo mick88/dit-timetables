@@ -3,7 +3,6 @@ package com.mick88.dittimetable.timetable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,17 +10,8 @@ import java.util.Set;
 import org.jsoup.nodes.Element;
 
 import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.HorizontalScrollView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.mick88.dittimetable.AppSettings;
-import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.list.MultiEvent;
 import com.mick88.dittimetable.list.Space;
@@ -109,7 +99,7 @@ public class TimetableDay
 	public int parseHtmlEvent(Element element, Context context, boolean allowCache)
 	{
 		int n=0;
-		TimetableEvent c = new TimetableEvent(element, timetable, context, allowCache);
+		TimetableEvent c = new TimetableEvent(element, timetable, context, allowCache, this.name);
 		if (c.isValid() /*&& c.isGroup(timetable.getHiddenGroups())*/) 
 		{
 			addClass(c);
@@ -170,7 +160,7 @@ public class TimetableDay
 		String [] events = string.split(EXPORT_DAY_SEPARATOR);
 		for (String eventString : events)
 		{
-			TimetableEvent event = new TimetableEvent(eventString, timetable);
+			TimetableEvent event = new TimetableEvent(eventString, timetable, this.name);
 			if (event.isValid() /*&& event.isGroup(timetable.hiddenGroups)*/)
 			{
 				n++;
@@ -183,32 +173,6 @@ public class TimetableDay
 	public boolean isToday()
 	{
 		return timetable.getToday(false) == this;
-	}
-	
-	@Deprecated
-	public View getView(LayoutInflater inflater, Context context)
-	{
-		View view = inflater.inflate(R.layout.day_layout, null);
-		LinearLayout layout = (LinearLayout) view.findViewById(R.id.dayContent);
-		
-		drawTimetable(layout, inflater, context);
-//		Log.d(toString(), "View created");
-		return view;
-	}
-	
-	private static View getSpacer(LayoutInflater inflater, int num, int highligh, Context context)
-	{
-		ViewGroup space = (ViewGroup) inflater.inflate(R.layout.timetable_event_empty, null);
-		ViewGroup container = (ViewGroup) space.findViewById(R.id.separator_dot_container);
-		for (int i=0; i < num; i++)
-		{
-			ImageView imageView = new ImageView(context);
-			imageView.setImageResource((i == highligh)?R.drawable.dot_selected:R.drawable.dot);
-			imageView.setPadding(5,5,5,5);
-			
-			container.addView(imageView);
-		}
-		return space;
 	}
 	
 	public List<EventItem> getTimetableEntries()
@@ -264,108 +228,6 @@ public class TimetableDay
 		}
 
 		return entries;
-	}
-	
-	@Deprecated
-	void drawTimetable(ViewGroup parentLayout, LayoutInflater inflater, Context context)
-	{		
-		int hour=0;
-		boolean isToday = isToday();
-		if (isToday)
-		{
-			hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-		}
-		
-		ViewGroup hsViews[] = new HorizontalScrollView[] {
-			null, null, null, null, null, null, 
-			null, null, null, null, null, null,
-			null, null, null, null, null, null, 
-			null, null, null, null, null, null};
-		
-		int lastEndHour=0;
-		TimetableEvent currentEvent=null;
-		
-		AppSettings settings = timetable.getSettings();
-		int currentWeek = Timetable.getCurrentWeek();
-		
-		int showWeek = settings.getOnlyCurrentWeek()?currentWeek : 0;
-		
-		/*TimetableActivity activity = (TimetableActivity) timetable.getParentActivity();
-		ViewPager viewPager = activity.getViewPager();*/
-		
-		
-		synchronized (events)
-		{
-			for (TimetableEvent event : events) 
-				if (event.isGroup(settings.getHiddenGroups()) && event.isInWeek(settings.getOnlyCurrentWeek() ? currentWeek:0))
-			{			
-				int numClassesAtCurrentHour = getNumEvents(event.getStartHour(), settings.getHiddenGroups(), showWeek);
-				boolean isSingleEvent = numClassesAtCurrentHour == 1;
-				View tile = event.getTile(context, isSingleEvent == false, inflater); 
-				
-				// mark current event
-				if ((isToday && currentEvent == null && event.getEndHour() > hour)
-						|| (currentEvent != null && (event.getStartHour() == currentEvent.getStartHour())))
-				{
-					currentEvent = event;
-					int rDrawable = event.isEventOn(hour)?R.drawable.event_selected_selector:R.drawable.event_upcoming_selector;
-					
-					if (isSingleEvent)
-						((RelativeLayout) tile.findViewById(R.id.timetable_event_small)).setBackgroundResource(rDrawable);
-					else
-						((LinearLayout) tile.findViewById(R.id.timetable_event_tiny)).setBackgroundResource(rDrawable);
-					
-				}
-				
-				if (lastEndHour > 0)
-				{
-					int hours = event.getStartHour()-lastEndHour;
-					if (hours > 0) 
-					{
-						parentLayout.addView(getSpacer(inflater, hours, isToday?(hour-lastEndHour):(-1), context));
-					}
-				}
-				lastEndHour=event.getEndHour();
-				
-				/*Add to layout*/
-				if (isSingleEvent) 
-				{
-					parentLayout.addView(tile);
-				}
-				else
-				{
-					int startTime = event.getStartHour();
-					ViewGroup multiEventContainer = hsViews[startTime];
-					
-					// create scroller if doesnt exist
-					if (multiEventContainer == null)
-					{
-						multiEventContainer = new HorizontalScrollView(context);
-
-						((HorizontalScrollView) multiEventContainer).setFillViewport(true);
-						
-						LayoutParams sameHourContainerParams = new LayoutParams(
-								LayoutParams.MATCH_PARENT,
-								LayoutParams.WRAP_CONTENT);
-						multiEventContainer.setLayoutParams(sameHourContainerParams);
-		
-						ViewGroup host = new LinearLayout(context);
-						host.setLayoutParams(new LayoutParams(
-							LayoutParams.MATCH_PARENT,
-							LayoutParams.WRAP_CONTENT));
-										
-						multiEventContainer.addView(host);
-		//					sameHourEventContainer.setScrollbarFadingEnabled(false);
-						
-						hsViews[startTime] = multiEventContainer;
-						parentLayout.addView(multiEventContainer);
-					}
-					
-					// casting container's inner layout
-					((ViewGroup) multiEventContainer.getChildAt(0)).addView(tile);
-				}
-			}
-		}
 	}
 	
 	public void downloadAdditionalInfo(Context context)
