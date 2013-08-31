@@ -66,6 +66,8 @@ public class EventDetailsActivity extends ActionBarActivity
 		}
 		result.add(new KeyValue("Group:", groups.toString()));
 		result.add(new KeyValue("Weeks:", event.getWeeks()));
+		result.add(new KeyValue("Duration:", String.format("%d hours", event.getLength())));
+		result.add(new KeyValue("ID:", String.valueOf(event.getId())));
 		
 		return result;
 	}
