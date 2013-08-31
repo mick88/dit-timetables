@@ -189,7 +189,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	 */
 	public int getLength()
 	{
-		return endHour - endMin;
+		return endHour - startHour;
 	}
 	
 	public boolean isEventOn()
