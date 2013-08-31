@@ -39,8 +39,7 @@
         android:layout_alignBottom="@+id/editCourseCode"
         android:layout_alignLeft="@+id/centerStrut"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/textView2"
-        android:entries="@array/year_values" />
+        android:layout_below="@+id/textView2" />
 
     <Spinner
         android:id="@+id/spinner_semester_selector"
@@ -49,8 +48,7 @@
         android:layout_alignBottom="@+id/edit_weeks"
         android:layout_alignLeft="@+id/spinner_year_selector"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/editCourseCode"
-        android:entries="@array/semester_predefines" />
+        android:layout_below="@+id/editCourseCode" />
 
     <EditText
         android:id="@+id/edit_weeks"

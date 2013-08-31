@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.RobotoArrayAdapter;
 import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.utils.FontApplicator;
@@ -32,7 +33,6 @@ import com.mick88.dittimetable.utils.FontApplicator;
 public class SettingsActivity extends ActionBarActivity
 {	
 	/**
-	 * TODO: Roboto font in Spinners
 	 * TODO: Don't allow back if data is incorrect
 	 */
 	
@@ -72,6 +72,12 @@ public class SettingsActivity extends ActionBarActivity
 		editPassword = (EditText) findViewById(R.id.editPassword);
 		weekCheckBox = (CheckBox) findViewById(R.id.checkBoxSetCurrentWeekOnly);
 		TextView tvInfo = (TextView) findViewById(R.id.textDatasetInfo);
+		
+		String [] years = getResources().getStringArray(R.array.year_values);
+		yearSelector.setAdapter(new RobotoArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, years));
+		
+		String [] presetWeeks = getResources().getStringArray(R.array.semester_predefines);
+		semesterSelector.setAdapter(new RobotoArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, presetWeeks));
 		
 		findViewById(R.id.btn_get_password).setOnClickListener(new View.OnClickListener()
 		{
