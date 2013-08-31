@@ -58,7 +58,7 @@
             >
         </activity>
         <activity
-            android:name="com.mick88.dittimetable.screens.EventDetailsActivity"
+            android:name="com.mick88.dittimetable.event_details.EventDetailsActivity"
             android:label="@string/title_activity_event_details"
             android:parentActivityName="com.mick88.dittimetable.screens.TimetableActivity" >
             <meta-data

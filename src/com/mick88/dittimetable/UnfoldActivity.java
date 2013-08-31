@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 
-import com.mick88.dittimetable.screens.EventDetailsActivity;
+import com.mick88.dittimetable.event_details.EventDetailsActivity;
 import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.utils.FontApplicator;
 
