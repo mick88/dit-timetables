@@ -35,10 +35,7 @@
             android:ems="10"
             android:hint="@string/course_code"
             android:inputType="textCapCharacters|textNoSuggestions|textVisiblePassword"
-            android:singleLine="true" >
-
-            <requestFocus />
-        </EditText>
+            android:singleLine="true" />
 
         <Spinner
             android:id="@+id/spinner_year_selector"
