@@ -41,5 +41,16 @@ public class RobotoArrayAdapter<T> extends ArrayAdapter<T>
 		
 		return result;
 	}
+	
+	@Override
+	public View getDropDownView(int position, View convertView, ViewGroup parent)
+	{
+		View result =  super.getDropDownView(position, convertView, parent);
+		
+		if (convertView == null) 
+			fontApplicator.applyFont(result);
+		
+		return result;
+	}
 
 }
