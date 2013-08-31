@@ -2,6 +2,8 @@ package com.mick88.dittimetable.event_details;
 
 import java.util.List;
 
+import com.mick88.dittimetable.utils.FontApplicator;
+
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,10 +14,12 @@ import android.widget.TextView;
 
 public class KeyValueAdapter extends ArrayAdapter<KeyValue>
 {
-
+	FontApplicator 
+		fontApplicator;
+	
 	public KeyValueAdapter(Context context, List<KeyValue> objects) {
 		super(context, 0, 0, objects);
-		// TODO Auto-generated constructor stub
+		this.fontApplicator = new FontApplicator(context.getAssets(), "Roboto-Light.ttf");
 	}
 	
 	@Override
@@ -28,6 +32,8 @@ public class KeyValueAdapter extends ArrayAdapter<KeyValue>
 		
 		tvName = (TextView) view.findViewById(android.R.id.text1);
 		tvValue = (TextView) view.findViewById(android.R.id.text2);
+		
+		fontApplicator.applyFont(view);
 		
 		tvName.setText(getItem(position).key);
 		tvValue.setText(getItem(position).value);
