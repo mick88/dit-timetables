@@ -208,6 +208,28 @@ public class SettingsActivity extends ActionBarActivity
 	private boolean validate()
 	{
 		boolean valid = true;
+		
+		if (TextUtils.isEmpty(editPassword.getText()))
+		{
+			editPassword.requestFocus();
+			editPassword.setError("Password cannot be empty");
+			valid = false;
+		}
+		
+		if (TextUtils.isEmpty(editUsername.getText()))
+		{
+			editUsername.requestFocus();
+			editUsername.setError("Username cannot be empty");
+			valid = false;
+		}
+		
+		if (editWeeks.getText().toString().matches("[0-9-,]+") == false) //any digit, space or ,. One or more times
+		{
+			editWeeks.requestFocus();
+			editWeeks.setError("Incorrect week range");
+			valid = false;
+		}
+		
 		if (editCourse.getText().toString().matches("DT[0-9]{3}") == false)
 		{
 			if (editCourse.getText().toString().matches("[0-9]{3}") == true)
@@ -222,27 +244,6 @@ public class SettingsActivity extends ActionBarActivity
 				editCourse.setError("Invalid course code");
 				valid = false;
 			}
-		}
-		
-		if (editWeeks.getText().toString().matches("[0-9-,]+") == false) //any digit, space or ,. One or more times
-		{
-			editWeeks.requestFocus();
-			editWeeks.setError("Incorrect week range");
-			valid = false;
-		}
-		
-		if (TextUtils.isEmpty(editUsername.getText()))
-		{
-			editUsername.requestFocus();
-			editUsername.setError("Username cannot be empty");
-			valid = false;
-		}
-		
-		if (TextUtils.isEmpty(editPassword.getText()))
-		{
-			editPassword.requestFocus();
-			editPassword.setError("Password cannot be empty");
-			valid = false;
 		}
 		
 		return valid;
