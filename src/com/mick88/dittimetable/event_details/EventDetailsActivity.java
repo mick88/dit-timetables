@@ -2,6 +2,7 @@ package com.mick88.dittimetable.event_details;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -57,14 +58,26 @@ public class EventDetailsActivity extends ActionBarActivity
 		result.add(new KeyValue("Room:", event.getRoom()));
 		result.add(new KeyValue("Lecturer:",event.getLecturer()));
 		result.add(new KeyValue("Type:", event.getType().toString()));
-		StringBuilder groups = new StringBuilder();
-		String glue = "";
-		for (String group : event.getGroups())
+		
+		final String groups;
+		Collection<String> groupsCollection = event.getGroups();
+		if (groupsCollection.isEmpty())
 		{
-			groups.append(glue).append(group);
-			glue = "\n";
+			groups = "All";
 		}
-		result.add(new KeyValue("Group:", groups.toString()));
+		else
+		{		
+			StringBuilder groupsBuilder = new StringBuilder();
+			String glue = "";
+			for (String group : groupsCollection)
+			{
+				groupsBuilder.append(glue).append(group);
+				glue = "\n";
+			}
+			groups = groupsBuilder.toString();
+		}
+
+		result.add(new KeyValue("Groups:", groups));
 		result.add(new KeyValue("Weeks:", event.getWeeks()));
 		result.add(new KeyValue("Duration:", String.format("%d hours", event.getLength())));
 		result.add(new KeyValue("ID:", String.valueOf(event.getId())));
