@@ -19,6 +19,17 @@ public class RobotoArrayAdapter<T> extends ArrayAdapter<T>
 		
 		fontApplicator = new FontApplicator(context.getAssets(), "Roboto-Light.ttf");
 	}
+	
+	
+
+	public RobotoArrayAdapter(Context context, int resource,
+			int textViewResourceId, T[] objects) {
+		super(context, resource, textViewResourceId, objects);
+		
+		fontApplicator = new FontApplicator(context.getAssets(), "Roboto-Light.ttf");		
+	}
+
+
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent)
