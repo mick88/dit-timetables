@@ -99,7 +99,7 @@ public class TimetableDay
 	public int parseHtmlEvent(Element element, Context context, boolean allowCache)
 	{
 		int n=0;
-		TimetableEvent c = new TimetableEvent(element, timetable, context, allowCache);
+		TimetableEvent c = new TimetableEvent(element, timetable, context, allowCache, this.name);
 		if (c.isValid() /*&& c.isGroup(timetable.getHiddenGroups())*/) 
 		{
 			addClass(c);
@@ -160,7 +160,7 @@ public class TimetableDay
 		String [] events = string.split(EXPORT_DAY_SEPARATOR);
 		for (String eventString : events)
 		{
-			TimetableEvent event = new TimetableEvent(eventString, timetable);
+			TimetableEvent event = new TimetableEvent(eventString, timetable, this.name);
 			if (event.isValid() /*&& event.isGroup(timetable.hiddenGroups)*/)
 			{
 				n++;

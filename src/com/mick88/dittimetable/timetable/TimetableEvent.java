@@ -93,6 +93,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			endHour=0;
 	private ClassType type=ClassType.Other;
 	Set<String> groups = new HashSet<String>();
+	public final String day;
 	
 	/**
 	 * Stores parsed list of weeks when event is on
@@ -219,27 +220,28 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		ID_NAME = 8,
 		ID_TYPE = 9;	
 	
-	private TimetableEvent(Timetable timetable)
+	private TimetableEvent(Timetable timetable, String day)
 	{
 		this.timetable = timetable;
+		this.day = day;
 		weeks = new HashSet<Integer>();
 	}
 	
 	/**
 	 * Creates new object by parsing data and loading/downloading additional data
 	 */
-	public TimetableEvent(Element table, Timetable timetable, Context context, boolean allowCache)
+	public TimetableEvent(Element table, Timetable timetable, Context context, boolean allowCache, String day)
 	{
-		this(timetable);
+		this(timetable, day);
 		parseNewHtmlTable(table, context, allowCache);
 	}
 	
 	/**
 	 * Creates new object by importing data from string
 	 */
-	public TimetableEvent(String importString, Timetable timetable)
+	public TimetableEvent(String importString, Timetable timetable, String day)
 	{
-		this(timetable);
+		this(timetable, day);
 		importFromString(importString);
 //		this.duration = this.endTime - this.startTime;
 	}
