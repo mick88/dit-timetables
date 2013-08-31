@@ -34,7 +34,6 @@ public class SettingsActivity extends ActionBarActivity
 	/**
 	 * TODO: Roboto font in Spinners
 	 * TODO: Don't allow back if data is incorrect
-	 * TODO: Clear error when semester is seleceted
 	 */
 	
 	FontApplicator fontApplicator;
