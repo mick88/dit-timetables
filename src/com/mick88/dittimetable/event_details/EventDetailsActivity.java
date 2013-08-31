@@ -64,7 +64,7 @@ public class EventDetailsActivity extends ActionBarActivity
 			groups.append(glue).append(group);
 			glue = "\n";
 		}
-		result.add(new KeyValue("Group:", groups.toString()));
+		result.add(new KeyValue("Groups:", groups.toString()));
 		result.add(new KeyValue("Weeks:", event.getWeeks()));
 		result.add(new KeyValue("Duration:", String.format("%d hours", event.getLength())));
 		result.add(new KeyValue("ID:", String.valueOf(event.getId())));
