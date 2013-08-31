@@ -25,7 +25,8 @@ public class RobotoArrayAdapter<T> extends ArrayAdapter<T>
 	{
 		View result = super.getView(position, convertView, parent);
 		
-		fontApplicator.applyFont(result);
+		if (convertView == null) 
+			fontApplicator.applyFont(result);
 		
 		return result;
 	}
