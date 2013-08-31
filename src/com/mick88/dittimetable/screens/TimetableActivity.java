@@ -249,7 +249,7 @@ public class TimetableActivity extends ActionBarActivity
 		setContentView(R.layout.activity_timetable);
 
 		FontApplicator fontApplicator = new FontApplicator(getAssets(), "Roboto-Light.ttf");
-		fontApplicator.applyFont(findViewById(R.id.layout_timetable));
+		fontApplicator.applyFont(getWindow().getDecorView());
 		application = (TimetableApp) getApplication();
 		processIntent();
 				
