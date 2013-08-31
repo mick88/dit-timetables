@@ -218,7 +218,7 @@ public class SettingsActivity extends ActionBarActivity
 			else
 			{
 				editCourse.requestFocus();
-				Toast.makeText(getApplicationContext(), "Please enter correct course code (like DT211)", Toast.LENGTH_LONG).show();
+				editCourse.setError("Invalid course code");
 				return false;
 			}
 		}
@@ -226,21 +226,21 @@ public class SettingsActivity extends ActionBarActivity
 		if (editWeeks.getText().toString().matches("[0-9-,]+") == false) //any digit, space or ,. One or more times
 		{
 			editWeeks.requestFocus();
-			Toast.makeText(getApplicationContext(), "Please enter correct week range (use dropdown)", Toast.LENGTH_LONG).show();
+			editWeeks.setError("Incorrect week range");
 			return false;
 		}
 		
 		if (TextUtils.isEmpty(editUsername.getText()))
 		{
 			editUsername.requestFocus();
-			Toast.makeText(getApplicationContext(), "Please enter user name", Toast.LENGTH_LONG).show();
+			editUsername.setError("Username cannot be empty");
 			return false;
 		}
 		
 		if (TextUtils.isEmpty(editPassword.getText()))
 		{
 			editPassword.requestFocus();
-			Toast.makeText(getApplicationContext(), "Please enter password", Toast.LENGTH_LONG).show();
+			editPassword.setError("Password cannot be empty");
 			return false;
 		}
 		
