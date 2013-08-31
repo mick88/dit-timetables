@@ -2,7 +2,6 @@ package com.mick88.dittimetable.event_details;
 
 import java.util.List;
 
-import com.mick88.dittimetable.event_details.EventDetailsActivity.KeyValue;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -22,17 +22,6 @@ public class EventDetailsActivity extends ActionBarActivity
 
 	public static final String EXTRA_EVENT = "event";
 	
-	public static class KeyValue
-	{
-		public String key, value;
-
-		public KeyValue(String key, String value) {
-			this.key = key;
-			this.value = value;
-		}		
-		
-	}
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -46,9 +35,12 @@ public class EventDetailsActivity extends ActionBarActivity
 		
 		if (serializable instanceof TimetableEvent)
 		{
-			List<KeyValue> pairs = getKeyValuePairs((TimetableEvent) serializable);
+			TimetableEvent event = (TimetableEvent) serializable;
+			List<KeyValue> pairs = getKeyValuePairs(event);
 			ListView listView = (ListView) findViewById(android.R.id.list);
 			listView.setAdapter(new KeyValueAdapter(this, pairs));
+			
+			setTitle(event.getName());
 		}
 		else  
 			finish();		
@@ -56,7 +48,7 @@ public class EventDetailsActivity extends ActionBarActivity
 	
 	private List<KeyValue> getKeyValuePairs(TimetableEvent event)
 	{
-		List<KeyValue> result = new ArrayList<EventDetailsActivity.KeyValue>();
+		List<KeyValue> result = new ArrayList<KeyValue>();
 		String name = event.getName();
 		
 		result.add(new KeyValue("Module:", name));
