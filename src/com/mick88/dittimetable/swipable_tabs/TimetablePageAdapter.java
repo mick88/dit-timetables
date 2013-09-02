@@ -21,18 +21,19 @@ public class TimetablePageAdapter extends FragmentPagerAdapter
 	{
 		super(fm);
 		this.fragments = new DayFragment[] {
-				new DayFragment().setTimetableDay(timetable.getDay(0)),
-				new DayFragment().setTimetableDay(timetable.getDay(1)),
-				new DayFragment().setTimetableDay(timetable.getDay(2)),
-				new DayFragment().setTimetableDay(timetable.getDay(3)),
-				new DayFragment().setTimetableDay(timetable.getDay(4)),
+				new DayFragment(),
+				new DayFragment(),
+				new DayFragment(),
+				new DayFragment(),
+				new DayFragment(),
 		};
 		
-		Bundle args = new Bundle();
-		args.putSerializable(DayFragment.EXTRA_SETTINGS, timetable.getSettings());
 		
+		int n=0;
 		for (DayFragment fragment : fragments)
 		{			
+			Bundle args = new Bundle();
+			args.putInt(DayFragment.EXTRA_DAY_ID, n++);
 			fragment.setArguments(args);
 		}
 		setTimetable(timetable);
@@ -59,6 +60,12 @@ public class TimetablePageAdapter extends FragmentPagerAdapter
 	}
 	
 	@Override
+	public int getItemPosition(Object object)
+	{
+		return POSITION_NONE;
+	}
+	
+	@Override
 	public CharSequence getPageTitle(int position)
 	{
 		return fragments[position].getDayName();
@@ -69,13 +76,6 @@ public class TimetablePageAdapter extends FragmentPagerAdapter
 	public int getCount()
 	{
 		return fragments.length;
-	}
-	
-	@Override
-	public void notifyDataSetChanged()
-	{
-		super.notifyDataSetChanged();
-		refresh();
 	}
 	
 	public void refresh()

@@ -1,48 +1,60 @@
 package com.mick88.dittimetable.swipable_tabs;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.list.EventAdapter;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
+import com.mick88.dittimetable.screens.TimetableActivity;
+import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableDay;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class DayFragment extends Fragment
 {
-	public static final String EXTRA_DAY_ID = "day_id",
-			EXTRA_DAY_NAME = "day_name",
-			EXTRA_SETTINGS = "app_settings",
-			EXTRA_DAY_OBJECT = "day_object";
+	public static final String EXTRA_DAY_ID = "day_id";
+	public int dayId;
+	
 	TimetableDay timetableDay = null;
-	EventAdapter eventAdapter = null;
+	Timetable timetable;
+	
 	TextView tvText;
-	int dayId;
 	private ListView listView;
-	private List<EventItem> events = new ArrayList<EventAdapter.EventItem>();
 	FontApplicator fontApplicator = null;
-	AppSettings appSettings;
+	
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);	
-		this.appSettings = (AppSettings) getArguments().getSerializable(EXTRA_SETTINGS);
 		
-		if (savedInstanceState != null)
+		if (getActivity() instanceof TimetableActivity)
 		{
-			timetableDay = (TimetableDay) savedInstanceState.getSerializable(EXTRA_DAY_OBJECT);
+			setTimetable(((TimetableActivity)getActivity()).getTimetable());
+		}
+		
+		this.dayId = getArguments().getInt(EXTRA_DAY_ID);
+	}
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState)
+	{
+		super.onActivityCreated(savedInstanceState);
+		
+		if (getActivity() instanceof TimetableActivity)
+		{
+			setTimetable(((TimetableActivity)getActivity()).getTimetable());
 		}
 	}
 	
@@ -50,17 +62,23 @@ public class DayFragment extends Fragment
 	public void onSaveInstanceState(Bundle outState)
 	{
 		super.onSaveInstanceState(outState);
-		outState.putSerializable(EXTRA_DAY_OBJECT, timetableDay);
+		outState.putInt(EXTRA_DAY_ID, dayId);
 	}
 	
 	@Override
 	public void onAttach(Activity activity)
 	{
 		super.onAttach(activity);		
-		fontApplicator = new FontApplicator(activity.getAssets(), "Roboto-Light.ttf");
+		fontApplicator = new FontApplicator(activity.getApplicationContext().getAssets(), "Roboto-Light.ttf");
 	}
 	
-	public DayFragment setTimetableDay(TimetableDay timetableDay)
+	public void setTimetable(Timetable timetable)
+	{
+		this.timetable = timetable;
+		if (timetable != null) setTimetableDay(timetable.getDay(dayId));
+	}
+	
+	DayFragment setTimetableDay(TimetableDay timetableDay)
 	{
 		this.timetableDay = timetableDay;
 		refresh();
@@ -81,10 +99,9 @@ public class DayFragment extends Fragment
 	
 	public void refresh()
 	{
-		if (timetableDay != null && eventAdapter != null)
+		if (timetableDay != null && listView != null)
 		{
-			events.clear();
-			List<EventItem> items = timetableDay.getTimetableEntries(appSettings);
+			List<EventItem> items = timetableDay.getTimetableEntries(timetable.getSettings());
 			if (items.isEmpty())
 			{
 				listView.setVisibility(View.GONE);
@@ -93,12 +110,13 @@ public class DayFragment extends Fragment
 			}
 			else
 			{
-				events.addAll(items);
-				eventAdapter.notifyDataSetChanged();
+				listView.setAdapter(new EventAdapter(getActivity(), items, timetableDay));
 				listView.setVisibility(View.VISIBLE);
 				tvText.setVisibility(View.GONE);
 			}
+			Log.d(getDayName(), "Refreshed");
 		}
+		else Log.e("ERROR", "timetable day or listview is null!");
 	}
 	
 	@Override
@@ -108,12 +126,22 @@ public class DayFragment extends Fragment
 		if (fontApplicator != null) fontApplicator.applyFont(view);
 		
 		listView = (ListView) view.findViewById(android.R.id.list);
-		eventAdapter = new EventAdapter(getActivity(), events, timetableDay);
-		listView.setAdapter(eventAdapter);
 		tvText = (TextView) view.findViewById(R.id.tvDayMessage);
 		
 		refresh();
 	}
 	
+	@Override
+	public void onDestroyView()
+	{
+		super.onDestroyView();
+		this.listView = null;
+	}
 	
+	@Override
+	public void onDetach()
+	{
+		super.onDetach();
+		timetable = null;
+	}
 }
