@@ -730,7 +730,7 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		for (String s : selected) application.getSettings().unhideGroup(s);
 		for (String s : unselected) application.getSettings().hideGroup(s);
-		application.getSettings().saveSettings();
+		application.getSettings().saveSettings(this);
 		refresh();
 	}
 
