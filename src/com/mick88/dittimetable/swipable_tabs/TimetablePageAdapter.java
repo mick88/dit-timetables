@@ -1,5 +1,6 @@
 package com.mick88.dittimetable.swipable_tabs;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -26,6 +27,14 @@ public class TimetablePageAdapter extends FragmentPagerAdapter
 				new DayFragment().setTimetableDay(timetable.getDay(3)),
 				new DayFragment().setTimetableDay(timetable.getDay(4)),
 		};
+		
+		Bundle args = new Bundle();
+		args.putSerializable(DayFragment.EXTRA_SETTINGS, timetable.getSettings());
+		
+		for (DayFragment fragment : fragments)
+		{			
+			fragment.setArguments(args);
+		}
 		setTimetable(timetable);
 	}
 	

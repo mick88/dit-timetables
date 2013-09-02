@@ -35,6 +35,7 @@ import com.mick88.dittimetable.web.Connection;
  */
 public class Timetable implements Serializable
 {
+	
 	private static final long serialVersionUID = 1L;
 
 	public static enum ErrorCode
@@ -255,7 +256,7 @@ public class Timetable implements Serializable
 		this.settings = settings;
 		/*Initialize days*/
 		for (int i = 0; i < NUM_DAYS; i++)
-			this.days[i] = new TimetableDay(DAY_NAMES[i], this);
+			this.days[i] = new TimetableDay(DAY_NAMES[i]);
 		
 		/*this.days[DAY_MONDAY] = new TimetableDay(DAY_NAMES[DAY_MONDAY], this);
 		this.days[DAY_TUESDAY] = new TimetableDay(DAY_NAMES[DAY_TUESDAY], this);
@@ -413,7 +414,7 @@ public class Timetable implements Serializable
 			for (TimetableDay day : days)
 			{
 				if (disposed) break;
-				day.downloadAdditionalInfo(context);
+				day.downloadAdditionalInfo(context, this);
 			}
 			
 			if (resultHandler != null) resultHandler.onFullDataDownloaded();
@@ -619,7 +620,7 @@ public class Timetable implements Serializable
 		{
 			if (dayId < days.length)
 			{
-				n += days[dayId++].importFromString(d);
+				n += days[dayId++].importFromString(d, this);
 			}
 		}
 		return (n > 0);
@@ -682,7 +683,7 @@ public class Timetable implements Serializable
 				}
 			else if (currentDay != null)
 			{
-				nEvents += currentDay.parseHtmlEvent(entry, context, allowCache);
+				nEvents += currentDay.parseHtmlEvent(this, entry, context, allowCache);
 				resultHandler.onProgress(nEvents, max);
 			}
 			else

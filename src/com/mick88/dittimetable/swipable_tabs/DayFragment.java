@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.list.EventAdapter;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
@@ -22,6 +23,7 @@ public class DayFragment extends Fragment
 {
 	public static final String EXTRA_DAY_ID = "day_id",
 			EXTRA_DAY_NAME = "day_name",
+			EXTRA_SETTINGS = "app_settings",
 			EXTRA_DAY_OBJECT = "day_object";
 	TimetableDay timetableDay = null;
 	EventAdapter eventAdapter = null;
@@ -30,11 +32,14 @@ public class DayFragment extends Fragment
 	private ListView listView;
 	private List<EventItem> events = new ArrayList<EventAdapter.EventItem>();
 	FontApplicator fontApplicator = null;
+	AppSettings appSettings;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);	
+		this.appSettings = (AppSettings) getArguments().getSerializable(EXTRA_SETTINGS);
+		
 		if (savedInstanceState != null)
 		{
 			timetableDay = (TimetableDay) savedInstanceState.getSerializable(EXTRA_DAY_OBJECT);
@@ -79,7 +84,7 @@ public class DayFragment extends Fragment
 		if (timetableDay != null && eventAdapter != null)
 		{
 			events.clear();
-			List<EventItem> items = timetableDay.getTimetableEntries();
+			List<EventItem> items = timetableDay.getTimetableEntries(appSettings);
 			if (items.isEmpty())
 			{
 				listView.setVisibility(View.GONE);

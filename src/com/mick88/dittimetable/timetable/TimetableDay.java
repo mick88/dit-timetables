@@ -24,16 +24,14 @@ import com.mick88.dittimetable.list.Space;
 public class TimetableDay implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	Timetable timetable=null;
 	final String name;
 	int id=-1;
 	final String logTag = "TimetableDay";
 	private List<TimetableEvent> events = new ArrayList<TimetableEvent>();
 	
-	public TimetableDay(String name, Timetable timetable)
+	public TimetableDay(String name)
 	{
 		this.name = name;
-		this.timetable = timetable;
 	}
 	
 	public void clearEvents()
@@ -98,7 +96,7 @@ public class TimetableDay implements Serializable
 		return result;
 	}
 	
-	public int parseHtmlEvent(Element element, Context context, boolean allowCache)
+	public int parseHtmlEvent(Timetable timetable, Element element, Context context, boolean allowCache)
 	{
 		int n=0;
 		TimetableEvent c = new TimetableEvent(element, timetable, context, allowCache, this.name);
@@ -156,7 +154,7 @@ public class TimetableDay implements Serializable
 		return builder;
 	}
 	
-	public int importFromString(String string)
+	public int importFromString(String string, Timetable timetable)
 	{
 		int n=0;
 		String [] events = string.split(EXPORT_DAY_SEPARATOR);
@@ -174,17 +172,17 @@ public class TimetableDay implements Serializable
 	
 	public boolean isToday()
 	{
-		return timetable.getToday(false) == this;
+		return Timetable.getTodayId(false) == this.id;
+//		return Timetable.getToday(false) == this;
 	}
 	
-	public List<EventItem> getTimetableEntries()
+	public List<EventItem> getTimetableEntries(AppSettings settings)
 	{
 		List<EventItem> entries = new ArrayList<EventItem>(events.size());
 		
 		int lastEndHour=0;
 		TimetableEvent lastEvent=null;
 		
-		AppSettings settings = timetable.getSettings();
 		int currentWeek = Timetable.getCurrentWeek(),
 			showWeek = settings.getOnlyCurrentWeek()?currentWeek : 0;
 		
@@ -232,7 +230,7 @@ public class TimetableDay implements Serializable
 		return entries;
 	}
 	
-	public void downloadAdditionalInfo(Context context)
+	public void downloadAdditionalInfo(Context context, Timetable timetable)
 	{
 		for (TimetableEvent event : events) if (event.isComplete() == false)
 		{
