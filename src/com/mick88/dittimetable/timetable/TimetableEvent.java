@@ -368,11 +368,8 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			return false;
 		}
 		
-		Log.i(logTag, "Event loaded from "+filename);
-		
 		if (parseAdditionalInfo(sb.toString(), timetable))
 		{
-			Log.i(logTag, "Timetable successfully loaded from file");
 			return true;
 		}
 		return false;
@@ -386,7 +383,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		file.write(buffer);
 		file.flush();
 		file.close();
-		Log.i(logTag, "Timetable saved to "+filename);
 	}
 	
 	/**
@@ -566,7 +562,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 				}
 			}
 		}
-		Log.d(logTag, "Weeks decoded to "+weeks.size());
 	}
 	
 	/**
