@@ -24,7 +24,7 @@ import com.mick88.dittimetable.list.Space;
 public class TimetableDay implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	transient Timetable timetable=null;
+	Timetable timetable=null;
 	final String name;
 	int id=-1;
 	final String logTag = "TimetableDay";
