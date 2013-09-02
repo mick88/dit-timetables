@@ -36,7 +36,7 @@ import com.mick88.dittimetable.web.Connection;
  */
 public class Timetable 
 {
-	public enum ErrorCode
+	public static enum ErrorCode
 	{
 		connectionFailed,
 		noError,
@@ -51,7 +51,7 @@ public class Timetable
 		wrongLoginDetails,
 	}
 	
-	public interface ResultHandler
+	public static interface ResultHandler
 	{
 		public void onDebugStringReceived(String s);
 		public void onDownloadPdfStarted(boolean success);
