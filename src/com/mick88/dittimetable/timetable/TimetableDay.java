@@ -1,5 +1,6 @@
 package com.mick88.dittimetable.timetable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -20,8 +21,9 @@ import com.mick88.dittimetable.list.Space;
  * ontains list of classes in a day
  * 
  */
-public class TimetableDay
+public class TimetableDay implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 	Timetable timetable=null;
 	final String name;
 	int id=-1;

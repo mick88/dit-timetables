@@ -21,7 +21,8 @@ import com.mick88.dittimetable.utils.FontApplicator;
 public class DayFragment extends Fragment
 {
 	public static final String EXTRA_DAY_ID = "day_id",
-			EXTRA_DAY_NAME = "day_name";
+			EXTRA_DAY_NAME = "day_name",
+			EXTRA_DAY_OBJECT = "day_object";
 	TimetableDay timetableDay = null;
 	EventAdapter eventAdapter = null;
 	TextView tvText;
@@ -34,6 +35,17 @@ public class DayFragment extends Fragment
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);	
+		if (savedInstanceState != null)
+		{
+			timetableDay = (TimetableDay) savedInstanceState.getSerializable(EXTRA_DAY_OBJECT);
+		}
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState)
+	{
+		super.onSaveInstanceState(outState);
+		outState.putSerializable(EXTRA_DAY_OBJECT, timetableDay);
 	}
 	
 	@Override
