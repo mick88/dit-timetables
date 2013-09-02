@@ -341,8 +341,15 @@ public class TimetableActivity extends ActionBarActivity
 	
 	void refresh()
 	{
-		setTitle();
-		timetablePageAdapter.setTimetable(timetable);
+		try
+		{
+			setTitle();
+			timetablePageAdapter.setTimetable(timetable);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	

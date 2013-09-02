@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
 import com.mick88.dittimetable.timetable.Timetable;
 
@@ -56,11 +55,5 @@ public class TimetablePageAdapter extends FragmentPagerAdapter
 	public int getCount()
 	{
 		return 5;
-	}
-	
-	public void refresh()
-	{
-		Log.d(toString(), "Refreshing Timetable pages...");
-		notifyDataSetChanged();
 	}
 }
