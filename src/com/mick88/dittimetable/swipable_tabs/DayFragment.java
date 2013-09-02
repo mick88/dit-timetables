@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.list.EventAdapter;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
@@ -22,11 +23,12 @@ import com.mick88.dittimetable.utils.FontApplicator;
 
 public class DayFragment extends Fragment
 {
-	public static final String EXTRA_DAY_ID = "day_id";
-	public int dayId;
+	public static final String
+		EXTRA_DAY = "day",
+		EXTRA_SETTINGS ="settings";
 	
 	TimetableDay timetableDay = null;
-	Timetable timetable;
+	AppSettings appSettings = null;
 	
 	TextView tvText;
 	private ListView listView;
@@ -39,30 +41,8 @@ public class DayFragment extends Fragment
 	{
 		super.onCreate(savedInstanceState);	
 		
-		if (getActivity() instanceof TimetableActivity)
-		{
-			setTimetable(((TimetableActivity)getActivity()).getTimetable());
-		}
-		
-		this.dayId = getArguments().getInt(EXTRA_DAY_ID);
-	}
-	
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState)
-	{
-		super.onActivityCreated(savedInstanceState);
-		
-		if (getActivity() instanceof TimetableActivity)
-		{
-			setTimetable(((TimetableActivity)getActivity()).getTimetable());
-		}
-	}
-	
-	@Override
-	public void onSaveInstanceState(Bundle outState)
-	{
-		super.onSaveInstanceState(outState);
-		outState.putInt(EXTRA_DAY_ID, dayId);
+		timetableDay = (TimetableDay) getArguments().getSerializable(EXTRA_DAY);
+		appSettings = (AppSettings) getArguments().getSerializable(EXTRA_SETTINGS);
 	}
 	
 	@Override
@@ -70,19 +50,6 @@ public class DayFragment extends Fragment
 	{
 		super.onAttach(activity);		
 		fontApplicator = new FontApplicator(activity.getApplicationContext().getAssets(), "Roboto-Light.ttf");
-	}
-	
-	public void setTimetable(Timetable timetable)
-	{
-		this.timetable = timetable;
-		if (timetable != null) setTimetableDay(timetable.getDay(dayId));
-	}
-	
-	DayFragment setTimetableDay(TimetableDay timetableDay)
-	{
-		this.timetableDay = timetableDay;
-		refresh();
-		return this;
 	}
 	
 	@Override
@@ -99,9 +66,9 @@ public class DayFragment extends Fragment
 	
 	public void refresh()
 	{
-		if (timetableDay != null && listView != null)
+		if (listView != null)
 		{
-			List<EventItem> items = timetableDay.getTimetableEntries(timetable.getSettings());
+			List<EventItem> items = timetableDay.getTimetableEntries(appSettings);
 			if (items.isEmpty())
 			{
 				listView.setVisibility(View.GONE);
@@ -135,12 +102,6 @@ public class DayFragment extends Fragment
 	{
 		super.onDestroyView();
 		this.listView = null;
-	}
-	
-	@Override
-	public void onDetach()
-	{
-		super.onDetach();
-		timetable = null;
+		this.tvText = null;
 	}
 }
