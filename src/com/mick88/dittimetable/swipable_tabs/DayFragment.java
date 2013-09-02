@@ -116,7 +116,6 @@ public class DayFragment extends Fragment
 			}
 			Log.d(getDayName(), "Refreshed");
 		}
-		else Log.e("ERROR", "timetable day or listview is null!");
 	}
 	
 	@Override
