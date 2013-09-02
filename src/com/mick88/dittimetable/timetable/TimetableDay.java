@@ -240,4 +240,20 @@ public class TimetableDay implements Serializable
 			event.downloadAdditionalInfo(context);
 		}
 	}
+	
+	@Override
+	public int hashCode()
+	{
+		return id;
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o instanceof TimetableDay)
+		{
+			return ((TimetableDay) o).id == id;
+		}
+		else return super.equals(o);
+	}
 }
