@@ -237,7 +237,7 @@ public class TimetableDay implements Serializable
 		for (TimetableEvent event : events) if (event.isComplete() == false)
 		{
 			if (timetable.isDisposed()) break;
-			event.downloadAdditionalInfo(context);
+			event.downloadAdditionalInfo(context, timetable);
 		}
 	}
 	
