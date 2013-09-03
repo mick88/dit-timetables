@@ -24,14 +24,14 @@ import com.mick88.dittimetable.list.Space;
 public class TimetableDay implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	final String name;
-	int id=-1;
+//	final String name;
+	final int id;
 	final String logTag = "TimetableDay";
 	private List<TimetableEvent> events = new ArrayList<TimetableEvent>();
 	
-	public TimetableDay(String name)
+	public TimetableDay(int id)
 	{
-		this.name = name;
+		this.id = id;
 	}
 	
 	public void clearEvents()
@@ -57,12 +57,12 @@ public class TimetableDay implements Serializable
 	
 	public String getName()
 	{
-		return name;
+		return Timetable.DAY_NAMES[id];
 	}
 	
 	public CharSequence getShortName()
 	{
-		return name.subSequence(0, 3);
+		return getName().subSequence(0, 3);
 	}
 	
 	public int getNumEvents(int hour, Set<String> hiddenGroups, int week)
@@ -99,7 +99,7 @@ public class TimetableDay implements Serializable
 	public int parseHtmlEvent(Timetable timetable, Element element, Context context, boolean allowCache)
 	{
 		int n=0;
-		TimetableEvent c = new TimetableEvent(element, timetable, context, allowCache, this.name);
+		TimetableEvent c = new TimetableEvent(element, timetable, context, allowCache, getName());
 		if (c.isValid() /*&& c.isGroup(timetable.getHiddenGroups())*/) 
 		{
 			addClass(c);
@@ -115,7 +115,7 @@ public class TimetableDay implements Serializable
 	{
 		if (events.isEmpty()) return new String();
 		
-		StringBuilder builder = new StringBuilder(name);
+		StringBuilder builder = new StringBuilder(getName());
 		
 		for (TimetableEvent c : events)
 		{
@@ -130,7 +130,7 @@ public class TimetableDay implements Serializable
 	{
 		if (events.isEmpty()) return new String();
 		int n=0;
-		StringBuilder builder = new StringBuilder(name);
+		StringBuilder builder = new StringBuilder(getName());
 		
 		for (TimetableEvent event : events) if (event.isInWeek(week) && event.isGroup(hiddenGroups))
 		{
@@ -160,7 +160,7 @@ public class TimetableDay implements Serializable
 		String [] events = string.split(EXPORT_DAY_SEPARATOR);
 		for (String eventString : events)
 		{
-			TimetableEvent event = new TimetableEvent(eventString, timetable, this.name);
+			TimetableEvent event = new TimetableEvent(eventString, timetable, this.getName());
 			if (event.isValid() /*&& event.isGroup(timetable.hiddenGroups)*/)
 			{
 				n++;

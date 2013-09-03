@@ -256,7 +256,7 @@ public class Timetable implements Serializable
 		this.settings = settings;
 		/*Initialize days*/
 		for (int i = 0; i < NUM_DAYS; i++)
-			this.days[i] = new TimetableDay(DAY_NAMES[i]);
+			this.days[i] = new TimetableDay(i);
 		
 		/*this.days[DAY_MONDAY] = new TimetableDay(DAY_NAMES[DAY_MONDAY], this);
 		this.days[DAY_TUESDAY] = new TimetableDay(DAY_NAMES[DAY_TUESDAY], this);
@@ -525,7 +525,7 @@ public class Timetable implements Serializable
 				String dayStr = day.text().trim();
 				for (TimetableDay d : this.days)
 				{
-					if (d.name.contains(dayStr))
+					if (d.getName().contains(dayStr))
 					{
 						result.add(d);
 						break;

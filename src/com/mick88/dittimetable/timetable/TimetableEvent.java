@@ -92,6 +92,9 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			endHour=0;
 	private ClassType type=ClassType.Other;
 	Set<String> groups = new HashSet<String>();
+	
+	// TODO: Use day ID instead
+	@Deprecated
 	public final String day;
 	
 	/**
