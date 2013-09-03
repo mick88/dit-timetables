@@ -108,7 +108,7 @@ public class TimetableDay implements Serializable
 		CharSequence start = events.get(0).getStartTime(),
 				end = events.get(events.size()-1).getEndTime();
 		
-		return new StringBuilder(start).append('-').append(end);
+		return new StringBuilder(start).append(" - ").append(end);
 	}
 	
 	public int parseHtmlEvent(Timetable timetable, Element element, Context context, boolean allowCache)
