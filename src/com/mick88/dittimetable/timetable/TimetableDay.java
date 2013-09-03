@@ -96,6 +96,21 @@ public class TimetableDay implements Serializable
 		return result;
 	}
 	
+	/**
+	 * Gets string representing hours from first to last event on this day
+	 * @param appSettings
+	 * @return
+	 */
+	public CharSequence getHoursRange(AppSettings appSettings)
+	{
+		List<TimetableEvent> events = getEvents(appSettings);
+		if (events.isEmpty()) return null;
+		CharSequence start = events.get(0).getStartTime(),
+				end = events.get(events.size()-1).getEndTime();
+		
+		return new StringBuilder(start).append('-').append(end);
+	}
+	
 	public int parseHtmlEvent(Timetable timetable, Element element, Context context, boolean allowCache)
 	{
 		int n=0;

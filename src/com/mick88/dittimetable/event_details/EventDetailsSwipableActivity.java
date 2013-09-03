@@ -48,6 +48,7 @@ public class EventDetailsSwipableActivity extends ActionBarActivity
 		}
 		
 		setTitle(timetableDay.getName());
+		getSupportActionBar().setSubtitle(timetableDay.getHoursRange(appSettings));
 		
 		ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 		List<TimetableEvent> events = new ArrayList<TimetableEvent>();
