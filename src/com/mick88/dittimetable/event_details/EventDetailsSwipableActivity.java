@@ -12,6 +12,7 @@ import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.timetable.TimetableDay;
 import com.mick88.dittimetable.timetable.TimetableEvent;
+import com.mick88.dittimetable.utils.FontApplicator;
 
 public class EventDetailsSwipableActivity extends ActionBarActivity
 {
@@ -29,6 +30,8 @@ public class EventDetailsSwipableActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timetable);
 		
+		new FontApplicator(getAssets(), "Roboto-Light.ttf").applyFont(getWindow().getDecorView());
+		
 		Bundle extras = getIntent().getExtras();
 		TimetableEvent selectedEvent;
 		
@@ -43,6 +46,8 @@ public class EventDetailsSwipableActivity extends ActionBarActivity
 			finish();
 			return;
 		}
+		
+		setTitle(timetableDay.getName());
 		
 		ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 		List<TimetableEvent> events = new ArrayList<TimetableEvent>();
