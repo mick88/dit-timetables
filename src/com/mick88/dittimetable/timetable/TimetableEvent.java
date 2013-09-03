@@ -93,9 +93,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	private ClassType type=ClassType.Other;
 	Set<String> groups = new HashSet<String>();
 	
-	// TODO: Use day ID instead
-	@Deprecated
-	public final String day;
+	private final int day;
 	
 	/**
 	 * Stores parsed list of weeks when event is on
@@ -112,6 +110,11 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	private String getFileName()
 	{
 		return String.format(Locale.getDefault(), "%d.html", id);
+	}
+	
+	public String getDayName()
+	{
+		return Timetable.DAY_NAMES[day];
 	}
 	
 	public int getId()
@@ -227,7 +230,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		ID_NAME = 8,
 		ID_TYPE = 9;	
 	
-	private TimetableEvent(Timetable timetable, String day)
+	private TimetableEvent(Timetable timetable, int day)
 	{
 		this.day = day;
 		weeks = new HashSet<Integer>();
@@ -236,7 +239,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	/**
 	 * Creates new object by parsing data and loading/downloading additional data
 	 */
-	public TimetableEvent(Element table, Timetable timetable, Context context, boolean allowCache, String day)
+	public TimetableEvent(Element table, Timetable timetable, Context context, boolean allowCache, int day)
 	{
 		this(timetable, day);
 		parseNewHtmlTable(table, context, allowCache, timetable);
@@ -245,7 +248,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	/**
 	 * Creates new object by importing data from string
 	 */
-	public TimetableEvent(String importString, Timetable timetable, String day)
+	public TimetableEvent(String importString, Timetable timetable, int day)
 	{
 		this(timetable, day);
 		importFromString(importString, timetable);

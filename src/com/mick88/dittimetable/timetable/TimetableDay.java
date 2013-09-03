@@ -99,7 +99,7 @@ public class TimetableDay implements Serializable
 	public int parseHtmlEvent(Timetable timetable, Element element, Context context, boolean allowCache)
 	{
 		int n=0;
-		TimetableEvent c = new TimetableEvent(element, timetable, context, allowCache, getName());
+		TimetableEvent c = new TimetableEvent(element, timetable, context, allowCache, id);
 		if (c.isValid() /*&& c.isGroup(timetable.getHiddenGroups())*/) 
 		{
 			addClass(c);
@@ -160,7 +160,7 @@ public class TimetableDay implements Serializable
 		String [] events = string.split(EXPORT_DAY_SEPARATOR);
 		for (String eventString : events)
 		{
-			TimetableEvent event = new TimetableEvent(eventString, timetable, this.getName());
+			TimetableEvent event = new TimetableEvent(eventString, timetable, id);
 			if (event.isValid() /*&& event.isGroup(timetable.hiddenGroups)*/)
 			{
 				n++;
