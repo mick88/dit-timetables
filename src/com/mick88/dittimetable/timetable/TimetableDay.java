@@ -1,5 +1,6 @@
 package com.mick88.dittimetable.timetable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -20,18 +21,17 @@ import com.mick88.dittimetable.list.Space;
  * ontains list of classes in a day
  * 
  */
-public class TimetableDay
+public class TimetableDay implements Serializable
 {
-	Timetable timetable=null;
-	final String name;
-	int id=-1;
+	private static final long serialVersionUID = 1L;
+//	final String name;
+	final int id;
 	final String logTag = "TimetableDay";
 	private List<TimetableEvent> events = new ArrayList<TimetableEvent>();
 	
-	public TimetableDay(String name, Timetable timetable)
+	public TimetableDay(int id)
 	{
-		this.name = name;
-		this.timetable = timetable;
+		this.id = id;
 	}
 	
 	public void clearEvents()
@@ -57,12 +57,12 @@ public class TimetableDay
 	
 	public String getName()
 	{
-		return name;
+		return Timetable.DAY_NAMES[id];
 	}
 	
 	public CharSequence getShortName()
 	{
-		return name.subSequence(0, 3);
+		return getName().subSequence(0, 3);
 	}
 	
 	public int getNumEvents(int hour, Set<String> hiddenGroups, int week)
@@ -96,10 +96,10 @@ public class TimetableDay
 		return result;
 	}
 	
-	public int parseHtmlEvent(Element element, Context context, boolean allowCache)
+	public int parseHtmlEvent(Timetable timetable, Element element, Context context, boolean allowCache)
 	{
 		int n=0;
-		TimetableEvent c = new TimetableEvent(element, timetable, context, allowCache, this.name);
+		TimetableEvent c = new TimetableEvent(element, timetable, context, allowCache, id);
 		if (c.isValid() /*&& c.isGroup(timetable.getHiddenGroups())*/) 
 		{
 			addClass(c);
@@ -115,7 +115,7 @@ public class TimetableDay
 	{
 		if (events.isEmpty()) return new String();
 		
-		StringBuilder builder = new StringBuilder(name);
+		StringBuilder builder = new StringBuilder(getName());
 		
 		for (TimetableEvent c : events)
 		{
@@ -130,7 +130,7 @@ public class TimetableDay
 	{
 		if (events.isEmpty()) return new String();
 		int n=0;
-		StringBuilder builder = new StringBuilder(name);
+		StringBuilder builder = new StringBuilder(getName());
 		
 		for (TimetableEvent event : events) if (event.isInWeek(week) && event.isGroup(hiddenGroups))
 		{
@@ -154,13 +154,13 @@ public class TimetableDay
 		return builder;
 	}
 	
-	public int importFromString(String string)
+	public int importFromString(String string, Timetable timetable)
 	{
 		int n=0;
 		String [] events = string.split(EXPORT_DAY_SEPARATOR);
 		for (String eventString : events)
 		{
-			TimetableEvent event = new TimetableEvent(eventString, timetable, this.name);
+			TimetableEvent event = new TimetableEvent(eventString, timetable, id);
 			if (event.isValid() /*&& event.isGroup(timetable.hiddenGroups)*/)
 			{
 				n++;
@@ -172,17 +172,17 @@ public class TimetableDay
 	
 	public boolean isToday()
 	{
-		return timetable.getToday(false) == this;
+		return Timetable.getTodayId(false) == this.id;
+//		return Timetable.getToday(false) == this;
 	}
 	
-	public List<EventItem> getTimetableEntries()
+	public List<EventItem> getTimetableEntries(AppSettings settings)
 	{
 		List<EventItem> entries = new ArrayList<EventItem>(events.size());
 		
 		int lastEndHour=0;
 		TimetableEvent lastEvent=null;
 		
-		AppSettings settings = timetable.getSettings();
 		int currentWeek = Timetable.getCurrentWeek(),
 			showWeek = settings.getOnlyCurrentWeek()?currentWeek : 0;
 		
@@ -230,12 +230,28 @@ public class TimetableDay
 		return entries;
 	}
 	
-	public void downloadAdditionalInfo(Context context)
+	public void downloadAdditionalInfo(Context context, Timetable timetable)
 	{
 		for (TimetableEvent event : events) if (event.isComplete() == false)
 		{
 			if (timetable.isDisposed()) break;
-			event.downloadAdditionalInfo(context);
+			event.downloadAdditionalInfo(context, timetable);
 		}
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return id;
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o instanceof TimetableDay)
+		{
+			return ((TimetableDay) o).id == id;
+		}
+		else return super.equals(o);
 	}
 }

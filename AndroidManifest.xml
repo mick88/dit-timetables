@@ -21,7 +21,6 @@
         android:name="com.mick88.dittimetable.TimetableApp">
         <activity
             android:name="com.mick88.dittimetable.screens.TimetableActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize" 
             >
 
             <!-- prevents activity from restarting when orientation changes -->

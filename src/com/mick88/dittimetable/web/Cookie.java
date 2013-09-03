@@ -1,10 +1,14 @@
 package com.mick88.dittimetable.web;
 
+import java.io.Serializable;
+
 import android.os.Bundle;
 import android.util.Log;
 
-public class Cookie
+public class Cookie implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	private String cookie;
 	final String logTag = "Cookie";
 	

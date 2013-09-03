@@ -46,7 +46,7 @@ public class EventDetailsActivity extends ActionBarActivity
 			listView.setAdapter(new KeyValueAdapter(this, pairs));
 			
 			setTitle(event.getName());
-			getSupportActionBar().setSubtitle(String.format(Locale.getDefault(), "%s %s", event.day, event.getEventTimeString()));
+			getSupportActionBar().setSubtitle(String.format(Locale.getDefault(), "%s %s", event.getDayName(), event.getEventTimeString()));
 		}
 		else  
 			finish();		

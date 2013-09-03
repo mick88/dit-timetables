@@ -1,9 +1,9 @@
 package com.mick88.dittimetable.swipable_tabs;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
 import com.mick88.dittimetable.timetable.Timetable;
 
@@ -13,66 +13,47 @@ import com.mick88.dittimetable.timetable.Timetable;
  */
 public class TimetablePageAdapter extends FragmentPagerAdapter
 {
-	DayFragment[] fragments;
 	Timetable timetable;
 	
 	public TimetablePageAdapter(FragmentManager fm, Timetable timetable)
 	{
 		super(fm);
-		this.fragments = new DayFragment[] {
-				new DayFragment().setTimetableDay(timetable.getDay(0)),
-				new DayFragment().setTimetableDay(timetable.getDay(1)),
-				new DayFragment().setTimetableDay(timetable.getDay(2)),
-				new DayFragment().setTimetableDay(timetable.getDay(3)),
-				new DayFragment().setTimetableDay(timetable.getDay(4)),
-		};
 		setTimetable(timetable);
 	}
 	
 	public TimetablePageAdapter setTimetable(Timetable timetable)
 	{
 		this.timetable = timetable;
-		int i=0;
-		for (DayFragment fragment : fragments)
-			fragment.setTimetableDay(timetable.getDay(i++));
+		notifyDataSetChanged();
 		return this;
 	}
 
 	@Override
 	public Fragment getItem(int arg0)
 	{
-		/*DayFragment fragment = new DayFragment();
+		DayFragment fragment = new DayFragment();
 		Bundle args = new Bundle();
-		args.putInt("day_id", arg0);
+		args.putSerializable(DayFragment.EXTRA_DAY, timetable.getDay(arg0));
+		args.putSerializable(DayFragment.EXTRA_SETTINGS, timetable.getSettings());
 		fragment.setArguments(args);
-		return fragment;*/
-		return fragments[arg0];
+		return fragment;
+	}
+	
+	@Override
+	public int getItemPosition(Object object)
+	{
+		return POSITION_NONE;
 	}
 	
 	@Override
 	public CharSequence getPageTitle(int position)
 	{
-		return fragments[position].getDayName();
-//		return timetable.getDayTimetable(position).getName();
+		return Timetable.DAY_NAMES[position];
 	}
 	
 	@Override
 	public int getCount()
 	{
-		return fragments.length;
-	}
-	
-	@Override
-	public void notifyDataSetChanged()
-	{
-		super.notifyDataSetChanged();
-		refresh();
-	}
-	
-	public void refresh()
-	{
-		Log.d(toString(), "Refreshing Timetable pages...");
-		for (DayFragment fragment : fragments)
-			fragment.refresh();
+		return 5;
 	}
 }

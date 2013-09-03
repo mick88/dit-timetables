@@ -72,7 +72,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	public static enum ClassType {Other, Lecture, Laboratory, Tutorial};
 	
 	private static final String GROUP_SEPARATOR = ", ";
-	private transient final Timetable timetable;
 	final static String logTag = "TimetableEvent";
 	final static String 
 			COLOR_NAME = "#987E06", 
@@ -93,7 +92,8 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			endHour=0;
 	private ClassType type=ClassType.Other;
 	Set<String> groups = new HashSet<String>();
-	public final String day;
+	
+	private final int day;
 	
 	/**
 	 * Stores parsed list of weeks when event is on
@@ -110,6 +110,11 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	private String getFileName()
 	{
 		return String.format(Locale.getDefault(), "%d.html", id);
+	}
+	
+	public String getDayName()
+	{
+		return Timetable.DAY_NAMES[day];
 	}
 	
 	public int getId()
@@ -225,9 +230,8 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		ID_NAME = 8,
 		ID_TYPE = 9;	
 	
-	private TimetableEvent(Timetable timetable, String day)
+	private TimetableEvent(Timetable timetable, int day)
 	{
-		this.timetable = timetable;
 		this.day = day;
 		weeks = new HashSet<Integer>();
 	}
@@ -235,19 +239,19 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	/**
 	 * Creates new object by parsing data and loading/downloading additional data
 	 */
-	public TimetableEvent(Element table, Timetable timetable, Context context, boolean allowCache, String day)
+	public TimetableEvent(Element table, Timetable timetable, Context context, boolean allowCache, int day)
 	{
 		this(timetable, day);
-		parseNewHtmlTable(table, context, allowCache);
+		parseNewHtmlTable(table, context, allowCache, timetable);
 	}
 	
 	/**
 	 * Creates new object by importing data from string
 	 */
-	public TimetableEvent(String importString, Timetable timetable, String day)
+	public TimetableEvent(String importString, Timetable timetable, int day)
 	{
 		this(timetable, day);
-		importFromString(importString);
+		importFromString(importString, timetable);
 //		this.duration = this.endTime - this.startTime;
 	}
 	
@@ -285,7 +289,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		return false;
 	}
 	
-	void addGroup(String group)
+	void addGroup(String group, Timetable timetable)
 	{
 		if (TextUtils.isEmpty(group) == false && groups.contains(group) == false)
 		{
@@ -312,13 +316,13 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	/**
 	 * Loads additional information about event from web timetables.
 	 */
-	public void downloadAdditionalInfo(Context context)
+	public void downloadAdditionalInfo(Context context, Timetable timetable)
 	{
 		Connection connection = timetable.getConnection();
 		String uri = String.format(Locale.getDefault(), "?reqtype=eventdetails&eventId=%s%%7C%d", Timetable.getDataset(), id);
 
 		String content = connection.getContent(uri);
-		if (parseAdditionalInfo(content))
+		if (parseAdditionalInfo(content, timetable))
 		{
 			complete = true;
 			try
@@ -337,7 +341,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		return complete;
 	}
 
-	private boolean loadAdditionalInfo(Context context)
+	private boolean loadAdditionalInfo(Context context, Timetable timetable)
 	{
 		String filename = getFileName();	
 		StringBuffer sb = new StringBuffer();
@@ -370,7 +374,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			return false;
 		}
 		
-		if (parseAdditionalInfo(sb.toString()))
+		if (parseAdditionalInfo(sb.toString(), timetable))
 		{
 			return true;
 		}
@@ -390,7 +394,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	/**
 	 * parses the additional info page
 	 */
-	private boolean parseAdditionalInfo(String content)
+	private boolean parseAdditionalInfo(String content, Timetable timetable)
 	{
 		if (content == null) return false;
 		Document doc = Jsoup.parse(content);
@@ -430,7 +434,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 				
 				String group = ((end==-1)?s:s.substring(0, end)).trim();
 	
-				addGroup(group);
+				addGroup(group, timetable);
 			}
 			weekRange = tableValues.get("Week numbers");
 			decodeWeeks();
@@ -448,7 +452,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	 * Parses the new timetable
 	 * @param	table	Element containing event table 
 	 */
-	public void parseNewHtmlTable(Element table, Context context, boolean allowCache)
+	public void parseNewHtmlTable(Element table, Context context, boolean allowCache, Timetable timetable)
 	{
 		valid=true;
 		try
@@ -488,9 +492,9 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			}
 			else if (allowCache==false)
 			{
-				if (loadAdditionalInfo(context)==false)
+				if (loadAdditionalInfo(context, timetable)==false)
 				{
-					downloadAdditionalInfo(context);
+					downloadAdditionalInfo(context, timetable);
 				}
 			}
 		}
@@ -569,7 +573,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	/**
 	 * imports saved event from file
 	 */
-	public void importFromString(String string)
+	public void importFromString(String string, Timetable timetable)
 	{
 		if (TextUtils.isEmpty(string)) 
 		{
@@ -598,7 +602,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 				String [] g = fields[field++].split(GROUP_SEPARATOR);
 				for (String s : g)
 				{
-					addGroup(s);
+					addGroup(s, timetable);
 				}
 			}
 			complete=true;

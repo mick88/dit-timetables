@@ -99,7 +99,7 @@ public class TimetableActivity extends ActionBarActivity
     		onlineUpdate = 	new Thread() { 
     	        public void run() 
     	        { 
-    	        	timetable.downloadFromWebsite(getApplicationContext());
+    	        	timetable.downloadFromWebsite(getApplicationContext(), TimetableActivity.this);
     	        } 
     	        
     		};
@@ -130,7 +130,7 @@ public class TimetableActivity extends ActionBarActivity
 			@Override
 			public void run()
 			{
-				timetable.importSavedTimetable(getApplicationContext());
+				timetable.importSavedTimetable(getApplicationContext(), TimetableActivity.this);
 			}
 		}).start();
     }
@@ -225,8 +225,8 @@ public class TimetableActivity extends ActionBarActivity
 				{
 					return;
 				}
-				if (weekRange == Timetable.INVALID_WEEK_RANGE) setTimetable(new Timetable(course, year, weeks, this, this, application.getSettings()));
-				else setTimetable(new Timetable(course, year, weekRange, this, this, application.getSettings()));
+				if (weekRange == Timetable.INVALID_WEEK_RANGE) setTimetable(new Timetable(course, year, weeks, application.getSettings()));
+				else setTimetable(new Timetable(course, year, weekRange, application.getSettings()));
 				
 //				loadTimetable();
 				isTemporaryTimetable = true;
@@ -255,7 +255,7 @@ public class TimetableActivity extends ActionBarActivity
 				
 		if (timetable == null) // if intent isnt processed
 		{
-			setTimetable(new Timetable(this, this, application.getSettings()));
+			setTimetable(new Timetable(application.getSettings()));
 
 			if (application.getSettings().isCourseDataSpecified() == false)
 			{
@@ -341,8 +341,15 @@ public class TimetableActivity extends ActionBarActivity
 	
 	void refresh()
 	{
-		setTitle();
-		timetablePageAdapter.setTimetable(timetable);
+		try
+		{
+			setTitle();
+			timetablePageAdapter.setTimetable(timetable);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	
@@ -366,7 +373,7 @@ public class TimetableActivity extends ActionBarActivity
 		case SETTINGS_REQUEST_CODE:
 			if (resultCode == RESULT_OK)
 			{
-				setTimetable(new Timetable(this, this, application.getSettings()));
+				setTimetable(new Timetable(application.getSettings()));
 			}
 			break;
 		}
@@ -395,7 +402,7 @@ public class TimetableActivity extends ActionBarActivity
 							public void run()
 							{
 								Log.d(logTag, "PDF download thread started.");
-								timetable.downloadPdf(getApplicationContext());
+								timetable.downloadPdf(getApplicationContext(), TimetableActivity.this);
 							}
 						};
 						downloadPdf.start();
@@ -586,28 +593,6 @@ public class TimetableActivity extends ActionBarActivity
 		return true;
 	}
 	
-	public void reportProgress(final int progress, final int max)
-	{
-		if (progressDialog != null && progressDialog.getMax() >= progress)
-		{
-			uiHandler.postDelayed(new Runnable()
-			{
-				
-				@Override
-				public void run()
-				{
-					if (progressDialog != null)
-						{
-							progressDialog.setIndeterminate(false);
-							progressDialog.setMax(max);
-							progressDialog.setProgress(progress);
-						}
-				}
-			}, 1);
-			
-		}
-	}
-	
 	void showProgressPopup(CharSequence message)
 	{
 		progressDialog = new ProgressDialog(this);
@@ -752,7 +737,7 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		for (String s : selected) application.getSettings().unhideGroup(s);
 		for (String s : unselected) application.getSettings().hideGroup(s);
-		application.getSettings().saveSettings();
+		application.getSettings().saveSettings(this);
 		refresh();
 	}
 
@@ -794,7 +779,28 @@ public class TimetableActivity extends ActionBarActivity
 		});
 		
 	}
-	
-	
 
+	@Override
+	public void onProgress(final int position, final int max)
+	{
+		if (progressDialog != null && progressDialog.getMax() >= position)
+		{
+			uiHandler.postDelayed(new Runnable()
+			{
+				
+				@Override
+				public void run()
+				{
+					if (progressDialog != null)
+						{
+							progressDialog.setIndeterminate(false);
+							progressDialog.setMax(max);
+							progressDialog.setProgress(position);
+						}
+				}
+			}, 1);
+			
+		}
+		
+	}
 }

@@ -153,7 +153,7 @@ public class SettingsActivity extends ActionBarActivity
 		appSettings.setYear((int) (yearSelector.getSelectedItemId()+1));
 		appSettings.setOnlyCurrentWeek(weekCheckBox.isChecked());
 		
-		appSettings.saveSettings();
+		appSettings.saveSettings(this);
 		try
 		{
 			Timetable.writeSettings(getApplicationContext(), settings);

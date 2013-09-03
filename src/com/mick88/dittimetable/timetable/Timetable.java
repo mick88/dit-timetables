@@ -3,6 +3,7 @@ package com.mick88.dittimetable.timetable;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,13 +20,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.mick88.dittimetable.AppSettings;
-import com.mick88.dittimetable.screens.TimetableActivity;
 import com.mick88.dittimetable.utils.FileUtils;
 import com.mick88.dittimetable.web.Connection;
 
@@ -34,9 +33,12 @@ import com.mick88.dittimetable.web.Connection;
  * @author Michal
  *
  */
-public class Timetable 
+public class Timetable implements Serializable
 {
-	public enum ErrorCode
+	
+	private static final long serialVersionUID = 1L;
+
+	public static enum ErrorCode
 	{
 		connectionFailed,
 		noError,
@@ -51,7 +53,7 @@ public class Timetable
 		wrongLoginDetails,
 	}
 	
-	public interface ResultHandler
+	public static interface ResultHandler
 	{
 		public void onDebugStringReceived(String s);
 		public void onDownloadPdfStarted(boolean success);
@@ -61,6 +63,7 @@ public class Timetable
 		public void onFullDataDownloaded();
 		public void onSettingsNotComplete();
 		public void onTimetableLoadFinish(ErrorCode errorCode);
+		void onProgress(int position, int max);
 	}
 	
 	public static final int 
@@ -159,17 +162,17 @@ public class Timetable
     	switch (Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
     	{
     		case Calendar.MONDAY:
-    			return 0;
+    			return DAY_MONDAY;
     		case Calendar.TUESDAY:
-    			return 1;
+    			return DAY_TUESDAY;
     		case Calendar.WEDNESDAY:
-    			return 2;
+    			return DAY_WEDNESDAY;
     		case Calendar.THURSDAY:
-    			return 3;
+    			return DAY_THURSDAY;
     		case Calendar.FRIDAY:
-    			return 4;
+    			return DAY_FRIDAY;
 			default: //shows monday if its the weekend
-				if (defaultMonday) return 0;
+				if (defaultMonday) return DAY_MONDAY;
 				else return -1;
     	}
     }
@@ -238,8 +241,7 @@ public class Timetable
 	private String key = getDataset();// "201213";	
 	Date lastUpdated = null;
 	final String logTag = "Timetable";
-	Activity parentActivity=null;
-	ResultHandler resultHandler=null;
+
 	final AppSettings settings;	
 	Boolean valid=true; //changed to false if error is detected	
 	private int weekRange = INVALID_WEEK_RANGE; // alternative to weeks
@@ -249,11 +251,12 @@ public class Timetable
 	/**
 	 * Creates new Timetable object from settings
 	 */
-	public Timetable(ResultHandler resultHandler, Activity parentActivity, AppSettings settings)
+	public Timetable(AppSettings settings)
 	{
+		this.settings = settings;
 		/*Initialize days*/
 		for (int i = 0; i < NUM_DAYS; i++)
-			this.days[i] = new TimetableDay(DAY_NAMES[i], this);
+			this.days[i] = new TimetableDay(i);
 		
 		/*this.days[DAY_MONDAY] = new TimetableDay(DAY_NAMES[DAY_MONDAY], this);
 		this.days[DAY_TUESDAY] = new TimetableDay(DAY_NAMES[DAY_TUESDAY], this);
@@ -265,9 +268,6 @@ public class Timetable
 		this.connection = new Connection(settings);
 //		this.key = getDataset();
 		
-		this.settings = settings;
-		this.resultHandler = resultHandler;
-		this.parentActivity = parentActivity;
 		
 		this.course = settings.getCourse();
 		this.year = settings.getYear();
@@ -277,18 +277,18 @@ public class Timetable
 	/**
 	 * Creates new tiemtable object with custom settings
 	 */
-	public Timetable(String course, int year, int weekRange, ResultHandler resultHandler, Activity parentActivity, AppSettings settings)
+	public Timetable(String course, int year, int weekRange, AppSettings settings)
 	{
-		this(resultHandler, parentActivity, settings);
+		this(settings);
 		
 		this.course = course;
 		this.year = year;
 		this.weekRange = weekRange;
 	}	
 	
-	public Timetable(String course, int year, String weeks, ResultHandler resultHandler, Activity parentActivity, AppSettings settings)
+	public Timetable(String course, int year, String weeks, AppSettings settings)
 	{
-		this(resultHandler, parentActivity, settings);
+		this(settings);
 		
 		this.course = course;
 		this.year = year;
@@ -327,8 +327,6 @@ public class Timetable
 	 */
 	public void dispose()
 	{
-		resultHandler = null;
-		parentActivity = null;
 		disposed=true;
 		Log.d("Timetable", "Timetable disposed "+describe());
 	}
@@ -338,7 +336,7 @@ public class Timetable
 	 * @param context
 	 * @return true if successful
 	 */
-	public boolean downloadFromWebsite(Context context)
+	public boolean downloadFromWebsite(Context context, ResultHandler resultHandler)
 	{
 		if (connection.areCredentialsPresent() == false)
 		{
@@ -399,7 +397,7 @@ public class Timetable
 			return false;
 		}
 		
-		boolean result = parseGraphicStringEx(string, false);
+		boolean result = parseGraphicStringEx(resultHandler, context, string, false);
 		
 		if (result == true) 
 		{
@@ -416,7 +414,7 @@ public class Timetable
 			for (TimetableDay day : days)
 			{
 				if (disposed) break;
-				day.downloadAdditionalInfo(context);
+				day.downloadAdditionalInfo(context, this);
 			}
 			
 			if (resultHandler != null) resultHandler.onFullDataDownloaded();
@@ -428,7 +426,7 @@ public class Timetable
 		return result;
 	}
 	
-	public void downloadPdf(Context context)
+	public void downloadPdf(Context context, ResultHandler resultHandler)
 	{
 		String weeksStr;
 		if (weeks.equals(SEMESTER_1)) weeksStr = "S1";
@@ -527,7 +525,7 @@ public class Timetable
 				String dayStr = day.text().trim();
 				for (TimetableDay d : this.days)
 				{
-					if (d.name.contains(dayStr))
+					if (d.getName().contains(dayStr))
 					{
 						result.add(d);
 						break;
@@ -597,7 +595,7 @@ public class Timetable
 	/**
 	 * Loads timetable from file
 	 */
-	public void importSavedTimetable(Context context)
+	public void importSavedTimetable(Context context, ResultHandler resultHandler)
 	{
 		if (importTimetable(context)) 
 		{
@@ -622,7 +620,7 @@ public class Timetable
 		{
 			if (dayId < days.length)
 			{
-				n += days[dayId++].importFromString(d);
+				n += days[dayId++].importFromString(d, this);
 			}
 		}
 		return (n > 0);
@@ -637,7 +635,7 @@ public class Timetable
 	 * Parses the new timetables
 	 * @param string html
 	 */
-	public boolean parseGraphicStringEx(String string, boolean allowCache)
+	public boolean parseGraphicStringEx(ResultHandler resultHandler, Context context, String string, boolean allowCache)
 	{		
 		Document doc = Jsoup.parse(string);
 		
@@ -650,7 +648,7 @@ public class Timetable
 		
 		Elements entries = parentContainer.select("div");
 		int max = entries.size()-6, nEvents=0;
-		reportProgress(nEvents, max);
+		resultHandler.onProgress(nEvents, max);
 		
 		clearEvents();
 		TimetableDay currentDay=null;
@@ -685,8 +683,8 @@ public class Timetable
 				}
 			else if (currentDay != null)
 			{
-				nEvents += currentDay.parseHtmlEvent(entry, parentActivity.getApplicationContext(), allowCache);
-				reportProgress(nEvents, max);
+				nEvents += currentDay.parseHtmlEvent(this, entry, context, allowCache);
+				resultHandler.onProgress(nEvents, max);
 			}
 			else
 			{
@@ -700,19 +698,7 @@ public class Timetable
 		{
 			day.sortEvents();
 		}
-		sortGroups();
 		return valid;
-	}
-	
-	private void reportProgress(int progress, int max)
-	{
-		if (parentActivity != null) ((TimetableActivity)parentActivity).reportProgress(progress, Math.max(max, progress));
-	}
-	
-	@Deprecated
-	void sortGroups()
-	{
-//		Collections.sort(groupsInTimetable);
 	}
 	
 	public Map<String,String> ToHashMap()

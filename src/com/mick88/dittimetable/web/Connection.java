@@ -1,5 +1,6 @@
 package com.mick88.dittimetable.web;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +28,10 @@ import android.webkit.MimeTypeMap;
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.utils.HttpUtils;
 
-public class Connection
-{	
+public class Connection implements Serializable
+{
+	private static final long serialVersionUID = 1L;
+
 	String receivedHtml;
 	
 	private Cookie cookie=null;

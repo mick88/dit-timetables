@@ -1,5 +1,6 @@
 package com.mick88.dittimetable;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,13 +9,14 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
 
-public class AppSettings 
+public class AppSettings implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	private static final String 
 		DEFAULT_USERNAME = "students",
 		DEFAULT_PASSWORD = "timetables";
-	private final SharedPreferences sharedPreferences;
-	private static final String sharedPrefNameTag = "com.mick88.dittimetable";
+	public static final String PREFERENCES_NAME = "com.mick88.dittimetable";
 	public static final String GROUP_SEPARATOR = ",";
 	
 	String username, 
@@ -25,10 +27,8 @@ public class AppSettings
 	boolean onlyCurrentWeek;
 	Set<String> hiddenGroups;
 	
-	public AppSettings(Context context)
-	{
-		sharedPreferences = context.getSharedPreferences(sharedPrefNameTag, Context.MODE_PRIVATE);
-		
+	public AppSettings()
+	{		
 		username = new String();
 		password = new String();
 		
@@ -47,11 +47,16 @@ public class AppSettings
 	
 	public AppSettings(Context context, boolean loadSettings)
 	{
-		this(context);
-		if (loadSettings == true) this.loadSettings();
+		this();
+		if (loadSettings == true) this.loadSettings(context);
 	}
 	
-	public void loadSettings()
+	public void loadSettings(Context context)
+	{
+		loadSettings(context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE));
+	}
+	
+	public void loadSettings(SharedPreferences sharedPreferences)
 	{
 		username = sharedPreferences.getString("username", DEFAULT_USERNAME);
 		password = sharedPreferences.getString("password", DEFAULT_PASSWORD);
@@ -67,7 +72,12 @@ public class AppSettings
 		Log.i(toString(), "Settings loaded");
 	}
 	
-	public void saveSettings()
+	public void saveSettings(Context context)
+	{
+		saveSettings(context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE));
+	}
+	
+	public void saveSettings(SharedPreferences sharedPreferences)
 	{
 		sharedPreferences.edit()
 			.putString("username", username)
