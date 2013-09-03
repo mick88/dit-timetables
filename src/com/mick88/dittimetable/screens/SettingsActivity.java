@@ -76,10 +76,10 @@ public class SettingsActivity extends ActionBarActivity
 		TextView tvInfo = (TextView) findViewById(R.id.textDatasetInfo);
 		
 		String [] years = getResources().getStringArray(R.array.year_values);
-		yearSelector.setAdapter(new RobotoArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, years));
+		yearSelector.setAdapter(new RobotoArrayAdapter<String>(this, android.R.layout.simple_spinner_item, android.R.id.text1, years));
 		
 		String [] presetWeeks = getResources().getStringArray(R.array.semester_predefines);
-		semesterSelector.setAdapter(new RobotoArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, android.R.id.text1, presetWeeks));
+		semesterSelector.setAdapter(new RobotoArrayAdapter<String>(this, android.R.layout.simple_spinner_item, android.R.id.text1, presetWeeks));
 		
 		findViewById(R.id.btn_get_password).setOnClickListener(new View.OnClickListener()
 		{
