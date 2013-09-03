@@ -11,13 +11,19 @@ import android.widget.ArrayAdapter;
 
 public class RobotoArrayAdapter<T> extends ArrayAdapter<T>
 {
-	final FontApplicator fontApplicator;
+	FontApplicator fontApplicator;
+	
+	private void init()
+	{
+		fontApplicator = new FontApplicator(getContext().getAssets(), "Roboto-Light.ttf");
+		setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	}
 	
 	public RobotoArrayAdapter(Context context, int resource,
 			int textViewResourceId, List<T> objects) {
 		super(context, resource, textViewResourceId, objects);
 		
-		fontApplicator = new FontApplicator(context.getAssets(), "Roboto-Light.ttf");
+		init();
 	}
 	
 	
@@ -26,7 +32,7 @@ public class RobotoArrayAdapter<T> extends ArrayAdapter<T>
 			int textViewResourceId, T[] objects) {
 		super(context, resource, textViewResourceId, objects);
 		
-		fontApplicator = new FontApplicator(context.getAssets(), "Roboto-Light.ttf");		
+		init();
 	}
 
 
