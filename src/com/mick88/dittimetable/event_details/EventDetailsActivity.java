@@ -19,6 +19,7 @@ import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.utils.FontApplicator;
 
+@Deprecated
 public class EventDetailsActivity extends ActionBarActivity
 {
 
