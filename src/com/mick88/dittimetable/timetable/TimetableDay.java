@@ -176,6 +176,22 @@ public class TimetableDay implements Serializable
 //		return Timetable.getToday(false) == this;
 	}
 	
+	public List<TimetableEvent> getEvents(AppSettings settings)
+	{
+		List<TimetableEvent> events = new ArrayList<TimetableEvent>();
+		
+		int currentWeek = Timetable.getCurrentWeek(),
+				showWeek = settings.getOnlyCurrentWeek()?currentWeek : 0;
+		
+		for (TimetableEvent event : this.events) 
+			if (event.isGroup(settings.getHiddenGroups()) && event.isInWeek(showWeek))
+			{
+				events.add(event);
+			}
+				
+		return events;
+	}
+	
 	public List<EventItem> getTimetableEntries(AppSettings settings)
 	{
 		List<EventItem> entries = new ArrayList<EventItem>(events.size());
