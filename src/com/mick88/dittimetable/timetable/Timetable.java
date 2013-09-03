@@ -162,17 +162,17 @@ public class Timetable implements Serializable
     	switch (Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
     	{
     		case Calendar.MONDAY:
-    			return 0;
+    			return DAY_MONDAY;
     		case Calendar.TUESDAY:
-    			return 1;
+    			return DAY_TUESDAY;
     		case Calendar.WEDNESDAY:
-    			return 2;
+    			return DAY_WEDNESDAY;
     		case Calendar.THURSDAY:
-    			return 3;
+    			return DAY_THURSDAY;
     		case Calendar.FRIDAY:
-    			return 4;
+    			return DAY_FRIDAY;
 			default: //shows monday if its the weekend
-				if (defaultMonday) return 0;
+				if (defaultMonday) return DAY_MONDAY;
 				else return -1;
     	}
     }
