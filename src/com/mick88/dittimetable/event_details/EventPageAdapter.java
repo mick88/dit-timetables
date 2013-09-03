@@ -38,6 +38,6 @@ public class EventPageAdapter extends FragmentPagerAdapter
 	@Override
 	public CharSequence getPageTitle(int position)
 	{
-		return events.get(position).getName();
+		return events.get(position).getStartTime();
 	}
 }
