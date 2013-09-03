@@ -16,7 +16,6 @@ import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.list.EventAdapter;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
-import com.mick88.dittimetable.screens.TimetableActivity;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableDay;
 import com.mick88.dittimetable.utils.FontApplicator;
@@ -25,9 +24,11 @@ public class DayFragment extends Fragment
 {
 	public static final String
 		EXTRA_DAY = "day",
+		EXTRA_TIMETABLE = "timetable",
 		EXTRA_SETTINGS ="settings";
 	
 	TimetableDay timetableDay = null;
+	Timetable timetable = null;
 	AppSettings appSettings = null;
 	
 	TextView tvText;
@@ -43,6 +44,7 @@ public class DayFragment extends Fragment
 		
 		timetableDay = (TimetableDay) getArguments().getSerializable(EXTRA_DAY);
 		appSettings = (AppSettings) getArguments().getSerializable(EXTRA_SETTINGS);
+		timetable = (Timetable) getArguments().getSerializable(EXTRA_TIMETABLE);
 	}
 	
 	@Override
@@ -77,7 +79,7 @@ public class DayFragment extends Fragment
 			}
 			else
 			{
-				listView.setAdapter(new EventAdapter(getActivity(), items, timetableDay));
+				listView.setAdapter(new EventAdapter(getActivity(), items, timetableDay, timetable));
 				listView.setVisibility(View.VISIBLE);
 				tvText.setVisibility(View.GONE);
 			}

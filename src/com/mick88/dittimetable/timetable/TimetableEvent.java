@@ -118,6 +118,11 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		return Timetable.DAY_NAMES[day];
 	}
 	
+	public int getDay()
+	{
+		return day;
+	}
+	
 	public int getId()
 	{
 		return id;
@@ -668,7 +673,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	}
 
 	@Override
-	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator, boolean allowHighlight)
+	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator, boolean allowHighlight, final Timetable timetable)
 	{
 		View view = convertView;
 		EventViewHolder viewHolder;
@@ -697,8 +702,8 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				intent.putExtra(EventDetailsSwipableActivity.EXTRA_SELECTED_EVENT, TimetableEvent.this);
 				// TODO: Pass settings and day objects
-//				intent.putExtra(EventDetailsSwipableActivity.EXTRA_SETTINGS, null);
-//				intent.putExtra(EventDetailsSwipableActivity.EXTRA_DAY, null);
+				intent.putExtra(EventDetailsSwipableActivity.EXTRA_SETTINGS, timetable.getSettings());
+				intent.putExtra(EventDetailsSwipableActivity.EXTRA_DAY, timetable.getDay(day));
 				context.startActivity(intent);				
 			}
 		});

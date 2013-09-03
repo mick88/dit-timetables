@@ -2,7 +2,6 @@ package com.mick88.dittimetable.list;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Stack;
 
@@ -19,10 +18,11 @@ import android.widget.RelativeLayout.LayoutParams;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.UnfoldActivity;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
+import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.utils.FontApplicator;
 
-public class MultiEvent implements EventItem, OnClickListener
+public class MultiEvent implements EventItem
 {
 	private final List<TimetableEvent> events;
 	private final static int MARGIN_INCREMENT = 25;;
@@ -39,7 +39,7 @@ public class MultiEvent implements EventItem, OnClickListener
 	}
 
 	@Override
-	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator, boolean allowHighlight)
+	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator, boolean allowHighlight, final Timetable timetable)
 	{
 		int dp = (int)(layoutInflater.getContext().getResources().getDisplayMetrics().density * MARGIN_INCREMENT);
 		final ViewGroup viewGroup;
@@ -53,7 +53,31 @@ public class MultiEvent implements EventItem, OnClickListener
 		}
 		else viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.timetable_event_multi, parent, false);
 
-		viewGroup.setOnClickListener(this);
+		viewGroup.setOnClickListener(new OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				Log.d("Multiview", "Multiview clicked "+v.toString());
+				if (v instanceof ViewGroup)
+				{
+					Context context = v.getContext();
+					ArrayList<Integer> positions = new ArrayList<Integer>(events.size());
+					ViewGroup viewGroup = (ViewGroup) v;
+					for (int i=0; i  < viewGroup.getChildCount(); i++)
+					{
+						Rect rect = new Rect();
+						viewGroup.getChildAt(i).getGlobalVisibleRect(rect);
+						positions.add(rect.top);
+					}
+					context.startActivity(new Intent(context, UnfoldActivity.class)
+						.putExtra(UnfoldActivity.EXTRA_EVENTS, (Serializable)events)
+						.putExtra(UnfoldActivity.EXTRA_POSITIONS, positions)
+						.putExtra(UnfoldActivity.EXTRA_TIMETABLE, timetable));
+				}
+			}
+		});
 
 		int margin = dp * events.size();
 
@@ -62,7 +86,7 @@ public class MultiEvent implements EventItem, OnClickListener
 		{
 			margin -= dp;
 			View recycle = recyclableViews.isEmpty() ? null : recyclableViews.pop();
-			View eventTile = events.get(i).getView(layoutInflater, recycle, viewGroup, fontApplicator, allowHighlight);
+			View eventTile = events.get(i).getView(layoutInflater, recycle, viewGroup, fontApplicator, allowHighlight, timetable);
 			eventTile.setClickable(false);
 			LayoutParams params = (LayoutParams) eventTile.getLayoutParams();
 			params.setMargins(0, margin, 0, 0);
@@ -72,26 +96,4 @@ public class MultiEvent implements EventItem, OnClickListener
 		
 		return viewGroup;
 	}
-
-	@Override
-	public void onClick(View v)
-	{
-		Log.d("Multiview", "Multiview clicked "+v.toString());
-		if (v instanceof ViewGroup)
-		{
-			Context context = v.getContext();
-			ArrayList<Integer> positions = new ArrayList<Integer>(events.size());
-			ViewGroup viewGroup = (ViewGroup) v;
-			for (int i=0; i  < viewGroup.getChildCount(); i++)
-			{
-				Rect rect = new Rect();
-				viewGroup.getChildAt(i).getGlobalVisibleRect(rect);
-				positions.add(rect.top);
-			}
-			context.startActivity(new Intent(context, UnfoldActivity.class)
-				.putExtra(UnfoldActivity.EXTRA_EVENTS, (Serializable)this.events)
-				.putExtra(UnfoldActivity.EXTRA_POSITIONS, positions));
-		}
-	}
-
 }

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
+import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 /**
@@ -34,7 +35,7 @@ public class Space implements EventItem
 	}
 
 	@Override
-	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator, boolean allowHighlight)
+	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator, boolean allowHighlight, Timetable timetable)
 	{
 		final int current = getCurrentSpace();
 		

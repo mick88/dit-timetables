@@ -1,17 +1,17 @@
 package com.mick88.dittimetable.event_details;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
-import com.mick88.dittimetable.AppSettings;
-import com.mick88.dittimetable.R;
-import com.mick88.dittimetable.timetable.TimetableDay;
-import com.mick88.dittimetable.timetable.TimetableEvent;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+
+import com.mick88.dittimetable.AppSettings;
+import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.list.EventAdapter.EventItem;
+import com.mick88.dittimetable.timetable.TimetableDay;
+import com.mick88.dittimetable.timetable.TimetableEvent;
 
 public class EventDetailsSwipableActivity extends ActionBarActivity
 {
@@ -46,7 +46,12 @@ public class EventDetailsSwipableActivity extends ActionBarActivity
 		
 		ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 		List<TimetableEvent> events = new ArrayList<TimetableEvent>();
-		events.addAll((Collection<? extends TimetableEvent>) timetableDay.getTimetableEntries(appSettings));
+		for (EventItem item : timetableDay.getTimetableEntries(appSettings))
+		{
+			if (item instanceof TimetableEvent)
+				events.add((TimetableEvent) item);
+		}
+//		events.addAll((Collection<? extends TimetableEvent>) timetableDay.getTimetableEntries(appSettings));
 		viewPager.setAdapter(new EventPageAdapter(getSupportFragmentManager(), events));
 		int page = events.indexOf(selectedEvent);
 		viewPager.setCurrentItem(page, false);

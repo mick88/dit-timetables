@@ -2,6 +2,7 @@ package com.mick88.dittimetable.event_details;
 
 import java.util.List;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -21,7 +22,11 @@ public class EventPageAdapter extends FragmentPagerAdapter
 	@Override
 	public Fragment getItem(int arg0)
 	{
-		return null;
+		Fragment fragment = new EventDetailsFragment();
+		Bundle args = new Bundle();
+		args.putSerializable(EventDetailsFragment.EXTRA_EVENT, events.get(arg0));
+		fragment.setArguments(args);
+		return fragment;
 	}
 
 	@Override
