@@ -159,22 +159,11 @@ public class Timetable implements Serializable
 	 */
 	public static int getTodayId(boolean defaultMonday)
     {
-    	switch (Calendar.getInstance().get(Calendar.DAY_OF_WEEK))
-    	{
-    		case Calendar.MONDAY:
-    			return DAY_MONDAY;
-    		case Calendar.TUESDAY:
-    			return DAY_TUESDAY;
-    		case Calendar.WEDNESDAY:
-    			return DAY_WEDNESDAY;
-    		case Calendar.THURSDAY:
-    			return DAY_THURSDAY;
-    		case Calendar.FRIDAY:
-    			return DAY_FRIDAY;
-			default: //shows monday if its the weekend
-				if (defaultMonday) return DAY_MONDAY;
-				else return -1;
-    	}
+		int day = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 2 + 7) % 7;
+		if (defaultMonday)
+			return (day > DAY_FRIDAY) ? DAY_MONDAY : day;
+		else 
+			return (day > DAY_FRIDAY) ? -1 : day;
     }
 	
 	/**
