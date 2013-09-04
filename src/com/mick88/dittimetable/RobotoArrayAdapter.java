@@ -15,7 +15,7 @@ public class RobotoArrayAdapter<T> extends ArrayAdapter<T>
 	
 	private void init()
 	{
-		fontApplicator = new FontApplicator(getContext().getAssets(), "Roboto-Light.ttf");
+		fontApplicator = new FontApplicator(getContext().getAssets(), TimetableApp.FONT_NAME);
 		setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	}
 	

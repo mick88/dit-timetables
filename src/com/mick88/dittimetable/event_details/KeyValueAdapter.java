@@ -3,6 +3,7 @@ package com.mick88.dittimetable.event_details;
 import java.util.List;
 
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 
@@ -25,7 +26,7 @@ public class KeyValueAdapter extends ArrayAdapter<KeyValue>
 	
 	public KeyValueAdapter(Context context, List<KeyValue> objects) {
 		super(context, 0, 0, objects);
-		this.fontApplicator = new FontApplicator(context.getAssets(), "Roboto-Light.ttf");
+		this.fontApplicator = new FontApplicator(context.getAssets(), TimetableApp.FONT_NAME);
 	}
 	
 	@Override

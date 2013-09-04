@@ -10,6 +10,7 @@ public class TimetableApp extends Application
 {
 	private AppSettings settings;
 	public static final String FLURRY_API_KEY = "DN7DRPJHSB5WX5FSX5SG";
+	public static final String FONT_NAME = "Roboto-Light.ttf";
 	
 	@Override
 	public void onCreate()

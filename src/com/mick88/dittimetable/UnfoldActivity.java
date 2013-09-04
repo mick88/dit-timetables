@@ -38,7 +38,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_unfold);
-		FontApplicator fontApplicator = new FontApplicator(getAssets(), "Roboto-Light.ttf");
+		FontApplicator fontApplicator = new FontApplicator(getAssets(), TimetableApp.FONT_NAME);
 		LinearLayout container = (LinearLayout) findViewById(R.id.container);
 		container.removeAllViews();
 		
