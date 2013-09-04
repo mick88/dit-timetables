@@ -59,7 +59,7 @@ public class SettingsActivity extends ActionBarActivity
 		
 		this.allowCancel = getIntent().getBooleanExtra(EXTRA_ALLOW_CANCEL, true);
 		
-		this.fontApplicator = new FontApplicator(getAssets(), "Roboto-Light.ttf");
+		this.fontApplicator = new FontApplicator(getAssets(), TimetableApp.FONT_NAME);
 		fontApplicator.applyFont(getWindow().getDecorView());
 		appSettings = ((TimetableApp)getApplication()).getSettings();
 		
