@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
-import android.text.style.UnderlineSpan;
 
 import com.mick88.dittimetable.timetable.TimetableEvent;
 
@@ -49,7 +48,6 @@ public class EventPageAdapter extends FragmentPagerAdapter
 		if (event.isEventOn()) 
 		{
 			spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-			spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		}
 		return spannableString;
 	}
