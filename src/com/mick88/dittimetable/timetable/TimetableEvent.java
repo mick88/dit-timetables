@@ -215,7 +215,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	
 	public boolean isEventOn(int hour)
 	{
-		return (hour >= startHour && hour < endHour);
+		return (hour >= startHour && hour < endHour && isToday());
 	}
 	
 	public CharSequence getEndTime()
