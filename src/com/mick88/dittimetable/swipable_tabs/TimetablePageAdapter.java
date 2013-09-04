@@ -1,9 +1,13 @@
 package com.mick88.dittimetable.swipable_tabs;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 
 import com.mick88.dittimetable.timetable.Timetable;
 
@@ -49,7 +53,13 @@ public class TimetablePageAdapter extends FragmentPagerAdapter
 	@Override
 	public CharSequence getPageTitle(int position)
 	{
-		return Timetable.DAY_NAMES[position];
+		
+		SpannableString spannableString = new SpannableString(Timetable.DAY_NAMES[position]);
+		if (Timetable.getTodayId(false) == position) 
+		{
+			spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
+		return spannableString;
 	}
 	
 	@Override

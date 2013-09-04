@@ -51,7 +51,6 @@ import com.mick88.dittimetable.web.Connection;
 public class TimetableActivity extends ActionBarActivity 
 									implements Timetable.ResultHandler, GroupSelectionListener, TabListener
 {
-
 	final int SETTINGS_REQUEST_CODE = 1;
 	
 	final String logTag = "Timetable";
@@ -248,7 +247,7 @@ public class TimetableActivity extends ActionBarActivity
 		
 		setContentView(R.layout.activity_timetable);
 
-		FontApplicator fontApplicator = new FontApplicator(getAssets(), "Roboto-Light.ttf");
+		FontApplicator fontApplicator = new FontApplicator(getAssets(), TimetableApp.FONT_NAME);
 		fontApplicator.applyFont(getWindow().getDecorView());
 		application = (TimetableApp) getApplication();
 		processIntent();

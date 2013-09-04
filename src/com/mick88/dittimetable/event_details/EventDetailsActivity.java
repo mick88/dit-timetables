@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.utils.FontApplicator;
 
@@ -31,7 +32,7 @@ public class EventDetailsActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_event_details);
 		
-		new FontApplicator(getAssets(), "Roboto-Light.ttf").applyFont(getWindow().getDecorView());
+		new FontApplicator(getAssets(), TimetableApp.FONT_NAME).applyFont(getWindow().getDecorView());
 		
 		// Show the Up button in the action bar.
 		setupActionBar();
