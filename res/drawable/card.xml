@@ -4,7 +4,7 @@
 		<shape android:shape="rectangle"
 			android:dither="true">
 
-			<corners android:radius="2dp"/>
+			<corners android:radius="@dimen/card_corner_radius"/>
 
 			<solid android:color="@color/card_shadow" />
 
@@ -15,7 +15,7 @@
 		<shape android:shape="rectangle"
 			android:dither="true">
 
-			<corners android:radius="2dp" />
+			<corners android:radius="@dimen/card_corner_radius" />
 
 			<solid android:color="@color/card" />
 
