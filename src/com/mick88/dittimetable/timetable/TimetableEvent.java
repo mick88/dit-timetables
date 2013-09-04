@@ -197,6 +197,11 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		return endHour - startHour;
 	}
 	
+	public boolean isToday()
+	{
+		return Timetable.getTodayId(false) == this.day;
+	}
+	
 	public boolean isEventOn()
 	{
 		return isEventOn(Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
