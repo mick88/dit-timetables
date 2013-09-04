@@ -8,19 +8,19 @@
             <solid android:color="@color/card_shadow" />
 
             <size
-                android:height="7dp"
-                android:width="7dp" />
+                android:height="@dimen/dot_size"
+                android:width="@dimen/dot_size" />
         </shape>
     </item>
-    <item android:bottom="1dp">
+    <item android:bottom="@dimen/dot_shadow_offset">
         <shape
             android:dither="true"
             android:shape="oval" >
             <solid android:color="@color/card" />
 
             <size
-                android:height="7dp"
-                android:width="7dp" />
+                android:height="@dimen/dot_size"
+                android:width="@dimen/dot_size" />
         </shape>
     </item>
 
