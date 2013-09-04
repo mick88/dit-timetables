@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-	<item>
-		<shape android:shape="rectangle"
-			android:dither="true">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
-			<corners android:radius="@dimen/card_corner_radius"/>
+    <item>
+        <shape
+            android:dither="true"
+            android:shape="rectangle" >
+            <corners android:radius="@dimen/card_corner_radius" />
 
-			<solid android:color="@color/card_shadow" />
+            <solid android:color="@color/card_shadow" />
+        </shape>
+    </item>
+    <item android:bottom="@dimen/card_shadow_offset">
+        <shape
+            android:dither="true"
+            android:shape="rectangle" >
+            <corners android:radius="@dimen/card_corner_radius" />
 
-		</shape>
-	</item>
+            <solid android:color="@color/card" />
 
-	<item android:bottom="@dimen/card_shadow_offset">
-		<shape android:shape="rectangle"
-			android:dither="true">
+            <padding
+                android:bottom="@dimen/card_padding"
+                android:left="@dimen/card_padding"
+                android:right="@dimen/card_padding"
+                android:top="@dimen/card_padding" />
+        </shape>
+    </item>
 
-			<corners android:radius="@dimen/card_corner_radius" />
-
-			<solid android:color="@color/card" />
-
-			<padding android:bottom="@dimen/card_padding"
-				android:left="@dimen/card_padding"
-				android:right="@dimen/card_padding"
-				android:top="@dimen/card_padding" />
-		</shape>
-	</item>
 </layer-list>
