@@ -11,7 +11,7 @@
 		</shape>
 	</item>
 
-	<item android:bottom="2dp">
+	<item android:bottom="@dimen/card_shadow_offset">
 		<shape android:shape="rectangle"
 			android:dither="true">
 
@@ -19,10 +19,10 @@
 
 			<solid android:color="@color/card_semi_selected" />
 
-			<padding android:bottom="8dp"
-				android:left="8dp"
-				android:right="8dp"
-				android:top="8dp" />
+			<padding android:bottom="@dimen/card_padding"
+				android:left="@dimen/card_padding"
+				android:right="@dimen/card_padding"
+				android:top="@dimen/card_padding" />
 		</shape>
 	</item>
 </layer-list>
