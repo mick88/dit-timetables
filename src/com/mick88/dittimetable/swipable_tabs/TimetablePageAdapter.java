@@ -8,10 +8,8 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
-import android.text.style.UnderlineSpan;
 
 import com.mick88.dittimetable.timetable.Timetable;
-import com.mick88.dittimetable.timetable.TimetableEvent;
 
 /**
  * This class handles pages in the main screen.
