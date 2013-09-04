@@ -59,7 +59,7 @@ public class SettingsActivity extends ActionBarActivity
 		
 		this.allowCancel = getIntent().getBooleanExtra(EXTRA_ALLOW_CANCEL, true);
 		
-		this.fontApplicator = new FontApplicator(getAssets(), "Roboto-Light.ttf");
+		this.fontApplicator = new FontApplicator(getAssets(), TimetableApp.FONT_NAME);
 		fontApplicator.applyFont(getWindow().getDecorView());
 		appSettings = ((TimetableApp)getApplication()).getSettings();
 		
@@ -148,7 +148,7 @@ public class SettingsActivity extends ActionBarActivity
 		appSettings.setUsername(editUsername.getText().toString().trim());
 		appSettings.setPassword(editPassword.getText().toString().trim());
 		
-		appSettings.setCourse(editCourse.getText().toString().toUpperCase());
+		appSettings.setCourse(editCourse.getText().toString().toUpperCase(Locale.ENGLISH));
 		appSettings.setWeeks(editWeeks.getText().toString());
 		appSettings.setYear((int) (yearSelector.getSelectedItemId()+1));
 		appSettings.setOnlyCurrentWeek(weekCheckBox.isChecked());
@@ -251,7 +251,7 @@ public class SettingsActivity extends ActionBarActivity
 			valid = false;
 		}
 		
-		if (editCourse.getText().toString().toUpperCase().matches("DT[0-9]{3}") == false)
+		if (editCourse.getText().toString().toUpperCase(Locale.ENGLISH).matches("DT[0-9]{3}") == false)
 		{
 			if (editCourse.getText().toString().matches("[0-9]{3}") == true)
 			{
@@ -289,39 +289,6 @@ public class SettingsActivity extends ActionBarActivity
 	@Override
 	public void onBackPressed()
 	{
-		if (allowCancel == false)
-		{
-			saveAndQuit();
-		}
-		else
-		{
-			AlertDialog dialog = new AlertDialog.Builder(this)
-					.setTitle(R.string.app_name)
-					.setMessage("Would you like to save changes?")
-					.setPositiveButton("Yes", new OnClickListener()
-					{
-						
-						@Override
-						public void onClick(DialogInterface dialog, int which)
-						{
-							saveAndQuit();
-						}
-					})
-					.setNegativeButton("No", new OnClickListener()
-					{
-						
-						@Override
-						public void onClick(DialogInterface dialog, int which)
-						{
-							cancelAndQuit();
-							
-						}
-					})
-					.setCancelable(false)
-					.setIcon(R.drawable.ic_launcher)
-					.create();
-			dialog.show();
-		}
+		saveAndQuit();
 	}
-
 }

@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:background="@color/color_background"
     android:minHeight="@dimen/tile_break"
     android:padding="2dp" >
 

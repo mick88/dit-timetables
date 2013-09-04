@@ -5,7 +5,7 @@
         <shape
             android:dither="true"
             android:shape="oval" >
-            <solid android:color="#ccc" />
+            <solid android:color="@color/card_shadow" />
 
             <size
                 android:height="7dp"
@@ -16,7 +16,7 @@
         <shape
             android:dither="true"
             android:shape="oval" >
-            <solid android:color="@color/color_item_background" />
+            <solid android:color="@color/card" />
 
             <size
                 android:height="7dp"

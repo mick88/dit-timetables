@@ -6,7 +6,7 @@
 
 			<corners android:radius="2dp"/>
 
-			<solid android:color="#ccc" />
+			<solid android:color="@color/card_shadow" />
 
 		</shape>
 	</item>
@@ -17,7 +17,7 @@
 
 			<corners android:radius="2dp" />
 
-			<solid android:color="@color/color_item_background" />
+			<solid android:color="@color/card" />
 
 			<padding android:bottom="8dp"
 				android:left="8dp"

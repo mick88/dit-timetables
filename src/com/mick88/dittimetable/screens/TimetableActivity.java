@@ -140,15 +140,6 @@ public class TimetableActivity extends ActionBarActivity
     	super.onConfigurationChanged(newConfig);
     }
     
-    View createTabView(final Context context, final CharSequence text)
-    {
-    	View view = LayoutInflater.from(context).inflate(R.layout.tab_view, null);
-    	TextView tv = (TextView) view.findViewById(R.id.tabText);
-    	tv.setText(text);
-    	
-    	return view;
-    }
-    
     public ViewPager getViewPager()
 	{
 		return viewPager;
