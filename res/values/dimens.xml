@@ -7,7 +7,11 @@
     <dimen name="tile_break">15dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    
 	<dimen name="card_corner_radius">2dp</dimen>
 	<dimen name="card_padding">8dp</dimen>
 	<dimen name="card_shadow_offset">2dp</dimen>
+	
+	<dimen name="dot_size">7dp</dimen>
+	<dimen name="dot_shadow_offset">1dp</dimen>
 </resources>
