@@ -12,19 +12,16 @@ import android.text.Spanned;
 import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 
-import com.mick88.dittimetable.timetable.TimetableDay;
 import com.mick88.dittimetable.timetable.TimetableEvent;
 
 public class EventPageAdapter extends FragmentPagerAdapter
 {
 	final List<TimetableEvent> events;
-	final TimetableDay timetableDay;
 	
-	public EventPageAdapter(FragmentManager fm, List<TimetableEvent> events, TimetableDay timetableDay) 
+	public EventPageAdapter(FragmentManager fm, List<TimetableEvent> events) 
 	{
 		super(fm);
 		this.events = events;
-		this.timetableDay = timetableDay;
 	}
 
 	@Override
@@ -49,7 +46,7 @@ public class EventPageAdapter extends FragmentPagerAdapter
 		TimetableEvent event = events.get(position);
 		
 		SpannableString spannableString = new SpannableString(event.getStartTime());
-		if (timetableDay.isToday() && event.isEventOn()) 
+		if (event.isEventOn()) 
 		{
 			spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 			spannableString.setSpan(new UnderlineSpan(), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
