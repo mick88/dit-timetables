@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.timetable.TimetableDay;
 import com.mick88.dittimetable.timetable.TimetableEvent;
@@ -31,7 +32,7 @@ public class EventDetailsSwipableActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timetable);
 		
-		new FontApplicator(getAssets(), "Roboto-Light.ttf").applyFont(getWindow().getDecorView());
+		new FontApplicator(getAssets(), TimetableApp.FONT_NAME).applyFont(getWindow().getDecorView());
 		
 		Bundle extras = getIntent().getExtras();
 		TimetableEvent selectedEvent;
