@@ -5,7 +5,7 @@
         android:width="2dp"
         android:color="@color/color_item_border" />
 
-    <solid android:color="@color/color_item_current" />
+    <solid android:color="@color/card_selected" />
 
     <padding
         android:bottom="@dimen/tile_padding"

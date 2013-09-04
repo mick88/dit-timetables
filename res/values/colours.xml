@@ -5,13 +5,15 @@
     <color name="color_lecture">#0000FF</color>
     <color name="color_laboratory">#FF8800</color>
     <color name="color_tutorial">#008888</color>
-
-    <color name="color_background">#E5E5E5</color>
-    <color name="color_item_current">#33B5E5</color>
-    <color name="color_item_upcoming">#ADD1DD</color>
-    <color name="color_item_background">#FFFFFF</color>
+    
     <color name="color_item_border">#FFFFFF</color>
     <color name="semi_transparent">#C000</color>
+    
+     <!-- Card colours -->
+    <color name="card">#FFFFFF</color>
+    <color name="color_background">#E5E5E5</color>
+    <color name="card_selected">#33B5E5</color>
+    <color name="card_semi_selected">#ADD1DD</color>
     <color name="card_shadow">#ccc</color>
     
     <!-- DIT Colours -->

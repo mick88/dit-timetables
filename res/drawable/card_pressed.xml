@@ -17,7 +17,7 @@
 
 			<corners android:radius="2dp" />
 
-			<solid android:color="@color/color_item_current" />
+			<solid android:color="@color/card_selected" />
 
 			<padding android:bottom="8dp"
 				android:left="8dp"
