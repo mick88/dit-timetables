@@ -53,7 +53,7 @@ public class MultiEvent implements EventItem
 		}
 		else viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.timetable_event_multi, parent, false);
 
-		viewGroup.setOnClickListener(new OnClickListener()
+		/*viewGroup.setOnClickListener(new OnClickListener()
 		{
 			
 			@Override
@@ -77,7 +77,7 @@ public class MultiEvent implements EventItem
 						.putExtra(UnfoldActivity.EXTRA_TIMETABLE, timetable));
 				}
 			}
-		});
+		});*/
 
 		int margin = dp * events.size();
 
