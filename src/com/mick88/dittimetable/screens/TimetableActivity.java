@@ -415,7 +415,8 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		Intent settingsScreen = new Intent(TimetableActivity.this, SettingsActivity.class);
 		settingsScreen.putExtra(SettingsActivity.EXTRA_ALLOW_CANCEL, allowCancel);
-		startActivityForResult(settingsScreen, SETTINGS_REQUEST_CODE);
+		startActivity(settingsScreen);
+		finish();
 	}
 	
 	void showGroupSelectionDialog()
