@@ -276,14 +276,21 @@ public class SettingsActivity extends ActionBarActivity
 		{
 			saveSettings();
 			this.setResult(RESULT_OK);
-			finish();
+			goBack();
 		}
 	}
 	
 	void cancelAndQuit()
 	{
 		this.setResult(RESULT_CANCELED);
-		this.finish();
+		goBack();
+	}
+	
+	private void goBack()
+	{
+		Intent intent = new Intent(getApplicationContext(), TimetableActivity.class);
+		startActivity(intent);
+		finish();
 	}
 
 	@Override
