@@ -13,7 +13,6 @@ import java.util.TimerTask;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -30,10 +29,8 @@ import android.support.v7.app.ActionBar.TabListener;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +49,7 @@ public class TimetableActivity extends ActionBarActivity
 									implements Timetable.ResultHandler, GroupSelectionListener, TabListener
 {
 	final int SETTINGS_REQUEST_CODE = 1;
+	public static final String EXTRA_TIMETABLE = "timetable";
 	
 	final String logTag = "Timetable";
 	String html;
@@ -241,7 +239,17 @@ public class TimetableActivity extends ActionBarActivity
 		FontApplicator fontApplicator = new FontApplicator(getAssets(), TimetableApp.FONT_NAME);
 		fontApplicator.applyFont(getWindow().getDecorView());
 		application = (TimetableApp) getApplication();
-		processIntent();
+		
+		if (savedInstanceState != null)
+		{
+			Object extraTimetable = savedInstanceState.getSerializable(EXTRA_TIMETABLE);
+			if (extraTimetable instanceof Timetable)
+			{
+				this.timetable = (Timetable) extraTimetable;
+				refresh();
+			}
+		}
+		else processIntent();
 				
 		if (timetable == null) // if intent isnt processed
 		{
@@ -255,6 +263,13 @@ public class TimetableActivity extends ActionBarActivity
 		
 		setupViewPager();
 
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState)
+	{
+		super.onSaveInstanceState(outState);
+		outState.putSerializable(EXTRA_TIMETABLE, this.timetable);
 	}
 	
 	/*
@@ -415,7 +430,8 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		Intent settingsScreen = new Intent(TimetableActivity.this, SettingsActivity.class);
 		settingsScreen.putExtra(SettingsActivity.EXTRA_ALLOW_CANCEL, allowCancel);
-		startActivityForResult(settingsScreen, SETTINGS_REQUEST_CODE);
+		startActivity(settingsScreen);
+		finish();
 	}
 	
 	void showGroupSelectionDialog()
