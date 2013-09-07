@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableDay;
@@ -41,7 +42,7 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 	public EventAdapter(Context context, List<EventItem> objects, TimetableDay timetableDay, Timetable timetable) 
 	{
 		super(context, R.layout.timetable_event_small, objects);
-		fontApplicator = new FontApplicator(getContext().getAssets(), "Roboto-Light.ttf");
+		fontApplicator = new FontApplicator(getContext().getAssets(), TimetableApp.FONT_NAME);
 		this.isToday = timetableDay.isToday();
 		this.timetable = timetable;
 	}
