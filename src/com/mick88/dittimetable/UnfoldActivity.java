@@ -13,7 +13,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 
-import com.mick88.dittimetable.event_details.EventDetailsActivity;
+import com.mick88.dittimetable.event_details.EventDetailsSwipableActivity;
+import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.utils.FontApplicator;
 
@@ -30,7 +31,10 @@ public class UnfoldActivity extends Activity implements OnClickListener
 	 */
 	public static final String EXTRA_POSITIONS = "positions";
 	
+	public static final String EXTRA_TIMETABLE = "timetable";
+	
 	private List<TimetableEvent> events = null;
+	private Timetable timetable = null;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -39,6 +43,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_unfold);
 		FontApplicator fontApplicator = new FontApplicator(getAssets(), TimetableApp.FONT_NAME);
+		timetable = (Timetable) getIntent().getExtras().getSerializable(EXTRA_TIMETABLE);
 		LinearLayout container = (LinearLayout) findViewById(R.id.container);
 		container.removeAllViews();
 		
@@ -51,15 +56,17 @@ public class UnfoldActivity extends Activity implements OnClickListener
 				int i=0;
 				for (final TimetableEvent event : events)
 				{
-					View view = event.getView(getLayoutInflater(), null, container, fontApplicator, false);
+					View view = event.getView(getLayoutInflater(), null, container, fontApplicator, false, timetable);
 					view.setOnClickListener(new OnClickListener()
 					{
 						
 						@Override
 						public void onClick(View v)
 						{
-							Intent intent = new Intent(getApplicationContext(), EventDetailsActivity.class);
-							intent.putExtra(EventDetailsActivity.EXTRA_EVENT, event);
+							Intent intent = new Intent(getApplicationContext(), EventDetailsSwipableActivity.class);
+							intent.putExtra(EventDetailsSwipableActivity.EXTRA_SELECTED_EVENT, event);
+							intent.putExtra(EventDetailsSwipableActivity.EXTRA_SETTINGS, timetable.getSettings());
+							intent.putExtra(EventDetailsSwipableActivity.EXTRA_DAY, timetable.getDay(event.getDay()));
 							startActivity(intent);
 						}
 					});

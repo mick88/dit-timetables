@@ -1,7 +1,15 @@
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@android:id/list"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:background="@drawable/card"
-    android:layout_margin="@dimen/tile_padding_outside"/>
+    android:layout_height="match_parent" >
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/tile_padding_outside"
+        android:layout_marginRight="@dimen/tile_padding_outside"
+        android:scrollbars="none"
+        android:background="@drawable/card" />
+
+</FrameLayout>

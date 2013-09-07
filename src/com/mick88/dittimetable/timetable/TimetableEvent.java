@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.event_details.EventDetailsActivity;
+import com.mick88.dittimetable.event_details.EventDetailsSwipableActivity;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.utils.FontApplicator;
 import com.mick88.dittimetable.web.Connection;
@@ -115,6 +116,11 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	public String getDayName()
 	{
 		return Timetable.DAY_NAMES[day];
+	}
+	
+	public int getDay()
+	{
+		return day;
 	}
 	
 	public int getId()
@@ -672,7 +678,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	}
 
 	@Override
-	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator, boolean allowHighlight)
+	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator, boolean allowHighlight, final Timetable timetable)
 	{
 		View view = convertView;
 		EventViewHolder viewHolder;
@@ -697,9 +703,12 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			public void onClick(View v)
 			{
 				Context context = v.getContext().getApplicationContext();
-				Intent intent = new Intent(context, EventDetailsActivity.class);
+				Intent intent = new Intent(context, EventDetailsSwipableActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				intent.putExtra(EventDetailsActivity.EXTRA_EVENT, TimetableEvent.this);
+				intent.putExtra(EventDetailsSwipableActivity.EXTRA_SELECTED_EVENT, TimetableEvent.this);
+				// TODO: Pass settings and day objects
+				intent.putExtra(EventDetailsSwipableActivity.EXTRA_SETTINGS, timetable.getSettings());
+				intent.putExtra(EventDetailsSwipableActivity.EXTRA_DAY, timetable.getDay(day));
 				context.startActivity(intent);				
 			}
 		});

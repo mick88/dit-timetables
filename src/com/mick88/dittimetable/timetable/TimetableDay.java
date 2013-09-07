@@ -96,6 +96,21 @@ public class TimetableDay implements Serializable
 		return result;
 	}
 	
+	/**
+	 * Gets string representing hours from first to last event on this day
+	 * @param appSettings
+	 * @return
+	 */
+	public CharSequence getHoursRange(AppSettings appSettings)
+	{
+		List<TimetableEvent> events = getEvents(appSettings);
+		if (events.isEmpty()) return null;
+		CharSequence start = events.get(0).getStartTime(),
+				end = events.get(events.size()-1).getEndTime();
+		
+		return new StringBuilder(start).append(" - ").append(end);
+	}
+	
 	public int parseHtmlEvent(Timetable timetable, Element element, Context context, boolean allowCache)
 	{
 		int n=0;
@@ -174,6 +189,22 @@ public class TimetableDay implements Serializable
 	{
 		return Timetable.getTodayId(false) == this.id;
 //		return Timetable.getToday(false) == this;
+	}
+	
+	public List<TimetableEvent> getEvents(AppSettings settings)
+	{
+		List<TimetableEvent> events = new ArrayList<TimetableEvent>();
+		
+		int currentWeek = Timetable.getCurrentWeek(),
+				showWeek = settings.getOnlyCurrentWeek()?currentWeek : 0;
+		
+		for (TimetableEvent event : this.events) 
+			if (event.isGroup(settings.getHiddenGroups()) && event.isInWeek(showWeek))
+			{
+				events.add(event);
+			}
+				
+		return events;
 	}
 	
 	public List<EventItem> getTimetableEntries(AppSettings settings)

@@ -39,6 +39,7 @@ public class TimetablePageAdapter extends FragmentPagerAdapter
 		Bundle args = new Bundle();
 		args.putSerializable(DayFragment.EXTRA_DAY, timetable.getDay(arg0));
 		args.putSerializable(DayFragment.EXTRA_SETTINGS, timetable.getSettings());
+		args.putSerializable(DayFragment.EXTRA_TIMETABLE, timetable);
 		fragment.setArguments(args);
 		return fragment;
 	}
