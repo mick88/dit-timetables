@@ -25,7 +25,7 @@ import com.mick88.dittimetable.timetable.Timetable;
 
 public class PdfDownloaderService extends Service
 {
-	private static final int NOTIFICATION_ID = 0;
+	private static final int NOTIFICATION_ID = 1;
 	public static final String EXTRA_TIMETABLE = "timetable";
 	
 	
