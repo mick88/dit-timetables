@@ -434,17 +434,23 @@ public class Timetable implements Serializable
 		return  Connection.ROOT_ADDRESS_PDF + pdfLink.attr("href");
 	}
 	
-	public void downloadPdf(Context context, ResultHandler resultHandler)
+	/**
+	 * Generate filename for downloaded PDF
+	 */
+	public String getPdfFileName()
 	{
-		String weeksStr;
+		final String weeksStr;
 		if (weeks.equals(SEMESTER_1)) weeksStr = "S1";
 		else if (weeks.equals(SEMESTER_2)) weeksStr = "S2";
 		else weeksStr = "W"+weeks;
-		String filename = String.format(Locale.getDefault(), "Timetable_%s-%d_%s.pdf", course, year, weeksStr);
 		
-		Log.d(logTag, "Downloading PDF file: "+filename);
-		
+		return String.format(Locale.getDefault(), "Timetable_%s-%d_%s.pdf", course, year, weeksStr);
+	}
+	
+	public void downloadPdf(Context context, ResultHandler resultHandler)
+	{		
 		String address = getPdfUrl();
+		String filename = getPdfFileName();
 		
 		try
 		{
