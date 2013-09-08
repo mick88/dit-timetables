@@ -43,7 +43,7 @@ public class PdfDownloaderService extends Service
 	
 	private void downloadPdf(Timetable timetable)
 	{
-		new AsyncTask<Timetable, Void, Void>()
+		new AsyncTask<Timetable, Void, File>()
 		{
 			protected void onPreExecute() 
 			{
@@ -55,40 +55,54 @@ public class PdfDownloaderService extends Service
 			}
 
 			@Override
-			protected Void doInBackground(Timetable... params)
+			protected File doInBackground(Timetable... params)
 			{
 				Timetable timetable = params[0];
 				String url = timetable.getPdfUrl();
 				String filename = timetable.getPdfFileName();
+				File file = new File(Environment.getExternalStorageDirectory(), filename);
 				try
 				{
-					downloadFile(url, new File(Environment.getExternalStorageDirectory(), filename));
+					downloadFile(url, file);
+					return file;
 				} 
 				catch (IOException e)
 				{
 					e.printStackTrace();
+					return null;
 				}
-				return null;
 			}
 			
 			@Override
-			protected void onCancelled(Void result) 
+			protected void onCancelled(File result) 
 			{
 				// TODO: clean if necessary
 				stopForeground(true);
 			}
 			
 			@Override
-			protected void onPostExecute(Void result) 
+			protected void onPostExecute(File result) 
 			{
 				stopForeground(true);
 				
-				Builder builder = new Builder(getApplicationContext())
-					.setSmallIcon(R.drawable.ic_launcher)
-					.setContentTitle("Dit Timetables")
-					.setContentText("Timetable downloaded");
-				NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-				notificationManager.notify(NOTIFICATION_ID, builder.build());
+				if (result != null)
+				{
+					Builder builder = new Builder(getApplicationContext())
+						.setSmallIcon(R.drawable.ic_launcher)
+						.setContentTitle("Dit Timetables")
+						.setContentText("Timetable downloaded");
+					NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+					notificationManager.notify(NOTIFICATION_ID, builder.build());
+				}
+				else
+				{
+					Builder builder = new Builder(getApplicationContext())
+						.setSmallIcon(R.drawable.ic_launcher)
+						.setContentTitle("Dit Timetables")
+						.setContentText("PDF download error!");
+					NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+					notificationManager.notify(NOTIFICATION_ID, builder.build());
+				}
 						
 				stopSelf();
 			}
