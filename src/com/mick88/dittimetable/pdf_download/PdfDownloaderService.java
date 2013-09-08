@@ -1,21 +1,19 @@
 package com.mick88.dittimetable.pdf_download;
 
-import com.mick88.dittimetable.R;
-import com.mick88.dittimetable.screens.TimetableActivity;
-import com.mick88.dittimetable.timetable.Timetable;
-
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
+
+import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.timetable.Timetable;
 
 public class PdfDownloaderService extends Service
 {
+	private static final int NOTIFICATION_ID = 0;
 	public static final String EXTRA_TIMETABLE = "timetable";
 	
 	
@@ -43,7 +41,7 @@ public class PdfDownloaderService extends Service
 					.setSmallIcon(R.drawable.ic_launcher)
 					.setContentTitle("DIT Timetables")
 					.setContentText("Downloading PDF");
-				startForeground(0, builder.build());
+				startForeground(NOTIFICATION_ID, builder.build());
 			}
 
 			@Override
@@ -65,7 +63,7 @@ public class PdfDownloaderService extends Service
 					.setContentTitle("Dit Timetables")
 					.setContentText("Timetable downloaded");
 				NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-				notificationManager.notify(0, builder.build());
+				notificationManager.notify(NOTIFICATION_ID, builder.build());
 						
 				stopSelf();
 			}
