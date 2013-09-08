@@ -1,12 +1,22 @@
 package com.mick88.dittimetable.pdf_download;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat.Builder;
+import android.util.Log;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.timetable.Timetable;
@@ -49,7 +59,15 @@ public class PdfDownloaderService extends Service
 			{
 				Timetable timetable = params[0];
 				String url = timetable.getPdfUrl();
-				
+				String filename = timetable.getPdfFileName();
+				try
+				{
+					downloadFile(url, new File(Environment.getExternalStorageDirectory(), filename));
+				} 
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
 				return null;
 			}
 			
@@ -76,5 +94,32 @@ public class PdfDownloaderService extends Service
 			}
 			
 		}.execute(timetable);
+	}
+	
+	private int downloadFile(String url, File outputFile) throws IOException
+	{
+		final int BUFFER_SIZE = 1024;
+		Log.d("PDF Downloader", "Downloading file "+url);
+		URL pdfUrl = new URL(url);
+//		URLConnection connection = pdfUrl.openConnection();
+//		connection.connect();
+//		int length = connection.getContentLength();
+	
+		InputStream inStream = new BufferedInputStream(pdfUrl.openStream());
+		OutputStream outStream = new FileOutputStream(outputFile);
+		
+		byte [] data = new byte [BUFFER_SIZE];
+		int count;
+		int total=0;
+		while ((count = inStream.read(data)) != -1)
+		{
+			total += count;
+			outStream.write(data);
+		}
+		
+		outStream.close();
+		inStream.close();
+		
+		return total;
 	}
 }
