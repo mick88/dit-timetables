@@ -136,7 +136,7 @@ public class PdfDownloaderService extends Service
 			total += count;
 			outStream.write(data);
 		}
-		
+		outStream.flush();
 		outStream.close();
 		inStream.close();
 		
