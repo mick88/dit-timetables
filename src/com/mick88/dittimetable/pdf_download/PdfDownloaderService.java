@@ -1,8 +1,11 @@
 package com.mick88.dittimetable.pdf_download;
 
+import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.screens.TimetableActivity;
 import com.mick88.dittimetable.timetable.Timetable;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -37,6 +40,7 @@ public class PdfDownloaderService extends Service
 			protected void onPreExecute() 
 			{
 				Builder builder = new Builder(getApplicationContext())
+					.setSmallIcon(R.drawable.ic_launcher)
 					.setContentTitle("DIT Timetables")
 					.setContentText("Downloading PDF");
 				startForeground(0, builder.build());
@@ -57,6 +61,7 @@ public class PdfDownloaderService extends Service
 				stopForeground(true);
 				
 				Builder builder = new Builder(getApplicationContext())
+					.setSmallIcon(R.drawable.ic_launcher)
 					.setContentTitle("Dit Timetables")
 					.setContentText("Timetable downloaded");
 				NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
