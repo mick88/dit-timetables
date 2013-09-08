@@ -1,4 +1,4 @@
-package com.mick88.dittimetable;
+package com.mick88.dittimetable.pdf_download;
 
 import com.mick88.dittimetable.timetable.Timetable;
 
