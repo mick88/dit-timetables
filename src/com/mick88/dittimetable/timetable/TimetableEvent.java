@@ -40,10 +40,10 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 {
 	private static final long serialVersionUID = 2900289895051796020L;
 
-	private static class EventViewHolder
+	public static class EventViewHolder
 	{
 		protected final TextView tvEventTime, tvEventLocation, tvEventTitle, tvEventType, tvEventLecturer, tvEventGroup;
-		protected final View background, eventTile;
+		public final View background, eventTile;
 		
 		public EventViewHolder(TextView tvEventTime, TextView tvEventLocation,
 				TextView tvEventTitle, TextView tvEventType,
