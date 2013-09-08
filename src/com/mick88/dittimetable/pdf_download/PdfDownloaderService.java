@@ -9,9 +9,11 @@ import java.io.OutputStream;
 import java.net.URL;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.IBinder;
@@ -87,8 +89,11 @@ public class PdfDownloaderService extends Service
 				
 				if (result != null)
 				{
+					Intent intent = new Intent(Intent.ACTION_VIEW);
+					intent.setData(Uri.fromFile(result));
 					Builder builder = new Builder(getApplicationContext())
 						.setSmallIcon(R.drawable.ic_launcher)
+						.setContentIntent(PendingIntent.getActivity(getApplicationContext(), NOTIFICATION_ID, intent, 0))
 						.setContentTitle("Dit Timetables")
 						.setContentText("Timetable downloaded");
 					NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
