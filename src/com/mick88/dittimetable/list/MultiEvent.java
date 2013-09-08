@@ -8,7 +8,6 @@ import java.util.Stack;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +19,7 @@ import com.mick88.dittimetable.UnfoldActivity;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableEvent;
+import com.mick88.dittimetable.timetable.TimetableEvent.EventViewHolder;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class MultiEvent implements EventItem
@@ -52,14 +52,13 @@ public class MultiEvent implements EventItem
 			viewGroup.removeAllViews();
 		}
 		else viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.timetable_event_multi, parent, false);
-
-		viewGroup.setOnClickListener(new OnClickListener()
+		
+		OnClickListener clickListener = new OnClickListener()
 		{
 			
 			@Override
 			public void onClick(View v)
 			{
-				Log.d("Multiview", "Multiview clicked "+v.toString());
 				if (v instanceof ViewGroup)
 				{
 					Context context = v.getContext();
@@ -77,7 +76,9 @@ public class MultiEvent implements EventItem
 						.putExtra(UnfoldActivity.EXTRA_TIMETABLE, timetable));
 				}
 			}
-		});
+		};
+
+		viewGroup.setOnClickListener(clickListener);
 
 		int margin = dp * events.size();
 
@@ -87,6 +88,8 @@ public class MultiEvent implements EventItem
 			margin -= dp;
 			View recycle = recyclableViews.isEmpty() ? null : recyclableViews.pop();
 			View eventTile = events.get(i).getView(layoutInflater, recycle, viewGroup, fontApplicator, allowHighlight, timetable);
+			EventViewHolder eventViewHolder = (EventViewHolder) eventTile.getTag();
+			eventViewHolder.eventTile.setOnClickListener(clickListener);
 			eventTile.setClickable(false);
 			LayoutParams params = (LayoutParams) eventTile.getLayoutParams();
 			params.setMargins(0, margin, 0, 0);

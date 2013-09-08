@@ -40,14 +40,14 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 {
 	private static final long serialVersionUID = 2900289895051796020L;
 
-	private static class EventViewHolder
+	public static class EventViewHolder
 	{
 		protected final TextView tvEventTime, tvEventLocation, tvEventTitle, tvEventType, tvEventLecturer, tvEventGroup;
-		protected final View background;
+		public final View background, eventTile;
 		
 		public EventViewHolder(TextView tvEventTime, TextView tvEventLocation,
 				TextView tvEventTitle, TextView tvEventType,
-				TextView tvEventLecturer, TextView tvEventGroup, View background) {
+				TextView tvEventLecturer, TextView tvEventGroup, View background, View eventTile) {
 			this.tvEventTime = tvEventTime;
 			this.tvEventLocation = tvEventLocation;
 			this.tvEventTitle = tvEventTitle;
@@ -55,6 +55,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			this.tvEventLecturer = tvEventLecturer;
 			this.tvEventGroup = tvEventGroup;
 			this.background = background;
+			this.eventTile = eventTile;
 		}
 		
 		public EventViewHolder(View view)
@@ -65,6 +66,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 					(TextView)view.findViewById(R.id.eventType),
 					(TextView)view.findViewById(R.id.eventLecturer),
 					(TextView)view.findViewById(R.id.eventGroup),
+					view.findViewById(R.id.timetable_event_small),
 					view.findViewById(R.id.timetable_event_small));
 		}
 	}
@@ -696,7 +698,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		else
 			viewHolder.background.setBackgroundResource(R.drawable.event_selector);
 		
-		view.setOnClickListener(new OnClickListener()
+		viewHolder.eventTile.setOnClickListener(new OnClickListener()
 		{
 			
 			@Override
@@ -706,7 +708,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 				Intent intent = new Intent(context, EventDetailsSwipableActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				intent.putExtra(EventDetailsSwipableActivity.EXTRA_SELECTED_EVENT, TimetableEvent.this);
-				// TODO: Pass settings and day objects
 				intent.putExtra(EventDetailsSwipableActivity.EXTRA_SETTINGS, timetable.getSettings());
 				intent.putExtra(EventDetailsSwipableActivity.EXTRA_DAY, timetable.getDay(day));
 				context.startActivity(intent);				

@@ -10,6 +10,9 @@
         android:layout_height="match_parent"
         android:divider="@android:color/transparent"
         tools:listitem="@layout/timetable_event_small" 
+        android:cacheColorHint="@color/color_background"
+        android:drawSelectorOnTop="true"
+        android:listSelector="@android:color/transparent"
         android:visibility="gone"/>
 
     <TextView
