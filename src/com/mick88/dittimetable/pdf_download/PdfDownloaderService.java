@@ -65,7 +65,8 @@ public class PdfDownloaderService extends Service
 				File file = new File(Environment.getExternalStorageDirectory(), filename);
 				try
 				{
-					downloadFile(url, file);
+					if (downloadFile(url, file) == 0)
+						return null;
 					return file;
 				} 
 				catch (IOException e)
