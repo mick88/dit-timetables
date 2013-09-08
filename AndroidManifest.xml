@@ -14,14 +14,12 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name="com.mick88.dittimetable.TimetableApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:name="com.mick88.dittimetable.TimetableApp">
-        <activity
-            android:name="com.mick88.dittimetable.screens.TimetableActivity"
-            >
+        android:theme="@style/AppTheme" >
+        <activity android:name="com.mick88.dittimetable.screens.TimetableActivity" >
 
             <!-- prevents activity from restarting when orientation changes -->
             <intent-filter>
@@ -36,10 +34,9 @@
         </activity>
         <activity
             android:name="com.mick88.dittimetable.UnfoldActivity"
-            android:label="@string/title_activity_unfold" 
+            android:label="@string/title_activity_unfold"
             android:parentActivityName="com.mick88.dittimetable.screens.TimetableActivity"
-            android:theme="@style/details_theme"
-            >
+            android:theme="@style/details_theme" >
         </activity>
         <activity
             android:name="com.mick88.dittimetable.event_details.EventDetailsSwipableActivity"
@@ -49,12 +46,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mick88.dittimetable.TimetableActivity" />
         </activity>
-<!--         <receiver android:name="com.mick88.dittimetable.widget.TimetableWidget" android:label="Timetable">
+        <!--
+             <receiver android:name="com.mick88.dittimetable.widget.TimetableWidget" android:label="Timetable">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info"/>
-        </receiver> -->
+        </receiver>
+        -->
+        <service
+            android:name="com.mick88.dittimetable.PdfDownloaderService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
+
 </manifest>
