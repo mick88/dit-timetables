@@ -54,6 +54,13 @@ public class PdfDownloaderService extends Service
 			}
 			
 			@Override
+			protected void onCancelled(Void result) 
+			{
+				// TODO: clean if necessary
+				stopForeground(true);
+			}
+			
+			@Override
 			protected void onPostExecute(Void result) 
 			{
 				stopForeground(true);
