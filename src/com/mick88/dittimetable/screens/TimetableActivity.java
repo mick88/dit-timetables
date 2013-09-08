@@ -39,6 +39,7 @@ import com.mick88.dittimetable.GroupSelectionDialog;
 import com.mick88.dittimetable.GroupSelectionDialog.GroupSelectionListener;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
+import com.mick88.dittimetable.pdf_download.PdfDownloaderService;
 import com.mick88.dittimetable.swipable_tabs.TimetablePageAdapter;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.Timetable.ErrorCode;
@@ -385,6 +386,14 @@ public class TimetableActivity extends ActionBarActivity
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
+	void downloadPdfInService()
+	{
+		Intent intent = new Intent(getApplicationContext(), PdfDownloaderService.class);
+		intent.putExtra(PdfDownloaderService.EXTRA_TIMETABLE, this.timetable);
+		startService(intent);
+	}
+	
+	@Deprecated
 	void downloadPdf()
 	{
 		if (downloadPdf==null ||  downloadPdf.isAlive() == false)
@@ -490,7 +499,8 @@ public class TimetableActivity extends ActionBarActivity
 			return false;
 			
 		case R.id.menu_download_pdf:			
-			downloadPdf();
+//			downloadPdf();
+			downloadPdfInService();
 			return true;
 			
 		case R.id.menu_refresh_timetable:
