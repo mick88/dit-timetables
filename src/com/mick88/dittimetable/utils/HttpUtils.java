@@ -15,12 +15,14 @@ import com.mick88.dittimetable.web.Cookie;
 
 public class HttpUtils
 {
+	public static final int TIMEOUT = 10000;
+
 	public static String get(String query, Cookie cookie) throws IOException
 	{
 		DefaultHttpClient httpClient = new DefaultHttpClient();
 		HttpParams params = httpClient.getParams();
-		HttpConnectionParams.setSoTimeout(params, 10000);
-		HttpConnectionParams.setConnectionTimeout(params, 10000);
+		HttpConnectionParams.setSoTimeout(params, TIMEOUT);
+		HttpConnectionParams.setConnectionTimeout(params, TIMEOUT);
 		httpClient.setParams(params);
 		
 		HttpGet get = new HttpGet(query);

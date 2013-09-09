@@ -83,8 +83,8 @@ public class Connection implements Serializable
 			/*Execute request*/
 			DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpParams params = httpClient.getParams();
-			HttpConnectionParams.setSoTimeout(params, 10000);
-			HttpConnectionParams.setConnectionTimeout(params, 10000);
+			HttpConnectionParams.setSoTimeout(params, HttpUtils.TIMEOUT);
+			HttpConnectionParams.setConnectionTimeout(params, HttpUtils.TIMEOUT);
 			httpClient.setParams(params);
 			HttpResponse response = httpClient.execute(post);
 
