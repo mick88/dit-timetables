@@ -12,6 +12,8 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
@@ -79,7 +81,11 @@ public class Connection implements Serializable
 			post.setEntity(new UrlEncodedFormEntity(loginDetails));
 			
 			/*Execute request*/
-			HttpClient httpClient = new DefaultHttpClient();
+			DefaultHttpClient httpClient = new DefaultHttpClient();
+			HttpParams params = httpClient.getParams();
+			HttpConnectionParams.setSoTimeout(params, 10000);
+			HttpConnectionParams.setConnectionTimeout(params, 10000);
+			httpClient.setParams(params);
 			HttpResponse response = httpClient.execute(post);
 
 			if (response.getStatusLine().getStatusCode() < 400)
