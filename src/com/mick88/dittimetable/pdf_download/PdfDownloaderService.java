@@ -1,12 +1,14 @@
 package com.mick88.dittimetable.pdf_download;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.net.URLConnection;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -121,11 +123,15 @@ public class PdfDownloaderService extends Service
 		final int BUFFER_SIZE = 1024;
 		Log.d("PDF Downloader", "Downloading file "+url);
 		URL pdfUrl = new URL(url);
-//		URLConnection connection = pdfUrl.openConnection();
-//		connection.connect();
-//		int length = connection.getContentLength();
+		URLConnection connection = pdfUrl.openConnection();
+		connection.setDoOutput(true);
+		connection.connect();
+		int length = connection.getContentLength();
+		
+		if (length == 0)
+			throw new IOException("Conten length is 0");
 	
-		InputStream inStream = new BufferedInputStream(pdfUrl.openStream());
+		InputStream inStream = connection.getInputStream();
 		OutputStream outStream = new FileOutputStream(outputFile);
 		
 		byte [] data = new byte [BUFFER_SIZE];
