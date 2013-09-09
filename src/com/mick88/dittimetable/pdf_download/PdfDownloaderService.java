@@ -34,7 +34,12 @@ public class PdfDownloaderService extends Service
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
-		downloadPdf((Timetable) intent.getSerializableExtra(EXTRA_TIMETABLE));
+		if (intent != null)
+		{
+			Object t = intent.getSerializableExtra(EXTRA_TIMETABLE);
+			if (t instanceof Timetable)
+				downloadPdf((Timetable) t);
+		}
 		return START_STICKY;
 	}
 	
