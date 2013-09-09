@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -83,8 +82,8 @@ public class Connection implements Serializable
 			/*Execute request*/
 			DefaultHttpClient httpClient = new DefaultHttpClient();
 			HttpParams params = httpClient.getParams();
-			HttpConnectionParams.setSoTimeout(params, HttpUtils.TIMEOUT);
-			HttpConnectionParams.setConnectionTimeout(params, HttpUtils.TIMEOUT);
+			HttpConnectionParams.setSoTimeout(params, HttpUtils.SOCKET_TIMEOUT);
+			HttpConnectionParams.setConnectionTimeout(params, HttpUtils.CONNECTION_TIMEOUT);
 			httpClient.setParams(params);
 			HttpResponse response = httpClient.execute(post);
 
