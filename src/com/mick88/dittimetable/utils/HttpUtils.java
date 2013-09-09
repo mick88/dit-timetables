@@ -16,8 +16,8 @@ import com.mick88.dittimetable.web.Cookie;
 public class HttpUtils
 {
 	public static final int 
-		SOCKET_TIMEOUT = 10000,
-		CONNECTION_TIMEOUT = 3000;
+		SOCKET_TIMEOUT = 20000,
+		CONNECTION_TIMEOUT = 10000;
 
 	public static String get(String query, Cookie cookie) throws IOException
 	{
