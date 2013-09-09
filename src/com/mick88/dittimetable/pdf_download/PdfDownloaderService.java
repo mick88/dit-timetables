@@ -58,8 +58,10 @@ public class PdfDownloaderService extends Service
 			{
 				Builder builder = new Builder(getApplicationContext())
 					.setSmallIcon(R.drawable.ic_launcher)
+					.setTicker("Downloading timetable...")
 					.setContentTitle("DIT Timetables")
-					.setContentText("Downloading PDF");
+					.setProgress(100, 0, true)
+					.setContentText("Downloading PDF...");
 				startForeground(NOTIFICATION_ID, builder.build());
 			}
 
