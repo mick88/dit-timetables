@@ -26,7 +26,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mick88.dittimetable.R;
-import com.mick88.dittimetable.event_details.EventDetailsActivity;
 import com.mick88.dittimetable.event_details.EventDetailsSwipableActivity;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.utils.FontApplicator;
@@ -103,7 +102,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	 */
 	final Set<Integer> weeks;
 	
-	boolean valid=true, complete =false;
+	boolean complete =false;
 	
 	String StripNbsp(String string)
 	{
@@ -467,7 +466,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	 */
 	public void parseNewHtmlTable(Element table, Context context, boolean allowCache, Timetable timetable)
 	{
-		valid=true;
 		try
 		{
 			String idString = table.id();
@@ -497,7 +495,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			else if (e.color.equalsIgnoreCase(COLOR_LECTURER)) lecturer = e.getText();
 		}
 		
-		if (valid == true)
+		if (isValid() == true)
 		{
 			if (id == 0)
 			{
@@ -590,7 +588,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	{
 		if (TextUtils.isEmpty(string)) 
 		{
-			valid = false;
 			return;
 		}
 		try
@@ -620,21 +617,17 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			}
 			complete=true;
 			decodeWeeks();
-			
-			valid=true;
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
-			valid = false;		
+			e.printStackTrace();		
 			Log.w(logTag, "Cannot parse event "+string);
 		}
-		valid=true;
 	}
 	
 	public boolean isValid()
 	{
-		return valid;
+		return startHour > 0 && endHour > 0;
 	}
 	
 	/**
