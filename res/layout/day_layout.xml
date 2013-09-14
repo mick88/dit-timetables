@@ -13,6 +13,7 @@
         android:cacheColorHint="@color/color_background"
         android:drawSelectorOnTop="true"
         android:listSelector="@android:color/transparent"
+        android:dividerHeight="0dp"
         android:visibility="gone"/>
 
     <TextView
