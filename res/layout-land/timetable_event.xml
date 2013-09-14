@@ -36,20 +36,36 @@
             android:id="@+id/eventTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/eventTime"
-            android:layout_toLeftOf="@+id/eventType"
+            android:layout_alignParentTop="true"
             android:text="Module name"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:singleLine="true"
+            android:ellipsize="middle"
             android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/eventGroup"
+            style="@android:style/TextAppearance.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/eventLocation"
+            android:ellipsize="end"
+            android:gravity="end"
+            android:lines="1"
+            android:maxLines="1"
+            android:text="Group A"
+            android:textColor="@color/color_group"
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/eventType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/eventTitle"
-            android:layout_alignParentBottom="false"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/eventLocation"
+            android:layout_alignBaseline="@+id/eventGroup"
+            android:layout_alignBottom="@+id/eventGroup"
+            android:layout_centerHorizontal="true"
             android:text="Type"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -58,29 +74,13 @@
             style="@android:style/TextAppearance.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/eventTitle"
-            android:text="Lecturer"
-            android:textColor="@color/color_lecturer"
-             android:lines="1"
-            android:maxLines="1"
+            android:layout_alignBaseline="@+id/eventGroup"
+            android:layout_alignLeft="@+id/eventTime"
             android:ellipsize="end"
-            android:visibility="visible" />
-
-        <TextView
-            android:id="@+id/eventGroup"
-            style="@android:style/TextAppearance.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/eventType"
-            android:layout_toRightOf="@+id/eventLecturer"
-            android:gravity="end"
             android:lines="1"
             android:maxLines="1"
-            android:ellipsize="end"
-            android:text="Group A"
-            android:textColor="@color/color_group"
+            android:text="Lecturer"
+            android:textColor="@color/color_lecturer"
             android:visibility="visible" />
 
     </RelativeLayout>
