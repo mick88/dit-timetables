@@ -5,6 +5,7 @@
     <dimen name="tile_padding">5dp</dimen>
     <dimen name="tile_margin_width">8dp</dimen>
     <dimen name="tile_margin_height">6dp</dimen>
+    <dimen name="timetable_header_height">@dimen/tile_margin_height</dimen>
     <dimen name="tile_break">15dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
