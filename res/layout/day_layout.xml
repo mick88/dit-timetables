@@ -8,12 +8,12 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="#f00"
+        android:divider="@android:color/transparent"
         tools:listitem="@layout/timetable_event" 
         android:cacheColorHint="@color/color_background"
         android:drawSelectorOnTop="true"
         android:listSelector="@android:color/transparent"
-        android:dividerHeight="1dp"
+        android:dividerHeight="0dp"
         android:visibility="gone"/>
 
     <TextView
