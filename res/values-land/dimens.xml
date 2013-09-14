@@ -6,5 +6,7 @@
 
     <dimen name="tile_margin_height" >4dp
     </dimen>
+    
+    <dimen name="timetable_header_height">6dp</dimen>
 
 </resources>
