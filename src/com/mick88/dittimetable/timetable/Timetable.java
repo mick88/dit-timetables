@@ -346,8 +346,9 @@ public class Timetable implements Serializable
 		
 		if (string.contains("You must login again."))
 		{
-			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.sessionExpired);
-			return false;
+//			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.sessionExpired);
+			this.connection.logIn();
+			return downloadFromWebsite(context, resultHandler);
 		}
 		
 		if (string.contains("There are no events to display."))
