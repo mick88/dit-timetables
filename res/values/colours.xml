@@ -2,9 +2,9 @@
 <resources>
      <color name="color_group">#FF0000</color>
 
-    <color name="color_lecture">#0000FF</color>
-    <color name="color_laboratory">#FF8800</color>
-    <color name="color_tutorial">#008888</color>
+    <color name="color_lecture">#000</color>
+    <color name="color_laboratory">#0000FF</color>
+    <color name="color_tutorial">#FF8800</color>
     
     <color name="color_lecturer">#777</color>
     
