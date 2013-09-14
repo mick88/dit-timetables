@@ -3,7 +3,10 @@
     android:id="@+id/timetable_event_frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/tile_padding_outside"
+     android:paddingLeft="@dimen/tile_margin_width"
+    android:paddingRight="@dimen/tile_margin_width"
+    android:paddingTop="@dimen/tile_margin_height"
+    android:paddingBottom="@dimen/tile_margin_width"
     android:layout_gravity="center_horizontal">
 
     <RelativeLayout
