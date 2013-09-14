@@ -7,8 +7,8 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/tile_padding_outside"
-        android:layout_marginRight="@dimen/tile_padding_outside"
+        android:layout_marginLeft="@dimen/tile_margin_width"
+        android:layout_marginRight="@dimen/tile_margin_width"
         android:layout_gravity="center"
         android:scrollbars="none"
         android:background="@drawable/card" />

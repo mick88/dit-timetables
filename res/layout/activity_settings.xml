@@ -8,9 +8,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <include layout="@layout/settings_timetable"  android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="@dimen/tile_padding_outside"/>
+        <include layout="@layout/settings_timetable"  android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="@dimen/tile_margin_width"/>
 
-        <include layout="@layout/settings_credentials"  android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="@dimen/tile_padding_outside" android:layout_marginTop="5dp"/>
+        <include layout="@layout/settings_credentials"  android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="@dimen/tile_margin_width" android:layout_marginTop="5dp"/>
     </LinearLayout>
 
 </ScrollView>
