@@ -1,5 +1,9 @@
 <resources>
 
+    <dimen name="tile_padding">10dp</dimen>
+    <dimen name="tile_margin_width">16dp</dimen>
+    <dimen name="tile_margin_height">5dp</dimen>
+    
     <dimen name="multievent_offset">32dp</dimen>
 
 </resources>
