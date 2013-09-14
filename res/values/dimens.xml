@@ -14,6 +14,7 @@
 	<dimen name="card_padding">8dp</dimen>
 	<dimen name="card_shadow_offset">2dp</dimen>
 	
+	<dimen name="multievent_offset">25dp</dimen>
 	<dimen name="dot_size">8dp</dimen>
 	<dimen name="dot_shadow_offset">@dimen/card_shadow_offset</dimen>
 </resources>

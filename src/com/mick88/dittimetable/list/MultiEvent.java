@@ -7,6 +7,7 @@ import java.util.Stack;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,8 @@ import com.mick88.dittimetable.utils.FontApplicator;
 public class MultiEvent implements EventItem
 {
 	private final List<TimetableEvent> events;
-	private final static int MARGIN_INCREMENT = 25;;
+	@Deprecated
+	private final static int MARGIN_INCREMENT = 25;
 	
 	public MultiEvent(List<TimetableEvent> events)
 	{
@@ -41,7 +43,8 @@ public class MultiEvent implements EventItem
 	@Override
 	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator, boolean allowHighlight, final Timetable timetable)
 	{
-		int dp = (int)(layoutInflater.getContext().getResources().getDisplayMetrics().density * MARGIN_INCREMENT);
+		Resources resources = layoutInflater.getContext().getResources();
+		float offset = (float)(resources.getDimension(R.dimen.multievent_offset));
 		final ViewGroup viewGroup;
 		Stack<View> recyclableViews = new Stack<View>();
 		if (convertView != null)
@@ -80,12 +83,12 @@ public class MultiEvent implements EventItem
 
 		viewGroup.setOnClickListener(clickListener);
 
-		int margin = dp * events.size();
+		int margin = (int)(offset * events.size());
 
 //		for (TimetableEvent event : events)
 		for (int i=events.size()-1; i >= 0; i--)
 		{
-			margin -= dp;
+			margin -= offset;
 			View recycle = recyclableViews.isEmpty() ? null : recyclableViews.pop();
 			View eventTile = events.get(i).getView(layoutInflater, recycle, viewGroup, fontApplicator, allowHighlight, timetable);
 			EventViewHolder eventViewHolder = (EventViewHolder) eventTile.getTag();
