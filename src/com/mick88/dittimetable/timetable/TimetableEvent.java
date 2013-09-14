@@ -679,7 +679,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		EventViewHolder viewHolder;
 		if (view == null)
 		{
-			view = layoutInflater.inflate(R.layout.timetable_event_small, parent, false);
+			view = layoutInflater.inflate(R.layout.timetable_event, parent, false);
 			if (fontApplicator != null) fontApplicator.applyFont(view);
 			viewHolder = new EventViewHolder(view);
 			view.setTag(viewHolder);
