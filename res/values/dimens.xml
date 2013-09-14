@@ -16,4 +16,6 @@
 	
 	<dimen name="dot_size">7dp</dimen>
 	<dimen name="dot_shadow_offset">1dp</dimen>
+	
+	<dimen name="multievent_offset">25dp</dimen>
 </resources>
