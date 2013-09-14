@@ -16,7 +16,7 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme"></style>
 
-    <style name="card_text_big" parent="@android:style/TextAppearance.Medium">
+    <style name="card_text_big" parent="@style/card_text">
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
     </style>
 
