@@ -16,7 +16,9 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme"></style>
 
-    <style name="BigText" parent="@android:style/TextAppearance.Medium"></style>
+    <style name="card_text_big" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
 
     <style name="Text" parent="@android:style/TextAppearance.Medium"></style>
     
@@ -41,4 +43,7 @@
         <!-- When closing the current activity, this is the animation that is run on the current activity (which is exiting the screen). -->
     </style>
 
+    <style name="card_text" parent="@android:style/Widget.TextView">
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+    </style>
 </resources>

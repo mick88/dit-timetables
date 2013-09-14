@@ -23,7 +23,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:text="00:00 - 00:00"
-            android:textAppearance="@style/BigText" />
+			style="@style/card_text_big" />
 
         <TextView
             android:id="@+id/eventLocation"
@@ -33,7 +33,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:text="Room"
-            android:textAppearance="@style/BigText" />
+            style="@style/card_text_big" />
 
         <TextView
             android:id="@+id/eventTitle"
@@ -45,11 +45,11 @@
             android:gravity="center"
             android:singleLine="true"
             android:ellipsize="middle"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            style="@style/card_text" />
 
         <TextView
             android:id="@+id/eventGroup"
-            style="@android:style/TextAppearance.Small"
+            style="@style/card_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -70,11 +70,11 @@
             android:layout_alignBottom="@+id/eventGroup"
             android:layout_centerHorizontal="true"
             android:text="Type"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+			style="@style/card_text" />
 
         <TextView
             android:id="@+id/eventLecturer"
-            style="@android:style/TextAppearance.Small"
+            style="@style/card_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/eventGroup"

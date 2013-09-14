@@ -3,11 +3,11 @@
     android:id="@+id/timetable_event_frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:paddingBottom="@dimen/tile_margin_width"
     android:paddingLeft="@dimen/tile_margin_width"
     android:paddingRight="@dimen/tile_margin_width"
-    android:paddingTop="@dimen/tile_margin_height"
-    android:paddingBottom="@dimen/tile_margin_width"
-    android:layout_gravity="center_horizontal">
+    android:paddingTop="@dimen/tile_margin_height" >
 
     <RelativeLayout
         android:id="@+id/timetable_event_small"
@@ -23,7 +23,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:text="00:00 - 00:00"
-            android:textAppearance="@style/BigText" />
+            style="@style/card_text_big"/>
 
         <TextView
             android:id="@+id/eventLocation"
@@ -33,59 +33,58 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:text="Room"
-            android:textAppearance="@style/BigText" />
+            style="@style/card_text_big" />
 
         <TextView
             android:id="@+id/eventTitle"
+            style="@style/card_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/eventTime"
             android:layout_toLeftOf="@+id/eventType"
-            android:text="Module name"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:text="Module name" />
 
         <TextView
             android:id="@+id/eventType"
+            style="@style/card_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/eventTitle"
             android:layout_alignParentBottom="false"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/eventLocation"
-            android:text="Type"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:text="Type"/>
 
         <TextView
             android:id="@+id/eventLecturer"
-            style="@android:style/TextAppearance.Small"
+            style="@style/card_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/eventTitle"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLines="1"
             android:text="Lecturer"
             android:textColor="@color/color_lecturer"
-             android:lines="1"
-            android:maxLines="1"
-            android:ellipsize="end"
             android:visibility="visible" />
 
         <TextView
             android:id="@+id/eventGroup"
-            style="@android:style/TextAppearance.Small"
+            style="@style/card_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/eventType"
             android:layout_toRightOf="@+id/eventLecturer"
+            android:ellipsize="end"
             android:gravity="end"
             android:lines="1"
             android:maxLines="1"
-            android:ellipsize="end"
             android:text="Group A"
             android:textColor="@color/color_group"
             android:visibility="visible" />
-
     </RelativeLayout>
 
 </FrameLayout>
