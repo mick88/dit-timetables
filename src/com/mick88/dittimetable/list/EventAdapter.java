@@ -41,7 +41,7 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 
 	public EventAdapter(Context context, List<EventItem> objects, TimetableDay timetableDay, Timetable timetable) 
 	{
-		super(context, R.layout.timetable_event_small, objects);
+		super(context, R.layout.timetable_event, objects);
 		fontApplicator = new FontApplicator(getContext().getAssets(), TimetableApp.FONT_NAME);
 		this.isToday = timetableDay.isToday();
 		this.timetable = timetable;

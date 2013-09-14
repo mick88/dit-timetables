@@ -5,12 +5,13 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:minHeight="@dimen/tile_break"
+    android:gravity="center"
     android:padding="2dp" >
 
     <LinearLayout
         android:id="@+id/separator_dot_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="true"
         android:orientation="horizontal" />
 </RelativeLayout>
