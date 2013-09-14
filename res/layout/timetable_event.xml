@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:paddingBottom="@dimen/tile_margin_width"
+    android:paddingBottom="@dimen/tile_margin_height"
     android:paddingLeft="@dimen/tile_margin_width"
     android:paddingRight="@dimen/tile_margin_width"
     android:paddingTop="@dimen/tile_margin_height" >
