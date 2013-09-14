@@ -6,7 +6,7 @@
 
 			<corners android:radius="@dimen/card_corner_radius"/>
 
-			<solid android:color="@color/card_shadow" />
+			<solid android:color="@color/card_shadow_selected" />
 
 		</shape>
 	</item>

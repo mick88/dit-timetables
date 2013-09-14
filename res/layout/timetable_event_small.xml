@@ -61,7 +61,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/eventTitle"
             android:text="Lecturer"
-            android:textColor="#AAA"
+            android:textColor="@color/color_lecturer"
              android:lines="1"
             android:maxLines="1"
             android:ellipsize="end"
