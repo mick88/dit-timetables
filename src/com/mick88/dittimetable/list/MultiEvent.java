@@ -25,7 +25,7 @@ import com.mick88.dittimetable.utils.FontApplicator;
 public class MultiEvent implements EventItem
 {
 	private final List<TimetableEvent> events;
-	private final static int MARGIN_INCREMENT = 25;;
+	private final static int MARGIN_INCREMENT = 25;
 	
 	public MultiEvent(List<TimetableEvent> events)
 	{
