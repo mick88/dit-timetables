@@ -96,6 +96,10 @@ public class DayFragment extends Fragment
 		listView = (ListView) view.findViewById(android.R.id.list);
 		tvText = (TextView) view.findViewById(R.id.tvDayMessage);
 		
+		View header = getLayoutInflater(savedInstanceState)
+				.inflate(R.layout.timetable_list_header, listView, false);
+		listView.addHeaderView(header);
+		
 		refresh();
 	}
 	
