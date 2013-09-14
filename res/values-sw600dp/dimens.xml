@@ -6,6 +6,8 @@
     
     <dimen name="multievent_offset">32dp</dimen>
     
+    <dimen name="card_shadow_offset">3dp</dimen>
+    
     <dimen name="dot_size">10dp</dimen>
 	<dimen name="dot_shadow_offset">2dp</dimen>
 
