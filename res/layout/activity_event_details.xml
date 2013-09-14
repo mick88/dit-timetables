@@ -9,6 +9,8 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="@dimen/tile_margin_width"
         android:layout_marginRight="@dimen/tile_margin_width"
+        android:layout_marginTop="@dimen/tile_margin_height"
+        android:layout_marginBottom="@dimen/tile_margin_height"
         android:layout_gravity="center"
         android:scrollbars="none"
         android:background="@drawable/card" />
