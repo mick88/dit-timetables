@@ -5,15 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.DefaultClientConnection;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -31,12 +28,15 @@ import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 
 import com.mick88.dittimetable.R;
-import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.timetable.Timetable;
-import com.mick88.dittimetable.web.Connection;
 
 public class PdfDownloaderService extends Service
 {
+	private static interface onDownloadProgressListener
+	{
+		void onProgress(int progress, int max);
+	}
+	
 	private static final int NOTIFICATION_ID = 1;
 	public static final String EXTRA_TIMETABLE = "timetable";
 	
@@ -62,17 +62,25 @@ public class PdfDownloaderService extends Service
 	
 	private void downloadPdf(Timetable timetable)
 	{
-		new AsyncTask<Timetable, Void, File>()
+		new AsyncTask<Timetable, Integer, File>()
 		{
+			Builder progressNotification;
 			protected void onPreExecute() 
 			{
-				Builder builder = new Builder(getApplicationContext())
+				progressNotification = new Builder(getApplicationContext())
 					.setSmallIcon(R.drawable.ic_notification_download)
 					.setTicker("Downloading timetable...")
 					.setContentTitle("DIT Timetables")
 					.setProgress(100, 0, true)
 					.setContentText("Downloading PDF...");
-				startForeground(NOTIFICATION_ID, builder.build());
+				startForeground(NOTIFICATION_ID, progressNotification.build());
+			}
+			
+			@Override
+			protected void onProgressUpdate(Integer... values) 
+			{
+				progressNotification.setProgress(values[1], values[0], false);
+				startForeground(NOTIFICATION_ID, progressNotification.build());
 			}
 
 			@Override
@@ -85,7 +93,15 @@ public class PdfDownloaderService extends Service
 				File file = new File(folder, filename);
 				try
 				{
-					if (downloadFile(url, file) == 0)
+					if (downloadFile(url, file, new onDownloadProgressListener()
+					{
+						
+						@Override
+						public void onProgress(int progress, int max)
+						{
+							onProgressUpdate(progress, max);							
+						}
+					}) == 0)
 						return null;
 					return file;
 				} 
@@ -138,7 +154,7 @@ public class PdfDownloaderService extends Service
 		}.execute(timetable);
 	}
 	
-	private int downloadFile(String url, File outputFile) throws IOException
+	private int downloadFile(String url, File outputFile, onDownloadProgressListener progressListener) throws IOException
 	{
 		final int BUFFER_SIZE = 1024;
 		Log.d("PDF Downloader", "Downloading file "+url);
