@@ -101,6 +101,7 @@ public class PdfDownloaderService extends Service
 					intent.setData(Uri.fromFile(result));
 					Builder builder = new Builder(getApplicationContext())
 						.setSmallIcon(R.drawable.ic_notification_download)
+						.setTicker("Timetable downloaded")
 						.setContentIntent(PendingIntent.getActivity(getApplicationContext(), NOTIFICATION_ID, intent, 0))
 						.setContentTitle("Dit Timetables")
 						.setContentText("Timetable downloaded");
@@ -112,6 +113,7 @@ public class PdfDownloaderService extends Service
 					Builder builder = new Builder(getApplicationContext())
 						.setSmallIcon(R.drawable.ic_notification_download)
 						.setContentTitle("Dit Timetables")
+						.setTicker("PDF download error!")
 						.setContentText("PDF download error!");
 					NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 					notificationManager.notify(NOTIFICATION_ID, builder.build());
