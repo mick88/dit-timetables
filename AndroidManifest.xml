@@ -22,8 +22,6 @@
         <activity
             android:name="com.mick88.dittimetable.screens.TimetableActivity"
             >
-
-            <!-- prevents activity from restarting when orientation changes -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
