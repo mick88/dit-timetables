@@ -168,7 +168,7 @@ public class PdfDownloaderService extends Service
 		
 		HttpGet httpGet = new HttpGet(url);
 		httpGet.setHeader("Accept-Type", ACCEPTED_TYPE);
-		HttpClient httpClient = new DefaultHttpClient();
+		HttpClient httpClient = new DefaultHttpClient(httpParams);
 		
 		HttpResponse response = httpClient.execute(httpGet);
 		Log.d("PDF Service", "Response: "+response.getStatusLine().toString());
