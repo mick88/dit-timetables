@@ -59,7 +59,7 @@ public class Connection implements Serializable
 		return cookie;
 	}
 	
-	private void logIn()
+	public void logIn()
 	{
 		Log.d(logName, "Getting cookie...");
 		cookie = new Cookie("");

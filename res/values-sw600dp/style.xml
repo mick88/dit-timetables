@@ -1,0 +1,11 @@
+<resources>
+
+    <style name="card_text_big" parent="@style/card_text">
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+    </style>
+
+    <style name="card_text" parent="@android:style/Widget.TextView">
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
+</resources>

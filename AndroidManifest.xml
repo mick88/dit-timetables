@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mick88.dittimetable"
     android:installLocation="auto"
-    android:versionCode="16"
-    android:versionName="3.0 RC1" >
+    android:versionCode="17"
+    android:versionName="3.0" >
 
     <uses-sdk
         android:minSdkVersion="7"
@@ -20,8 +20,6 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity android:name="com.mick88.dittimetable.screens.TimetableActivity" >
-
-            <!-- prevents activity from restarting when orientation changes -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

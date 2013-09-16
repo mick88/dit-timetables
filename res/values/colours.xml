@@ -2,9 +2,11 @@
 <resources>
      <color name="color_group">#FF0000</color>
 
-    <color name="color_lecture">#0000FF</color>
-    <color name="color_laboratory">#FF8800</color>
-    <color name="color_tutorial">#008888</color>
+    <color name="color_lecture">#000</color>
+    <color name="color_laboratory">#0000FF</color>
+    <color name="color_tutorial">#FF8800</color>
+    
+    <color name="color_lecturer">#777</color>
     
     <color name="semi_transparent">#C000</color>
     
@@ -14,6 +16,8 @@
     <color name="card_selected">#33B5E5</color>
     <color name="card_semi_selected">#ADD1DD</color>
     <color name="card_shadow">#ccc</color>
+    <color name="card_shadow_selected">#0385b5</color>
+    <color name="card_shadow_semi_selected">#7da1ad</color>
     
     <!-- DIT Colours -->
     <color name="dit_dark_blue">#0060A9</color>

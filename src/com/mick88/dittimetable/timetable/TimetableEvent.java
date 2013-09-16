@@ -17,6 +17,7 @@ import org.jsoup.select.Elements;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -679,7 +680,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		EventViewHolder viewHolder;
 		if (view == null)
 		{
-			view = layoutInflater.inflate(R.layout.timetable_event_small, parent, false);
+			view = layoutInflater.inflate(R.layout.timetable_event, parent, false);
 			if (fontApplicator != null) fontApplicator.applyFont(view);
 			viewHolder = new EventViewHolder(view);
 			view.setTag(viewHolder);
@@ -713,6 +714,33 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		viewHolder.tvEventTime.setText(getEventTimeString());
 		viewHolder.tvEventType.setText(getClassType().toString());
 		viewHolder.tvEventTitle.setText(getName());
+		
+		int colourRes = 0;
+		switch (getType())
+		{
+			case Laboratory:
+				colourRes = R.color.color_laboratory;
+				break;
+			case Lecture:
+				colourRes = R.color.color_lecture;
+				break;
+			case Tutorial:
+				colourRes = R.color.color_tutorial;
+				break;			
+		}
+		
+		if (colourRes != 0)
+		{
+			viewHolder
+			.tvEventType
+			.setTextColor(viewHolder
+					.tvEventType
+					.getContext()
+					.getResources()
+					.getColor(colourRes));
+		}
+		
+		
 		
 		return view;		
 	}
