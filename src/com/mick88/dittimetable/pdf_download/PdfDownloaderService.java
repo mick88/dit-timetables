@@ -8,6 +8,16 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.DefaultClientConnection;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -21,7 +31,9 @@ import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.timetable.Timetable;
+import com.mick88.dittimetable.web.Connection;
 
 public class PdfDownloaderService extends Service
 {
@@ -129,16 +141,23 @@ public class PdfDownloaderService extends Service
 	{
 		final int BUFFER_SIZE = 1024;
 		Log.d("PDF Downloader", "Downloading file "+url);
-		URL pdfUrl = new URL(url);
-		URLConnection connection = pdfUrl.openConnection();
-		connection.setDoOutput(true);
-		connection.connect();
-		int length = connection.getContentLength();
+		
+		HttpParams httpParams = new BasicHttpParams();
+		HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
+		HttpConnectionParams.setSoTimeout(httpParams, 5000);
+		
+		HttpGet httpGet = new HttpGet(url);
+		HttpClient httpClient = new DefaultHttpClient();
+		
+		HttpResponse response = httpClient.execute(httpGet);
+		Log.d("PDF Service", "Response: "+response.getStatusLine().toString());
+		HttpEntity entity = response.getEntity();
+		int length = (int) entity.getContentLength();
 		
 		if (length == 0)
 			throw new IOException("Content length is 0");
 	
-		InputStream inStream = connection.getInputStream();
+		InputStream inStream = entity.getContent();
 		OutputStream outStream = new FileOutputStream(outputFile);
 		
 		byte [] data = new byte [BUFFER_SIZE];
@@ -152,6 +171,8 @@ public class PdfDownloaderService extends Service
 		outStream.flush();
 		outStream.close();
 		inStream.close();
+		
+		entity.consumeContent();
 		
 		return total;
 	}
