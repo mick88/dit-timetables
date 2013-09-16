@@ -1,5 +1,6 @@
 package com.mick88.dittimetable.pdf_download;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -174,7 +175,7 @@ public class PdfDownloaderService extends Service
 		if (length == 0)
 			throw new IOException("Content length is 0");
 	
-		InputStream inStream = entity.getContent();
+		InputStream inStream = new BufferedInputStream(entity.getContent());
 		OutputStream outStream = new FileOutputStream(outputFile);
 		
 		byte [] data = new byte [BUFFER_SIZE];
