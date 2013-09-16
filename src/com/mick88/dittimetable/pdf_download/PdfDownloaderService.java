@@ -33,6 +33,8 @@ import com.mick88.dittimetable.timetable.Timetable;
 
 public class PdfDownloaderService extends Service
 {
+	private static final String ACCEPTED_TYPE = "application/pdf";
+
 	private static interface onDownloadProgressListener
 	{
 		void onProgress(int progress, int max);
@@ -165,11 +167,19 @@ public class PdfDownloaderService extends Service
 		HttpConnectionParams.setSoTimeout(httpParams, 5000);
 		
 		HttpGet httpGet = new HttpGet(url);
+		httpGet.setHeader("Accept-Type", ACCEPTED_TYPE);
 		HttpClient httpClient = new DefaultHttpClient();
 		
 		HttpResponse response = httpClient.execute(httpGet);
 		Log.d("PDF Service", "Response: "+response.getStatusLine().toString());
 		HttpEntity entity = response.getEntity();
+		
+		String type = response.getFirstHeader("Content-Type").getValue();
+		if (type.equalsIgnoreCase(ACCEPTED_TYPE) == false)
+		{
+			throw new IOException("Downloaded file is not PDF");
+		}
+		
 		int length = (int) entity.getContentLength();
 		
 		if (length == 0)
