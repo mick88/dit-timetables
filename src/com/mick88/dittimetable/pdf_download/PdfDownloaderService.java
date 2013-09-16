@@ -8,8 +8,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import javax.net.ssl.HttpsURLConnection;
-
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -57,7 +55,7 @@ public class PdfDownloaderService extends Service
 			protected void onPreExecute() 
 			{
 				Builder builder = new Builder(getApplicationContext())
-					.setSmallIcon(R.drawable.ic_launcher)
+					.setSmallIcon(R.drawable.ic_notification_download)
 					.setTicker("Downloading timetable...")
 					.setContentTitle("DIT Timetables")
 					.setProgress(100, 0, true)
@@ -102,7 +100,7 @@ public class PdfDownloaderService extends Service
 					Intent intent = new Intent(Intent.ACTION_VIEW);
 					intent.setData(Uri.fromFile(result));
 					Builder builder = new Builder(getApplicationContext())
-						.setSmallIcon(R.drawable.ic_launcher)
+						.setSmallIcon(R.drawable.ic_notification_download)
 						.setContentIntent(PendingIntent.getActivity(getApplicationContext(), NOTIFICATION_ID, intent, 0))
 						.setContentTitle("Dit Timetables")
 						.setContentText("Timetable downloaded");
@@ -112,7 +110,7 @@ public class PdfDownloaderService extends Service
 				else
 				{
 					Builder builder = new Builder(getApplicationContext())
-						.setSmallIcon(R.drawable.ic_launcher)
+						.setSmallIcon(R.drawable.ic_notification_download)
 						.setContentTitle("Dit Timetables")
 						.setContentText("PDF download error!");
 					NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
