@@ -81,7 +81,8 @@ public class PdfDownloaderService extends Service
 				Timetable timetable = params[0];
 				String url = timetable.getPdfUrl();
 				String filename = timetable.getPdfFileName();
-				File file = new File(Environment.getExternalStorageDirectory(), filename);
+				File folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+				File file = new File(folder, filename);
 				try
 				{
 					if (downloadFile(url, file) == 0)
