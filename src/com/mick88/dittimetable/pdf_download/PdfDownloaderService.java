@@ -136,7 +136,7 @@ public class PdfDownloaderService extends Service
 		int length = connection.getContentLength();
 		
 		if (length == 0)
-			throw new IOException("Conten length is 0");
+			throw new IOException("Content length is 0");
 	
 		InputStream inStream = connection.getInputStream();
 		OutputStream outStream = new FileOutputStream(outputFile);
