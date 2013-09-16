@@ -3,9 +3,6 @@ package com.mick88.dittimetable.screens;
 import java.io.IOException;
 import java.util.Locale;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -251,9 +248,9 @@ public class SettingsActivity extends ActionBarActivity
 			valid = false;
 		}
 		
-		if (editCourse.getText().toString().toUpperCase(Locale.ENGLISH).matches("DT[0-9]{3}") == false)
+		if (editCourse.getText().toString().toUpperCase(Locale.ENGLISH).matches("DT[0-9]{3}.*") == false)
 		{
-			if (editCourse.getText().toString().matches("[0-9]{3}") == true)
+			if (editCourse.getText().toString().matches("[0-9]{3}.*") == true)
 			{
 				// autocorrect
 				CharSequence text = editCourse.getText();
