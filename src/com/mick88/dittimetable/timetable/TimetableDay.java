@@ -12,6 +12,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
@@ -134,6 +135,9 @@ public class TimetableDay implements Serializable
 		TimetableEvent event = new TimetableEvent(this.id, gridCols);
 		if (event.isValid())
 		{
+			if (event.loadAdditionalInfo(context, timetable) == false)
+				downloadAdditionalInfo(context, timetable);
+			
 			addClass(event);
 			return true;
 		}

@@ -417,7 +417,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		return complete;
 	}
 
-	private boolean loadAdditionalInfo(Context context, Timetable timetable)
+	public boolean loadAdditionalInfo(Context context, Timetable timetable)
 	{
 		String filename = getFileName();	
 		StringBuffer sb = new StringBuffer();
