@@ -27,13 +27,16 @@
 
         <TextView
             android:id="@+id/eventLocation"
+            style="@style/card_text_big"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="false"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:text="Room"
-            style="@style/card_text_big" />
+            android:layout_toRightOf="@+id/eventTime"
+            android:gravity="right"
+            android:ellipsize="start"
+            android:singleLine="true"
+            android:text="Room" />
 
         <TextView
             android:id="@+id/eventTitle"
