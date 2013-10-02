@@ -387,7 +387,7 @@ public class Timetable implements Serializable
 			return false;
 		}*/
 		
-		boolean result = parseGrid(resultHandler, context, string, false);
+		boolean result = parseGrid(resultHandler, context, string);
 		
 		if (result == true) 
 		{
@@ -692,7 +692,7 @@ public class Timetable implements Serializable
 		return valid;
 	}
 	
-	public boolean parseGrid(ResultHandler resultHandler, Context context, String html, boolean allowCache)
+	public boolean parseGrid(ResultHandler resultHandler, Context context, String html)
 	{
 		// put days in a hashmap
 		Map<String, TimetableDay> days = new HashMap<String, TimetableDay>(7);
@@ -718,7 +718,7 @@ public class Timetable implements Serializable
 			TimetableDay tDay = days.get(day);
 			if (tDay != null)
 			{
-				if (tDay.parseGridRow(this, columns, context, allowCache))
+				if (tDay.parseGridRow(this, columns, context))
 					numParsedEvents++;
 			}
 		}

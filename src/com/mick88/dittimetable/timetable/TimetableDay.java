@@ -12,7 +12,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
@@ -130,7 +129,7 @@ public class TimetableDay implements Serializable
 		return n;
 	}
 	
-	public boolean parseGridRow(Timetable timetable, Elements gridCols, Context context, boolean allowCache)
+	public boolean parseGridRow(Timetable timetable, Elements gridCols, Context context)
 	{
 		TimetableEvent event = new TimetableEvent(this.id, gridCols);
 		if (event.isValid())
