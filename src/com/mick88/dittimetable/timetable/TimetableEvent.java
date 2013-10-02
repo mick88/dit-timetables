@@ -72,6 +72,9 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	
 	private static final String CHAR_NBSP = "\u00A0";	
 	public static enum ClassType {Other, Lecture, Laboratory, Tutorial};
+	public static final int 
+		MIN_START_TIME = 8,
+		MAX_START_TIME = 22;
 	
 	private static final String GROUP_SEPARATOR = ", ";
 	final static String logTag = "TimetableEvent";
@@ -696,7 +699,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	
 	public boolean isValid()
 	{
-		return startHour > 0 && endHour > 0;
+		return startHour >= MIN_START_TIME && endHour > startHour;
 	}
 	
 	/**
