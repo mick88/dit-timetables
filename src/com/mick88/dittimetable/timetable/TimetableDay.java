@@ -277,10 +277,13 @@ public class TimetableDay implements Serializable
 	
 	public void downloadAdditionalInfo(Context context, Timetable timetable)
 	{
-		for (TimetableEvent event : events) if (event.isComplete() == false)
+		synchronized (events)
 		{
-			if (timetable.isDisposed()) break;
-			event.downloadAdditionalInfo(context, timetable);
+			for (TimetableEvent event : events) if (event.isComplete() == false)
+			{
+				if (timetable.isDisposed()) break;
+				event.downloadAdditionalInfo(context, timetable);
+			}
 		}
 	}
 	
