@@ -488,8 +488,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		
 		try
 		{
-//			name = tableValues.get("Module").trim().replaceFirst("CMPU\\s[\\d]{4}\\s-\\s", "");
-			name = tableValues.get("Module").trim().replaceFirst("[A-Z]{4}\\s[\\d]{4}\\s-\\s", "");
 			String [] grps = tableValues.get("Class Subgroup").split(",");
 			for (String s : grps)
 			{
