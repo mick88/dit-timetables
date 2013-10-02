@@ -508,6 +508,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 				addGroup(group, timetable);
 			}
 			weekRange = tableValues.get("Week numbers");
+			this.lecturer = parseLecturerName(tableValues.get("Lecturer"));
 			decodeWeeks();
 		}
 		catch(Exception e)
@@ -517,6 +518,15 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		
 		tableValues.clear();	
 		return true;
+	}
+	
+	private String parseLecturerName(String text)
+	{
+		String [] parts = text.split(" - ");
+		if (parts.length > 1)
+			return parts[1];
+		else 
+			return text;
 	}
 	
 	/** 
