@@ -37,7 +37,10 @@ public class TimetableDay implements Serializable
 	
 	public void clearEvents()
 	{
-		events.clear();
+		synchronized (events)
+		{
+			events.clear();
+		}
 	}
 	
 	public void sortEvents()
