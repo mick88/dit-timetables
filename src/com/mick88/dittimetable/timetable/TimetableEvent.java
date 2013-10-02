@@ -262,8 +262,15 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	private void parseGridRow(Elements columns)
 	{
 		this.id = Integer.parseInt(columns.get(GRID_ID).text());
-		this.startHour = parseHour(columns.get(GRID_TIME_START).text());
-		this.endHour = parseHour(columns.get(GRID_TIME_FINISH).text());
+		
+		int [] time = parseHour(columns.get(GRID_TIME_START).text());
+		this.startHour = time[0];
+		this.startMin = time[1];
+		
+		time = parseHour(columns.get(GRID_TIME_FINISH).text());
+		this.endHour = time[0];
+		this.endMin = time[1];
+		
 		this.room = parseRooms(columns.get(GRID_ROOM).text());
 		this.name = stripCurlyBraces(columns.get(GRID_MODULE_NAME).text());
 		this.type = parseType(columns.get(GRID_EVENT_TYPE).text());
@@ -289,10 +296,13 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	/**
 	 * return hour as integer from hh:mm string
 	 */
-	private int parseHour(String time)
+	private int [] parseHour(String time)
 	{
 		String [] parts = time.split(":");
-		return Integer.parseInt(parts[0]);
+		int [] result = new int [parts.length];
+		for (int i=0; i < parts.length; i++)
+			result[i] = Integer.parseInt(parts[i]);
+		return result;
 	}
 	
 	/**
