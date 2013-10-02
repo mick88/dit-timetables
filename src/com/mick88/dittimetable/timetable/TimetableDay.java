@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import android.content.Context;
 
@@ -111,6 +112,7 @@ public class TimetableDay implements Serializable
 		return new StringBuilder(start).append(" - ").append(end);
 	}
 	
+	@Deprecated
 	public int parseHtmlEvent(Timetable timetable, Element element, Context context, boolean allowCache)
 	{
 		int n=0;
@@ -122,6 +124,18 @@ public class TimetableDay implements Serializable
 		}
 
 		return n;
+	}
+	
+	public boolean parseGridRow(Timetable timetable, Elements gridCols, Context context, boolean allowCache)
+	{
+		TimetableEvent event = new TimetableEvent(this.id, gridCols);
+		if (event.isValid())
+		{
+			addClass(event);
+			return true;
+		}
+		else 
+			return false;
 	}
 	
 	

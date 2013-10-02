@@ -17,7 +17,6 @@ import org.jsoup.select.Elements;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -234,19 +233,66 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	{
 		return week == 0 || weeks.isEmpty() || weeks.contains(week);
 	}
+
+	public static final int
+		GRID_ID = 1,
+		GRID_DAY = 2,
+		GRID_TIME_START = 3,
+		GRID_TIME_FINISH = 4,
+		GRID_ROOM = 5,
+		GRID_MODULE_CODE = 7,
+		GRID_MODULE_NAME = 8,
+		GRID_EVENT_TYPE = 9;
 	
-	static final int 
-		ID_DAY = 2,
-		ID_START = 3,
-		ID_FINISH = 4,
-		ID_ROOM = 5,
-		ID_NAME = 8,
-		ID_TYPE = 9;	
-	
-	private TimetableEvent(Timetable timetable, int day)
+	private TimetableEvent(int day)
 	{
 		this.day = day;
 		weeks = new HashSet<Integer>();
+	}
+	
+	/**
+	 * Create Event object from timetable grid row
+	 */
+	public TimetableEvent(int day, Elements gridCols)
+	{
+		this(day);
+		parseGridRow(gridCols);
+	}
+	
+	private void parseGridRow(Elements columns)
+	{
+		this.id = Integer.parseInt(columns.get(GRID_ID).text());
+		this.startHour = parseHour(columns.get(GRID_TIME_START).text());
+		this.endHour = parseHour(columns.get(GRID_TIME_FINISH).text());
+		this.room = parseRooms(columns.get(GRID_ROOM).text());
+		this.name = stripCurlyBraces(columns.get(GRID_MODULE_NAME).text());
+		this.type = parseType(columns.get(GRID_EVENT_TYPE).text());
+	}
+	
+	private String parseRooms(String text)
+	{
+		return stripCurlyBraces(text);
+	}
+	
+	private String stripCurlyBraces(String text)
+	{
+		int start = text.indexOf('{')+1;
+		if (start > 0)
+		{
+			int end = text.indexOf('}', start);
+			if (end > -1)
+				return text.substring(start, end);
+		}
+		return text;
+	}
+	
+	/**
+	 * return hour as integer from hh:mm string
+	 */
+	private int parseHour(String time)
+	{
+		String [] parts = time.split(":");
+		return Integer.parseInt(parts[0]);
 	}
 	
 	/**
@@ -254,7 +300,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	 */
 	public TimetableEvent(Element table, Timetable timetable, Context context, boolean allowCache, int day)
 	{
-		this(timetable, day);
+		this(day);
 		parseNewHtmlTable(table, context, allowCache, timetable);
 	}
 	
@@ -263,7 +309,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	 */
 	public TimetableEvent(String importString, Timetable timetable, int day)
 	{
-		this(timetable, day);
+		this(day);
 		importFromString(importString, timetable);
 //		this.duration = this.endTime - this.startTime;
 	}
@@ -317,13 +363,17 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		return groupStr;
 	}
 	
-	private void parseType(String s)
+	private ClassType parseType(String s)
 	{
-		if (s.contains("Lecture")) type = ClassType.Lecture;
-		else if (s.contains("Laboratory")) type = ClassType.Laboratory;
-		else if (s.contains("Tutorial")) type = ClassType.Tutorial;
-		else type = ClassType.Other;
-		
+		try
+		{
+			return Enum.valueOf(ClassType.class, s);
+		}
+		catch (IllegalArgumentException e)
+		{
+			e.printStackTrace();
+			return ClassType.Other;
+		}
 	}
 	
 	/**
