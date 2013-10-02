@@ -148,6 +148,16 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		return room;
 	}
 	
+	/**
+	 * Gets list of rooms and replaces dividers with NL characters
+	 */
+	public String getRoomStacked()
+	{
+		return getRoom()
+				.replace(", ", "\n") // alignment fix
+				.replace(',', '\n');
+	}
+	
 	public ClassType getClassType()
 	{
 		return type;
