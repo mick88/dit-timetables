@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import android.content.Context;
 
@@ -36,7 +37,10 @@ public class TimetableDay implements Serializable
 	
 	public void clearEvents()
 	{
-		events.clear();
+		synchronized (events)
+		{
+			events.clear();
+		}
 	}
 	
 	public void sortEvents()
@@ -111,6 +115,7 @@ public class TimetableDay implements Serializable
 		return new StringBuilder(start).append(" - ").append(end);
 	}
 	
+	@Deprecated
 	public int parseHtmlEvent(Timetable timetable, Element element, Context context, boolean allowCache)
 	{
 		int n=0;
@@ -122,6 +127,21 @@ public class TimetableDay implements Serializable
 		}
 
 		return n;
+	}
+	
+	public boolean parseGridRow(Timetable timetable, Elements gridCols, Context context)
+	{
+		TimetableEvent event = new TimetableEvent(this.id, gridCols);
+		if (event.isValid())
+		{
+			if (event.loadAdditionalInfo(context, timetable) == false)
+				downloadAdditionalInfo(context, timetable);
+			
+			addClass(event);
+			return true;
+		}
+		else 
+			return false;
 	}
 	
 	
@@ -263,10 +283,13 @@ public class TimetableDay implements Serializable
 	
 	public void downloadAdditionalInfo(Context context, Timetable timetable)
 	{
-		for (TimetableEvent event : events) if (event.isComplete() == false)
+		synchronized (events)
 		{
-			if (timetable.isDisposed()) break;
-			event.downloadAdditionalInfo(context, timetable);
+			for (TimetableEvent event : events) if (event.isComplete() == false)
+			{
+				if (timetable.isDisposed()) break;
+				event.downloadAdditionalInfo(context, timetable);
+			}
 		}
 	}
 	
