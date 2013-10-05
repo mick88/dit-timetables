@@ -106,6 +106,8 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	final Set<Integer> weeks;
 	
 	boolean complete =false;
+	// changed to true when event info is loaded from website
+	private transient boolean updated = false;
 	
 	String StripNbsp(String string)
 	{
@@ -411,6 +413,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		if (parseAdditionalInfo(content, timetable))
 		{
 			complete = true;
+			updated = true;
 			try
 			{
 				saveAdditionalInfo(context, content);
@@ -425,6 +428,15 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	public boolean isComplete()
 	{
 		return complete;
+	}
+	
+	/**
+	 * Tells whether the event details have just been downloaded
+	 * @return
+	 */
+	public boolean isUpdated()
+	{
+		return updated;
 	}
 
 	public boolean loadAdditionalInfo(Context context, Timetable timetable)
