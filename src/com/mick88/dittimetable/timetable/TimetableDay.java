@@ -135,7 +135,7 @@ public class TimetableDay implements Serializable
 		if (event.isValid())
 		{
 			if (event.loadAdditionalInfo(context, timetable) == false)
-				downloadAdditionalInfo(context, timetable);
+				event.downloadAdditionalInfo(context, timetable);
 			
 			addClass(event);
 			return true;
@@ -281,11 +281,14 @@ public class TimetableDay implements Serializable
 		return entries;
 	}
 	
+	/**
+	 * Download details of events that are outdated
+	 */
 	public void downloadAdditionalInfo(Context context, Timetable timetable)
 	{
 		synchronized (events)
 		{
-			for (TimetableEvent event : events) if (event.isComplete() == false)
+			for (TimetableEvent event : events) if (event.isUpdated() == false)
 			{
 				if (timetable.isDisposed()) break;
 				event.downloadAdditionalInfo(context, timetable);
