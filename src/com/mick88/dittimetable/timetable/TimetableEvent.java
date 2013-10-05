@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -25,6 +24,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.flurry.android.FlurryAgent;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.event_details.EventDetailsSwipableActivity;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
@@ -145,6 +145,16 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	public String getRoom()
 	{
 		return room;
+	}
+	
+	/**
+	 * Gets list of rooms and replaces dividers with NL characters
+	 */
+	public String getRoomStacked()
+	{
+		return getRoom()
+				.replace(", ", "\n") // alignment fix
+				.replace(',', '\n');
 	}
 	
 	public ClassType getClassType()
@@ -467,59 +477,59 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		file.close();
 	}
 	
+	void setGroups(String groupString, Timetable timetable)
+	{
+		String [] grps = groupString.split(",");
+		for (String s : grps)
+		{
+			int end = s.indexOf('-');
+			
+			String group = ((end==-1)?s:s.substring(0, end)).trim();
+
+			addGroup(group, timetable);
+		}
+	}
+	
 	/**
 	 * parses the additional info page
 	 */
 	private boolean parseAdditionalInfo(String content, Timetable timetable)
 	{
 		if (content == null) return false;
-		Document doc = Jsoup.parse(content);
-		Element table = doc.select("table.eventdetails").first();
-		if (table == null) return false;
-		
-		HashMap<String, String> tableHeaders = new HashMap<String, String>();
-		HashMap<String, String> tableValues = new HashMap<String, String>();
-		
-		Elements headers = table.select("th");		
-		for (Element header : headers)
-		{
-			tableHeaders.put(header.id(), header.text());
-		}
-		headers.clear();
-		
-		Elements values = table.select("td");
-		for (Element value : values)
-		{
-			String val = value.text();
-			if (TextUtils.isEmpty(val)) continue;
-			String h = tableHeaders.get(value.attr("headers"));
-			tableValues.put(h, val);
-		}
-		values.clear();
-		tableHeaders.clear();
-		if (tableValues.size() == 0) return false;
 		
 		try
 		{
-			String [] grps = tableValues.get("Class Subgroup").split(",");
-			for (String s : grps)
+			Document doc = Jsoup.parse(content);
+			
+			Elements elements = doc.select("th, td");		
+			for (int i=0; i < elements.size(); i++)
 			{
-				int end = s.indexOf('-');
-				
-				String group = ((end==-1)?s:s.substring(0, end)).trim();
-	
-				addGroup(group, timetable);
+				Element element = elements.get(i);
+				if (element.tagName().equalsIgnoreCase("th"))
+				{
+					String headerText = element.text();
+					if (headerText.equals("Class Subgroup"))
+					{
+						setGroups(elements.get(++i).text(), timetable);
+					} 
+					else if (headerText.equals("Week numbers"))
+					{
+						this.weekRange = elements.get(++i).text();
+						decodeWeeks();
+					}
+					else if (headerText.equals("Lecturer"))
+					{
+						this.lecturer = parseLecturerName(elements.get(++i).text());
+					} 
+				}
 			}
-			weekRange = tableValues.get("Week numbers");
-			this.lecturer = parseLecturerName(tableValues.get("Lecturer"));
-			decodeWeeks();
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
+			FlurryAgent.onError("parseAdditionalInfo", "TimetableEvent", e);
 			e.printStackTrace();
+			return false;
 		}
-		
-		tableValues.clear();	
 		return true;
 	}
 	
