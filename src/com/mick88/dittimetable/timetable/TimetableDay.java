@@ -195,13 +195,13 @@ public class TimetableDay implements Serializable
 		return builder;
 	}
 	
-	public int importFromString(String string, Timetable timetable)
+	public int importFromString(String string)
 	{
 		int n=0;
 		String [] events = string.split(EXPORT_DAY_SEPARATOR);
 		for (String eventString : events)
 		{
-			TimetableEvent event = new TimetableEvent(eventString, timetable, id);
+			TimetableEvent event = new TimetableEvent(eventString, id);
 			if (event.isValid() /*&& event.isGroup(timetable.hiddenGroups)*/)
 			{
 				n++;

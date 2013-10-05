@@ -602,7 +602,7 @@ public class Timetable implements Serializable
 		{
 			if (dayId < days.length)
 			{
-				n += days[dayId++].importFromString(d, this);
+				n += days[dayId++].importFromString(d);
 			}
 		}
 		return (n > 0);

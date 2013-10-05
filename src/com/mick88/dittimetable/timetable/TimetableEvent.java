@@ -332,10 +332,10 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	/**
 	 * Creates new object by importing data from string
 	 */
-	public TimetableEvent(String importString, Timetable timetable, int day)
+	public TimetableEvent(String importString, int day)
 	{
 		this(day);
-		importFromString(importString, timetable);
+		importFromString(importString);
 //		this.duration = this.endTime - this.startTime;
 	}
 	
@@ -373,7 +373,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		return false;
 	}
 	
-	void addGroup(String group, Timetable timetable)
+	void addGroup(String group)
 	{
 		if (TextUtils.isEmpty(group) == false && groups.contains(group) == false)
 		{
@@ -409,7 +409,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		String uri = String.format(Locale.getDefault(), "?reqtype=eventdetails&eventId=%s%%7C%d", Timetable.getDataset(), id);
 
 		String content = connection.getContent(uri);
-		if (parseAdditionalInfo(content, timetable))
+		if (parseAdditionalInfo(content))
 		{
 			complete = true;
 			updated = true;
@@ -471,7 +471,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			return false;
 		}
 		
-		if (parseAdditionalInfo(sb.toString(), timetable))
+		if (parseAdditionalInfo(sb.toString()))
 		{
 			return true;
 		}
@@ -488,7 +488,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		file.close();
 	}
 	
-	void setGroups(String groupString, Timetable timetable)
+	void setGroups(String groupString)
 	{
 		String [] grps = groupString.split(",");
 		for (String s : grps)
@@ -497,14 +497,14 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			
 			String group = ((end==-1)?s:s.substring(0, end)).trim();
 
-			addGroup(group, timetable);
+			addGroup(group);
 		}
 	}
 	
 	/**
 	 * parses the additional info page
 	 */
-	private boolean parseAdditionalInfo(String content, Timetable timetable)
+	private boolean parseAdditionalInfo(String content)
 	{
 		if (content == null) return false;
 		
@@ -521,7 +521,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 					String headerText = element.text();
 					if (headerText.equals("Class Subgroup"))
 					{
-						setGroups(elements.get(++i).text(), timetable);
+						setGroups(elements.get(++i).text());
 					} 
 					else if (headerText.equals("Week numbers"))
 					{
@@ -677,7 +677,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	/**
 	 * imports saved event from file
 	 */
-	public void importFromString(String string, Timetable timetable)
+	public void importFromString(String string)
 	{
 		if (TextUtils.isEmpty(string)) 
 		{
@@ -705,7 +705,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 				String [] g = fields[field++].split(GROUP_SEPARATOR);
 				for (String s : g)
 				{
-					addGroup(s, timetable);
+					addGroup(s);
 				}
 			}
 			complete=true;
