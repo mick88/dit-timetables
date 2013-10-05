@@ -380,14 +380,14 @@ public class Timetable implements Serializable
 			return false;
 		}
 		
-		if (string.contains(STR_TABLE_GRAPHIC_START) == false)
+		/*if (string.contains(STR_TABLE_GRAPHIC_START) == false)
 		{
 			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.wrongDataReceived);
 			Log.d(logTag, string);
 			return false;
-		}
+		}*/
 		
-		boolean result = parseGraphicStringEx(resultHandler, context, string, false);
+		boolean result = parseGrid(resultHandler, context, string);
 		
 		if (result == true) 
 		{
@@ -553,10 +553,10 @@ public class Timetable implements Serializable
 	public String getQueryAddress()
 	{
 		if (weekRange == -1) return String.format(Locale.ENGLISH, 
-				"?reqtype=timetable&action=timetable&sKey=%s%%7C%s&sTitle=Computing&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&sWeeks=%s&sType=course&instCode=-2&instName=", 
+				"?reqtype=timetable&action=getgrid&sKey=%s%%7C%s&sTitle=Computing&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&sWeeks=%s&sType=course&instCode=-2&instName=", 
 				key, course, year, weeks);
 		else return String.format(Locale.ENGLISH, 
-				"?reqtype=timetable&action=timetable&sKey=%s%%7C%s&sTitle=Computing&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&weekRange=%d&sType=course&instCode=-2&instName=", 
+				"?reqtype=timetable&action=getgrid&sKey=%s%%7C%s&sTitle=Computing&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&weekRange=%d&sType=course&instCode=-2&instName=", 
 				key, course, year, weekRange);
 	}
 	
@@ -624,6 +624,7 @@ public class Timetable implements Serializable
 	/**
 	 * Parses the new timetables
 	 * @param string html
+	 * @deprecated
 	 */
 	public boolean parseGraphicStringEx(ResultHandler resultHandler, Context context, String string, boolean allowCache)
 	{		
@@ -689,6 +690,44 @@ public class Timetable implements Serializable
 			day.sortEvents();
 		}
 		return valid;
+	}
+	
+	public boolean parseGrid(ResultHandler resultHandler, Context context, String html)
+	{
+		// put days in a hashmap
+		Map<String, TimetableDay> days = new HashMap<String, TimetableDay>(7);
+		for (TimetableDay day : this.days)
+			days.put(day.getShortName().toString(), day);
+		
+		int numParsedEvents = 0,
+				totalEvents=0;
+		clearEvents();
+				
+		Document document = Jsoup.parse(html);
+		Elements gridRows = document.select("table.gridTable tr");
+		totalEvents = gridRows.size();
+		resultHandler.onProgress(0, totalEvents);
+
+		int currentRow=0;
+		for (Element row : gridRows)
+		{
+			Elements columns = row.select("td.gridData");
+			resultHandler.onProgress(++currentRow, totalEvents);
+			if (columns.isEmpty()) continue;
+			String day = columns.get(TimetableEvent.GRID_DAY).text();
+			TimetableDay tDay = days.get(day);
+			if (tDay != null)
+			{
+				if (tDay.parseGridRow(this, columns, context))
+					numParsedEvents++;
+			}
+		}
+		
+		for (TimetableDay day : this.days)
+			day.sortEvents();
+		
+		return numParsedEvents > 0;
+		
 	}
 	
 	public Map<String,String> ToHashMap()
