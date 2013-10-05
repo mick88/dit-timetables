@@ -135,7 +135,7 @@ public class TimetableDay implements Serializable
 		if (event.isValid())
 		{
 			if (event.loadAdditionalInfo(context, timetable) == false)
-				downloadAdditionalInfo(context, timetable);
+				event.downloadAdditionalInfo(context, timetable);
 			
 			addClass(event);
 			return true;
