@@ -222,11 +222,6 @@ public class Timetable implements Serializable
 	
 	boolean disposed=false;
 	
-	/**
-	 * All groups in currently loaded timetable
-	 */
-	Set<String> groupsInTimetable=new HashSet<String>();
-	
 	private String key = getDataset();// "201213";	
 	Date lastUpdated = null;
 	final String logTag = "Timetable";
@@ -284,11 +279,6 @@ public class Timetable implements Serializable
 		this.weeks = weeks;		
 	}
 	
-	void addClassGroup(String groupCode)
-	{
-		groupsInTimetable.add(groupCode);
-	}
-	
 	void clearEvents()
 	{
 		valid=false;
@@ -296,7 +286,6 @@ public class Timetable implements Serializable
 		{
 			days[i].clearEvents();
 		}
-		groupsInTimetable.clear();
 	}
 	
 	public CharSequence describe()
@@ -538,7 +527,10 @@ public class Timetable implements Serializable
 	
 	public Set<String> getGroupsInTimetable()
 	{
-		return groupsInTimetable;
+		Set<String> groups = new HashSet<String>();
+		for (TimetableDay day : days)
+			day.getGroups(groups);
+		return groups;
 	}
 	
 	public int getNumDays()
@@ -739,10 +731,6 @@ public class Timetable implements Serializable
 		result.put("Week range", this.weeks);
 		
 		StringBuilder groups = new StringBuilder();
-		for (String group : groupsInTimetable)
-		{
-			if (settings.getHiddenGroups().contains(group) == false) groups.append(group).append(',');
-		}
 		result.put("groups", groups.toString());
 		
 		result.put("username", settings.getUsername());

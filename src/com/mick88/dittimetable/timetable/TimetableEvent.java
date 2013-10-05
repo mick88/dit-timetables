@@ -378,7 +378,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		if (TextUtils.isEmpty(group) == false && groups.contains(group) == false)
 		{
 			groups.add(group);
-			timetable.addClassGroup(group);
 			groupStr = groupToString();
 		}
 	}

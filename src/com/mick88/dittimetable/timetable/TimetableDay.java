@@ -84,6 +84,12 @@ public class TimetableDay implements Serializable
 		return events;
 	}
 	
+	public void getGroups(Set<String> groupSet)
+	{
+		for (TimetableEvent event : events)
+			groupSet.addAll(event.getGroups());
+	}
+	
 	/**
 	 * Get Set of lectures at this time
 	 * @return

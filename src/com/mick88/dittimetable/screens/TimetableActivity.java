@@ -260,7 +260,6 @@ public class TimetableActivity extends ActionBarActivity
 				onSettingsNotComplete();
 			}
 		}
-		
 		setupViewPager();
 
 	}
