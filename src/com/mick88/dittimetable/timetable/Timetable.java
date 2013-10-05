@@ -705,6 +705,7 @@ public class Timetable implements Serializable
 				
 		Document document = Jsoup.parse(html);
 		Elements gridRows = document.select("table.gridTable tr");
+		if (gridRows == null || gridRows.isEmpty()) return false;
 		totalEvents = gridRows.size();
 		resultHandler.onProgress(0, totalEvents);
 
