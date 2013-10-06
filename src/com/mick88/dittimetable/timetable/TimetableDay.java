@@ -121,20 +121,6 @@ public class TimetableDay implements Serializable
 		return new StringBuilder(start).append(" - ").append(end);
 	}
 	
-	@Deprecated
-	public int parseHtmlEvent(Timetable timetable, Element element, Context context, boolean allowCache)
-	{
-		int n=0;
-		TimetableEvent c = new TimetableEvent(element, timetable, context, allowCache, id);
-		if (c.isValid() /*&& c.isGroup(timetable.getHiddenGroups())*/) 
-		{
-			addClass(c);
-			n++;
-		}
-
-		return n;
-	}
-	
 	public boolean parseGridRow(Timetable timetable, Elements gridCols, Context context)
 	{
 		TimetableEvent event = new TimetableEvent(this.id, gridCols);
