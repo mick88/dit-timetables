@@ -30,6 +30,7 @@ import android.util.Log;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.timetable.Timetable;
+import com.mick88.dittimetable.utils.HttpUtils;
 
 public class PdfDownloaderService extends Service
 {
@@ -163,8 +164,8 @@ public class PdfDownloaderService extends Service
 		Log.d("PDF Downloader", "Downloading file "+url);
 		
 		HttpParams httpParams = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(httpParams, 5000);
-		HttpConnectionParams.setSoTimeout(httpParams, 5000);
+		HttpConnectionParams.setConnectionTimeout(httpParams, HttpUtils.CONNECTION_TIMEOUT);
+		HttpConnectionParams.setSoTimeout(httpParams, HttpUtils.CONNECTION_TIMEOUT);
 		
 		HttpGet httpGet = new HttpGet(url);
 		httpGet.setHeader("Accept-Type", ACCEPTED_TYPE);
