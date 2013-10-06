@@ -174,16 +174,16 @@ public class PdfDownloaderService extends Service
 		Log.d("PDF Service", "Response: "+response.getStatusLine().toString());
 		HttpEntity entity = response.getEntity();
 		
+		int length = (int) entity.getContentLength();
+		
+		if (length == 0)
+			throw new IOException("Content length is 0");
+		
 		String type = response.getFirstHeader("Content-Type").getValue();
 		if (type.equalsIgnoreCase(ACCEPTED_TYPE) == false)
 		{
 			throw new IOException("Downloaded file is not PDF");
 		}
-		
-		int length = (int) entity.getContentLength();
-		
-		if (length == 0)
-			throw new IOException("Content length is 0");
 	
 		InputStream inStream = new BufferedInputStream(entity.getContent());
 		OutputStream outStream = new FileOutputStream(outputFile);
