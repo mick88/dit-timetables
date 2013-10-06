@@ -183,7 +183,7 @@ public class PdfDownloaderService extends Service
 	
 	private int downloadFile(String url, File outputFile, onDownloadProgressListener progressListener) throws IOException
 	{
-		final int BUFFER_SIZE = 128;
+		final int BUFFER_SIZE = 1024;
 		Log.d("PDF Downloader", "Downloading file "+url);
 		
 		HttpParams httpParams = new BasicHttpParams();
@@ -218,7 +218,6 @@ public class PdfDownloaderService extends Service
 		int total=0;
 		while ((count = inStream.read(data)) != -1)
 		{
-			progressListener.onProgress(total, length);
 			total += count;
 			outStream.write(data, 0,  count);
 		}
