@@ -67,7 +67,7 @@ public class PdfDownloaderService extends Service
 	
 	private void downloadPdf(Timetable timetable)
 	{
-		new AsyncTask<Timetable, Integer, File>()
+		new AsyncTask<Timetable, Exception, File>()
 		{
 			Builder progressNotification;
 			String url;
@@ -83,10 +83,9 @@ public class PdfDownloaderService extends Service
 			}
 			
 			@Override
-			protected void onProgressUpdate(Integer... values) 
+			protected void onProgressUpdate(Exception... values) 
 			{
-				progressNotification.setProgress(values[1], values[0], false);
-				startForeground(NOTIFICATION_ID, progressNotification.build());
+				showErrorNotification(values[0].getMessage());
 			}
 
 			@Override
@@ -99,21 +98,15 @@ public class PdfDownloaderService extends Service
 				File file = new File(folder, filename);
 				try
 				{
-					if (downloadFile(url, file, new onDownloadProgressListener()
-					{
-						
-						@Override
-						public void onProgress(int progress, int max)
-						{
-							onProgressUpdate(progress, max);							
-						}
-					}) == 0)
-						return null;
+					if (downloadFile(url, file) == 0)
+						throw new Exception("Received stream is empty");
+					
 					return file;
 				} 
-				catch (IOException e)
+				catch (Exception e)
 				{
 					e.printStackTrace();
+					publishProgress(e);
 					return null;
 				}
 			}
@@ -134,21 +127,22 @@ public class PdfDownloaderService extends Service
 				{
 					onPdfDownloaded(result, url);
 				}
-				else
-				{
-					Builder builder = new Builder(getApplicationContext())
-						.setSmallIcon(R.drawable.ic_notification_download)
-						.setContentTitle("Dit Timetables")
-						.setTicker("PDF download error!")
-						.setContentText("PDF download error!");
-					NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-					notificationManager.notify(NOTIFICATION_ID, builder.build());
-				}
 						
 				stopSelf();
 			}
 			
 		}.execute(timetable);
+	}
+	
+	void showErrorNotification(String message)
+	{
+		Builder builder = new Builder(getApplicationContext())
+			.setSmallIcon(R.drawable.ic_notification_download)
+			.setContentTitle("Dit Timetables")
+			.setTicker("PDF download error!")
+			.setContentText(message);
+		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.notify(NOTIFICATION_ID, builder.build());
 	}
 	
 	void onPdfDownloaded(File pdfFile, String url)
@@ -181,7 +175,7 @@ public class PdfDownloaderService extends Service
 		notificationManager.notify(NOTIFICATION_ID, builder.build());
 	}
 	
-	private int downloadFile(String url, File outputFile, onDownloadProgressListener progressListener) throws IOException
+	private int downloadFile(String url, File outputFile) throws IOException
 	{
 		final int BUFFER_SIZE = 1024;
 		Log.d("PDF Downloader", "Downloading file "+url);
