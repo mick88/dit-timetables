@@ -31,12 +31,12 @@ import android.util.Log;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.utils.HttpUtils;
+import com.mick88.dittimetable.web.Connection;
 
 public class PdfDownloaderService extends Service
 {
 	private static final int INTENT_ID_SHARE_URL = 1;
 	private static final int INTENT_ID_SHARE_PDF = 0;
-	private static final String USER_AGENT = "DIT Timetables app";
 	private static final String ACCEPTED_TYPE = "application/pdf";	
 	private static final int NOTIFICATION_ID = 1;
 	public static final String EXTRA_TIMETABLE = "timetable";
@@ -183,7 +183,7 @@ public class PdfDownloaderService extends Service
 		
 		HttpGet httpGet = new HttpGet(url);
 		httpGet.setHeader("Accept-Type", ACCEPTED_TYPE);
-		httpGet.setHeader("User-Agent", USER_AGENT);
+		httpGet.setHeader("User-Agent", Connection.USER_AGENT);
 		HttpClient httpClient = new DefaultHttpClient(httpParams);
 		
 		HttpResponse response = httpClient.execute(httpGet);

@@ -437,26 +437,6 @@ public class Timetable implements Serializable
 		return String.format(Locale.getDefault(), "Timetable_%s-%d_%s.pdf", course, year, weeksStr);
 	}
 	
-	public void downloadPdf(Context context, ResultHandler resultHandler)
-	{		
-		String address = getPdfUrl();
-		String filename = getPdfFileName();
-		
-		try
-		{
-			connection.downloadPdf(context, address, filename);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			resultHandler.onDownloadPdfStarted(false);
-			return;
-		}
-		Log.i(logTag, "PDF download started. Filename: "+filename);
-		resultHandler.onDownloadPdfStarted(true);
-		return;
-	}
-	
 	/**
 	 * Writes timetable to file
 	 */

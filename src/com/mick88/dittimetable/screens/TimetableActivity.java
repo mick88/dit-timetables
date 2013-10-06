@@ -392,48 +392,6 @@ public class TimetableActivity extends ActionBarActivity
 		startService(intent);
 	}
 	
-	@Deprecated
-	void downloadPdf()
-	{
-		if (downloadPdf==null ||  downloadPdf.isAlive() == false)
-		{
-			new AlertDialog.Builder(this)
-			.setIcon(R.drawable.ic_launcher)
-			.setTitle("Download PDF")
-			.setMessage(String.format(Locale.getDefault(), "Timetable will be downloaded to your %s folder.", Connection.downloadsFolder))
-			.setPositiveButton(android.R.string.ok, new OnClickListener()
-			{
-				
-				@Override
-				public void onClick(DialogInterface dialog, int which)
-				{
-					try
-					{						
-						showProgressPopup("Preparing download...");
-						downloadPdf = new Thread()
-						{
-							public void run()
-							{
-								Log.d(logTag, "PDF download thread started.");
-								timetable.downloadPdf(getApplicationContext(), TimetableActivity.this);
-							}
-						};
-						downloadPdf.start();
-						FlurryAgent.onEvent("Downloading PDF");
-					}
-					catch (Exception e)
-					{
-						e.printStackTrace();
-						TimetableActivity.this.onDownloadPdfStarted(false);
-					}
-				}
-			})
-			.setNegativeButton(android.R.string.cancel, null)
-			.show();
-			
-		}
-	}
-	
 	void showSettingsScreen(boolean allowCancel)
 	{
 		Intent settingsScreen = new Intent(TimetableActivity.this, SettingsActivity.class);

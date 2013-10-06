@@ -15,16 +15,10 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
 import android.annotation.SuppressLint;
-import android.app.DownloadManager;
-import android.app.DownloadManager.Request;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
-import android.webkit.MimeTypeMap;
 
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.utils.HttpUtils;
@@ -103,44 +97,6 @@ public class Connection implements Serializable
 		{
 			e.printStackTrace();
 		}
-	}
-	
-	
-	@SuppressLint("NewApi")
-	public void downloadPdf(Context context, String address, String filename)
-	{
-		Uri uri = Uri.parse(address);
-		
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.GINGERBREAD)
-		{
-			Intent intent = new Intent(Intent.ACTION_VIEW,  uri);
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			context.startActivity(intent);
-		}
-		else
-		{
-			DownloadManager.Request request = new Request(uri);
-			request.setDescription("DIT Timetable");
-			request.setTitle("Timetable");
-			MimeTypeMap m = MimeTypeMap.getSingleton();
-			request.setMimeType(m.getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(filename)));
-	
-			request.setDestinationInExternalPublicDir(downloadsFolder, filename);
-	
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-			{
-				setRequestAdvancedOptions(request);
-			}
-			DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-			manager.enqueue(request);
-		}
-	}
-	
-	@SuppressLint("NewApi")
-	void setRequestAdvancedOptions(DownloadManager.Request request)
-	{
-		request.setNotificationVisibility(Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-		request.allowScanningByMediaScanner();
 	}
 	
 	public String getContent(String address)
