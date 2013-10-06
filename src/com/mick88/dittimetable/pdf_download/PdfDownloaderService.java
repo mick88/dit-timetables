@@ -71,10 +71,10 @@ public class PdfDownloaderService extends Service
 			{
 				progressNotification = new Builder(getApplicationContext())
 					.setSmallIcon(R.drawable.ic_notification_download)
-					.setTicker("Downloading timetable...")
-					.setContentTitle("DIT Timetables")
+					.setTicker(getString(R.string.downloading_timetable_))
+					.setContentTitle(getString(R.string.dit_timetables))
 					.setProgress(100, 0, true)
-					.setContentText("Downloading PDF...");
+					.setContentText(getString(R.string.downloading_timetable_));
 				startForeground(NOTIFICATION_ID, progressNotification.build());
 			}
 			
@@ -135,8 +135,8 @@ public class PdfDownloaderService extends Service
 	{
 		Builder builder = new Builder(getApplicationContext())
 			.setSmallIcon(R.drawable.ic_notification_download)
-			.setContentTitle("Dit Timetables")
-			.setTicker("PDF download error!")
+			.setContentTitle(getString(R.string.dit_timetables))
+			.setTicker(getString(R.string.pdf_download_error_))
 			.setContentText(message);
 		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.notify(NOTIFICATION_ID, builder.build());
@@ -148,26 +148,26 @@ public class PdfDownloaderService extends Service
 			.setType(ACCEPTED_TYPE)
 			.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(pdfFile))
 			.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		PendingIntent sharePendingIntent = PendingIntent.getActivity(getApplicationContext(), INTENT_ID_SHARE_PDF, Intent.createChooser(shareIntent, "Share timetable PDF"), PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent sharePendingIntent = PendingIntent.getActivity(getApplicationContext(), INTENT_ID_SHARE_PDF, Intent.createChooser(shareIntent, getString(R.string.share_timetable_pdf)), PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		Intent shareUrlIntent = new Intent(Intent.ACTION_SEND)
 			.setType("text/plain")
 			.putExtra(Intent.EXTRA_TEXT, url)
 			.putExtra(Intent.EXTRA_TITLE, "Timetable")
 			.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		PendingIntent shareUrlPendingIntent = PendingIntent.getActivity(getApplicationContext(), INTENT_ID_SHARE_URL, Intent.createChooser(shareUrlIntent, "Share timetable URL"), PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent shareUrlPendingIntent = PendingIntent.getActivity(getApplicationContext(), INTENT_ID_SHARE_URL, Intent.createChooser(shareUrlIntent, getString(R.string.share_pdf_url)), PendingIntent.FLAG_UPDATE_CURRENT);
 			
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setData(Uri.fromFile(pdfFile));
 		
 		Builder builder = new Builder(getApplicationContext())
 			.setSmallIcon(R.drawable.ic_notification_download)
-			.setTicker("Timetable downloaded")
+			.setTicker(getString(R.string.timetable_pdf_downloaded))
 			.setContentIntent(PendingIntent.getActivity(getApplicationContext(), NOTIFICATION_ID, intent, 0))
-			.setContentTitle("Dit Timetables")
-			.addAction(R.drawable.ic_notification_share, "Share PDF", sharePendingIntent)
-			.addAction(R.drawable.ic_notification_share_url, "Share URL", shareUrlPendingIntent)
-			.setContentText("Timetable downloaded");
+			.setContentTitle(getString(R.string.dit_timetables))
+			.addAction(R.drawable.ic_notification_share, getString(R.string.share_pdf), sharePendingIntent)
+			.addAction(R.drawable.ic_notification_share_url, getString(R.string.share_url), shareUrlPendingIntent)
+			.setContentText(getString(R.string.timetable_pdf_downloaded));
 		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.notify(NOTIFICATION_ID, builder.build());
 	}

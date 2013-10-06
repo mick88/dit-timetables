@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Timetable</string>
+    <string name="dit_timetables">DIT Timetables</string>
     <string name="main_title">Timetable</string>
     <string name="menu_download_pdf">Download PDF</string>
     <string name="refresh">Refresh</string>
@@ -40,5 +41,12 @@
     <string name="about">About</string>
     <string name="title_activity_unfold">UnfoldActivity</string>
     <string name="share_timetable">Share timetable</string>
+    <string name="share_pdf">Share PDF</string>
+    <string name="share_url">Share URL</string>
+    <string name="downloading_timetable_">Downloading timetable&#8230;</string>
+    <string name="pdf_download_error_">PDF download error!</string>
+    <string name="share_timetable_pdf">Share timetable PDF</string>
+    <string name="share_pdf_url">Share link to timetable</string>
+    <string name="timetable_pdf_downloaded">Timetable PDF downloaded</string>
 
 </resources>
