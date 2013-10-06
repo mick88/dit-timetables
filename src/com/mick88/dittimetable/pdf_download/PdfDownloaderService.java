@@ -85,6 +85,7 @@ public class PdfDownloaderService extends Service
 			@Override
 			protected void onProgressUpdate(Exception... values) 
 			{
+				stopForeground(true);
 				showErrorNotification(values[0].getMessage());
 			}
 
