@@ -34,7 +34,7 @@ public class Connection implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	String receivedHtml;
-	
+	public static final String USER_AGENT = "DIT Timetables app";
 	private Cookie cookie=null;
 	public static String downloadsFolder = "Download";
 	final AppSettings settings;
