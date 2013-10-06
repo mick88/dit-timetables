@@ -37,13 +37,7 @@ public class PdfDownloaderService extends Service
 	private static final int INTENT_ID_SHARE_URL = 1;
 	private static final int INTENT_ID_SHARE_PDF = 0;
 	private static final String USER_AGENT = "DIT Timetables app";
-	private static final String ACCEPTED_TYPE = "application/pdf";
-
-	private static interface onDownloadProgressListener
-	{
-		void onProgress(int progress, int max);
-	}
-	
+	private static final String ACCEPTED_TYPE = "application/pdf";	
 	private static final int NOTIFICATION_ID = 1;
 	public static final String EXTRA_TIMETABLE = "timetable";
 	
