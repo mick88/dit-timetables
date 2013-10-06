@@ -34,6 +34,8 @@ import com.mick88.dittimetable.utils.HttpUtils;
 
 public class PdfDownloaderService extends Service
 {
+	private static final int INTENT_ID_SHARE_URL = 1;
+	private static final int INTENT_ID_SHARE_PDF = 0;
 	private static final String USER_AGENT = "DIT Timetables app";
 	private static final String ACCEPTED_TYPE = "application/pdf";
 
@@ -152,14 +154,14 @@ public class PdfDownloaderService extends Service
 			.setType(ACCEPTED_TYPE)
 			.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(pdfFile))
 			.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		PendingIntent sharePendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, Intent.createChooser(shareIntent, "Share timetable PDF"), PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent sharePendingIntent = PendingIntent.getActivity(getApplicationContext(), INTENT_ID_SHARE_PDF, Intent.createChooser(shareIntent, "Share timetable PDF"), PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		Intent shareUrlIntent = new Intent(Intent.ACTION_SEND)
 		.setType("text/plain")
 		.putExtra(Intent.EXTRA_TEXT, url)
 		.putExtra(Intent.EXTRA_TITLE, "Timetable")
 		.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-	PendingIntent shareUrlPendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, Intent.createChooser(shareUrlIntent, "Share timetable URL"), PendingIntent.FLAG_UPDATE_CURRENT);
+	PendingIntent shareUrlPendingIntent = PendingIntent.getActivity(getApplicationContext(), INTENT_ID_SHARE_URL, Intent.createChooser(shareUrlIntent, "Share timetable URL"), PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setData(Uri.fromFile(pdfFile));
