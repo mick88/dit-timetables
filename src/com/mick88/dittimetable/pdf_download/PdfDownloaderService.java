@@ -152,13 +152,21 @@ public class PdfDownloaderService extends Service
 	
 	void onPdfDownloaded(File pdfFile)
 	{
+		Intent shareIntent = new Intent(Intent.ACTION_SEND)
+			.setType(ACCEPTED_TYPE)
+			.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(pdfFile))
+			.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		PendingIntent sharePendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setData(Uri.fromFile(pdfFile));
+		
 		Builder builder = new Builder(getApplicationContext())
 			.setSmallIcon(R.drawable.ic_notification_download)
 			.setTicker("Timetable downloaded")
 			.setContentIntent(PendingIntent.getActivity(getApplicationContext(), NOTIFICATION_ID, intent, 0))
 			.setContentTitle("Dit Timetables")
+			.addAction(R.drawable.ic_notification_share, "Share PDF", sharePendingIntent)
 			.setContentText("Timetable downloaded");
 		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.notify(NOTIFICATION_ID, builder.build());
