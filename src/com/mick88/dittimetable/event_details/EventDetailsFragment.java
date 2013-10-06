@@ -44,7 +44,7 @@ public class EventDetailsFragment extends Fragment
 		
 		result.add(new KeyValue("Module:", name));
 		result.add(new KeyValue("Time:", String.format(Locale.getDefault(), "%s - %s", event.getStartTime(), event.getEndTime())));
-		result.add(new KeyValue("Room:", event.getRoom()));
+		result.add(new KeyValue("Room:", event.getRoomStacked()));
 		result.add(new KeyValue("Lecturer:",event.getLecturer()));
 		result.add(new KeyValue("Type:", event.getType().toString()));
 		

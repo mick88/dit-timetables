@@ -5,8 +5,6 @@ import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
-import com.mick88.dittimetable.R;
-
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class CustomPageTransformer 
 	implements ViewPager.PageTransformer

@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -17,7 +16,6 @@ import org.jsoup.select.Elements;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +24,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.flurry.android.FlurryAgent;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.event_details.EventDetailsSwipableActivity;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
@@ -73,6 +72,9 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	
 	private static final String CHAR_NBSP = "\u00A0";	
 	public static enum ClassType {Other, Lecture, Laboratory, Tutorial};
+	public static final int 
+		MIN_START_TIME = 8,
+		MAX_START_TIME = 22;
 	
 	private static final String GROUP_SEPARATOR = ", ";
 	final static String logTag = "TimetableEvent";
@@ -104,6 +106,8 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	final Set<Integer> weeks;
 	
 	boolean complete =false;
+	// changed to true when event info is loaded from website
+	private transient boolean updated = false;
 	
 	String StripNbsp(String string)
 	{
@@ -143,6 +147,16 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	public String getRoom()
 	{
 		return room;
+	}
+	
+	/**
+	 * Gets list of rooms and replaces dividers with NL characters
+	 */
+	public String getRoomStacked()
+	{
+		return getRoom()
+				.replace(", ", "\n") // alignment fix
+				.replace(',', '\n');
 	}
 	
 	public ClassType getClassType()
@@ -234,19 +248,76 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	{
 		return week == 0 || weeks.isEmpty() || weeks.contains(week);
 	}
+
+	public static final int
+		GRID_ID = 1,
+		GRID_DAY = 2,
+		GRID_TIME_START = 3,
+		GRID_TIME_FINISH = 4,
+		GRID_ROOM = 5,
+		GRID_MODULE_CODE = 7,
+		GRID_MODULE_NAME = 8,
+		GRID_EVENT_TYPE = 9;
 	
-	static final int 
-		ID_DAY = 2,
-		ID_START = 3,
-		ID_FINISH = 4,
-		ID_ROOM = 5,
-		ID_NAME = 8,
-		ID_TYPE = 9;	
-	
-	private TimetableEvent(Timetable timetable, int day)
+	private TimetableEvent(int day)
 	{
 		this.day = day;
 		weeks = new HashSet<Integer>();
+	}
+	
+	/**
+	 * Create Event object from timetable grid row
+	 */
+	public TimetableEvent(int day, Elements gridCols)
+	{
+		this(day);
+		parseGridRow(gridCols);
+	}
+	
+	private void parseGridRow(Elements columns)
+	{
+		this.id = Integer.parseInt(columns.get(GRID_ID).text());
+		
+		int [] time = parseHour(columns.get(GRID_TIME_START).text());
+		this.startHour = time[0];
+		this.startMin = time[1];
+		
+		time = parseHour(columns.get(GRID_TIME_FINISH).text());
+		this.endHour = time[0];
+		this.endMin = time[1];
+		
+		this.room = parseRooms(columns.get(GRID_ROOM).text());
+		this.name = stripCurlyBraces(columns.get(GRID_MODULE_NAME).text());
+		this.type = parseType(columns.get(GRID_EVENT_TYPE).text());
+	}
+	
+	private String parseRooms(String text)
+	{
+		return stripCurlyBraces(text);
+	}
+	
+	private String stripCurlyBraces(String text)
+	{
+		int start = text.indexOf('{')+1;
+		if (start > 0)
+		{
+			int end = text.indexOf('}', start);
+			if (end > -1)
+				return text.substring(start, end);
+		}
+		return text;
+	}
+	
+	/**
+	 * return hour as integer from hh:mm string
+	 */
+	private int [] parseHour(String time)
+	{
+		String [] parts = time.split(":");
+		int [] result = new int [parts.length];
+		for (int i=0; i < parts.length; i++)
+			result[i] = Integer.parseInt(parts[i]);
+		return result;
 	}
 	
 	/**
@@ -254,17 +325,17 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	 */
 	public TimetableEvent(Element table, Timetable timetable, Context context, boolean allowCache, int day)
 	{
-		this(timetable, day);
+		this(day);
 		parseNewHtmlTable(table, context, allowCache, timetable);
 	}
 	
 	/**
 	 * Creates new object by importing data from string
 	 */
-	public TimetableEvent(String importString, Timetable timetable, int day)
+	public TimetableEvent(String importString, int day)
 	{
-		this(timetable, day);
-		importFromString(importString, timetable);
+		this(day);
+		importFromString(importString);
 //		this.duration = this.endTime - this.startTime;
 	}
 	
@@ -302,12 +373,11 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		return false;
 	}
 	
-	void addGroup(String group, Timetable timetable)
+	void addGroup(String group)
 	{
 		if (TextUtils.isEmpty(group) == false && groups.contains(group) == false)
 		{
 			groups.add(group);
-			timetable.addClassGroup(group);
 			groupStr = groupToString();
 		}
 	}
@@ -317,13 +387,17 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		return groupStr;
 	}
 	
-	private void parseType(String s)
+	private ClassType parseType(String s)
 	{
-		if (s.contains("Lecture")) type = ClassType.Lecture;
-		else if (s.contains("Laboratory")) type = ClassType.Laboratory;
-		else if (s.contains("Tutorial")) type = ClassType.Tutorial;
-		else type = ClassType.Other;
-		
+		try
+		{
+			return Enum.valueOf(ClassType.class, s);
+		}
+		catch (IllegalArgumentException e)
+		{
+			e.printStackTrace();
+			return ClassType.Other;
+		}
 	}
 	
 	/**
@@ -335,9 +409,10 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		String uri = String.format(Locale.getDefault(), "?reqtype=eventdetails&eventId=%s%%7C%d", Timetable.getDataset(), id);
 
 		String content = connection.getContent(uri);
-		if (parseAdditionalInfo(content, timetable))
+		if (parseAdditionalInfo(content))
 		{
 			complete = true;
+			updated = true;
 			try
 			{
 				saveAdditionalInfo(context, content);
@@ -353,8 +428,17 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	{
 		return complete;
 	}
+	
+	/**
+	 * Tells whether the event details have just been downloaded
+	 * @return
+	 */
+	public boolean isUpdated()
+	{
+		return updated;
+	}
 
-	private boolean loadAdditionalInfo(Context context, Timetable timetable)
+	public boolean loadAdditionalInfo(Context context, Timetable timetable)
 	{
 		String filename = getFileName();	
 		StringBuffer sb = new StringBuffer();
@@ -387,7 +471,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			return false;
 		}
 		
-		if (parseAdditionalInfo(sb.toString(), timetable))
+		if (parseAdditionalInfo(sb.toString()))
 		{
 			return true;
 		}
@@ -404,61 +488,69 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		file.close();
 	}
 	
+	void setGroups(String groupString)
+	{
+		String [] grps = groupString.split(",");
+		for (String s : grps)
+		{
+			int end = s.indexOf('-');
+			
+			String group = ((end==-1)?s:s.substring(0, end)).trim();
+
+			addGroup(group);
+		}
+	}
+	
 	/**
 	 * parses the additional info page
 	 */
-	private boolean parseAdditionalInfo(String content, Timetable timetable)
+	private boolean parseAdditionalInfo(String content)
 	{
 		if (content == null) return false;
-		Document doc = Jsoup.parse(content);
-		Element table = doc.select("table.eventdetails").first();
-		if (table == null) return false;
-		
-		HashMap<String, String> tableHeaders = new HashMap<String, String>();
-		HashMap<String, String> tableValues = new HashMap<String, String>();
-		
-		Elements headers = table.select("th");		
-		for (Element header : headers)
-		{
-			tableHeaders.put(header.id(), header.text());
-		}
-		headers.clear();
-		
-		Elements values = table.select("td");
-		for (Element value : values)
-		{
-			String val = value.text();
-			if (TextUtils.isEmpty(val)) continue;
-			String h = tableHeaders.get(value.attr("headers"));
-			tableValues.put(h, val);
-		}
-		values.clear();
-		tableHeaders.clear();
-		if (tableValues.size() == 0) return false;
 		
 		try
 		{
-//			name = tableValues.get("Module").trim().replaceFirst("CMPU\\s[\\d]{4}\\s-\\s", "");
-			name = tableValues.get("Module").trim().replaceFirst("[A-Z]{4}\\s[\\d]{4}\\s-\\s", "");
-			String [] grps = tableValues.get("Class Subgroup").split(",");
-			for (String s : grps)
+			Document doc = Jsoup.parse(content);
+			
+			Elements elements = doc.select("th, td");		
+			for (int i=0; i < elements.size(); i++)
 			{
-				int end = s.indexOf('-');
-				
-				String group = ((end==-1)?s:s.substring(0, end)).trim();
-	
-				addGroup(group, timetable);
+				Element element = elements.get(i);
+				if (element.tagName().equalsIgnoreCase("th"))
+				{
+					String headerText = element.text();
+					if (headerText.equals("Class Subgroup"))
+					{
+						setGroups(elements.get(++i).text());
+					} 
+					else if (headerText.equals("Week numbers"))
+					{
+						this.weekRange = elements.get(++i).text();
+						decodeWeeks();
+					}
+					else if (headerText.equals("Lecturer"))
+					{
+						this.lecturer = parseLecturerName(elements.get(++i).text());
+					} 
+				}
 			}
-			weekRange = tableValues.get("Week numbers");
-			decodeWeeks();
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
+			FlurryAgent.onError("parseAdditionalInfo", "TimetableEvent", e);
 			e.printStackTrace();
+			return false;
 		}
-		
-		tableValues.clear();	
 		return true;
+	}
+	
+	private String parseLecturerName(String text)
+	{
+		String [] parts = text.split(" - ");
+		if (parts.length > 1)
+			return parts[1];
+		else 
+			return text;
 	}
 	
 	/** 
@@ -585,7 +677,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	/**
 	 * imports saved event from file
 	 */
-	public void importFromString(String string, Timetable timetable)
+	public void importFromString(String string)
 	{
 		if (TextUtils.isEmpty(string)) 
 		{
@@ -613,7 +705,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 				String [] g = fields[field++].split(GROUP_SEPARATOR);
 				for (String s : g)
 				{
-					addGroup(s, timetable);
+					addGroup(s);
 				}
 			}
 			complete=true;
@@ -628,7 +720,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	
 	public boolean isValid()
 	{
-		return startHour > 0 && endHour > 0;
+		return startHour >= MIN_START_TIME && endHour > startHour;
 	}
 	
 	/**

@@ -222,11 +222,6 @@ public class Timetable implements Serializable
 	
 	boolean disposed=false;
 	
-	/**
-	 * All groups in currently loaded timetable
-	 */
-	Set<String> groupsInTimetable=new HashSet<String>();
-	
 	private String key = getDataset();// "201213";	
 	Date lastUpdated = null;
 	final String logTag = "Timetable";
@@ -284,11 +279,6 @@ public class Timetable implements Serializable
 		this.weeks = weeks;		
 	}
 	
-	void addClassGroup(String groupCode)
-	{
-		groupsInTimetable.add(groupCode);
-	}
-	
 	void clearEvents()
 	{
 		valid=false;
@@ -296,7 +286,6 @@ public class Timetable implements Serializable
 		{
 			days[i].clearEvents();
 		}
-		groupsInTimetable.clear();
 	}
 	
 	public CharSequence describe()
@@ -380,14 +369,14 @@ public class Timetable implements Serializable
 			return false;
 		}
 		
-		if (string.contains(STR_TABLE_GRAPHIC_START) == false)
+		/*if (string.contains(STR_TABLE_GRAPHIC_START) == false)
 		{
 			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.wrongDataReceived);
 			Log.d(logTag, string);
 			return false;
-		}
+		}*/
 		
-		boolean result = parseGraphicStringEx(resultHandler, context, string, false);
+		boolean result = parseGrid(resultHandler, context, string);
 		
 		if (result == true) 
 		{
@@ -542,7 +531,10 @@ public class Timetable implements Serializable
 	
 	public Set<String> getGroupsInTimetable()
 	{
-		return groupsInTimetable;
+		Set<String> groups = new HashSet<String>();
+		for (TimetableDay day : days)
+			day.getGroups(groups);
+		return groups;
 	}
 	
 	public int getNumDays()
@@ -557,10 +549,10 @@ public class Timetable implements Serializable
 	public String getQueryAddress()
 	{
 		if (weekRange == -1) return String.format(Locale.ENGLISH, 
-				"?reqtype=timetable&action=timetable&sKey=%s%%7C%s&sTitle=Computing&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&sWeeks=%s&sType=course&instCode=-2&instName=", 
+				"?reqtype=timetable&action=getgrid&sKey=%s%%7C%s&sTitle=Computing&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&sWeeks=%s&sType=course&instCode=-2&instName=", 
 				key, course, year, weeks);
 		else return String.format(Locale.ENGLISH, 
-				"?reqtype=timetable&action=timetable&sKey=%s%%7C%s&sTitle=Computing&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&weekRange=%d&sType=course&instCode=-2&instName=", 
+				"?reqtype=timetable&action=getgrid&sKey=%s%%7C%s&sTitle=Computing&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&weekRange=%d&sType=course&instCode=-2&instName=", 
 				key, course, year, weekRange);
 	}
 	
@@ -614,7 +606,7 @@ public class Timetable implements Serializable
 		{
 			if (dayId < days.length)
 			{
-				n += days[dayId++].importFromString(d, this);
+				n += days[dayId++].importFromString(d);
 			}
 		}
 		return (n > 0);
@@ -625,74 +617,44 @@ public class Timetable implements Serializable
 		return disposed;
 	}
 	
-	/**
-	 * Parses the new timetables
-	 * @param string html
-	 */
-	public boolean parseGraphicStringEx(ResultHandler resultHandler, Context context, String string, boolean allowCache)
-	{		
-		Document doc = Jsoup.parse(string);
+	public boolean parseGrid(ResultHandler resultHandler, Context context, String html)
+	{
+		// put days in a hashmap
+		Map<String, TimetableDay> days = new HashMap<String, TimetableDay>(7);
+		for (TimetableDay day : this.days)
+			days.put(day.getShortName().toString(), day);
 		
-		Elements topLevel = doc.select("div.highAndWide");
-		Element parentContainer = topLevel.first();
-		
-		List<TimetableDay> days = getDayOrder(doc.select("div#scrollDay").first());
-		
-		if (parentContainer == null || days.isEmpty()) return false;
-		
-		Elements entries = parentContainer.select("div");
-		int max = entries.size()-6, nEvents=0;
-		resultHandler.onProgress(nEvents, max);
-		
+		int numParsedEvents = 0,
+				totalEvents=0;
 		clearEvents();
-		TimetableDay currentDay=null;
-		
-		for (Element entry : entries)
-		{
-			if (disposed) return false;
-			String id = entry.id();
-			if (id.equalsIgnoreCase("r0")) 
-			{
-				currentDay = days.get(DAY_MONDAY);
-			}
-			else if (id.equalsIgnoreCase("r1")) 
-				{
-					currentDay = days.get(DAY_TUESDAY);
-				}
-			else if (id.equalsIgnoreCase("r2")) 
-				{
-					currentDay = days.get(DAY_WEDNESDAY);
-				}
-			else if (id.equalsIgnoreCase("r3")) 
-				{
-					currentDay = days.get(DAY_THURSDAY);
-				}
-			else if (id.equalsIgnoreCase("r4")) 
-				{
-					currentDay = days.get(DAY_FRIDAY);
-				}
-			else if (id.equalsIgnoreCase("r5")) 
-				{
-					currentDay = days.get(DAY_SATURDAY);
-				}
-			else if (currentDay != null)
-			{
-				nEvents += currentDay.parseHtmlEvent(this, entry, context, allowCache);
-				resultHandler.onProgress(nEvents, max);
-			}
-			else
-			{
-				Log.w(logTag, "Event cannot be parsed: "+entry.toString());
-			}
-		}
+				
+		Document document = Jsoup.parse(html);
+		Elements gridRows = document.select("table.gridTable tr");
+		if (gridRows == null || gridRows.isEmpty()) return false;
+		totalEvents = gridRows.size();
+		resultHandler.onProgress(0, totalEvents);
 
-		valid=(nEvents > 0);
-		
-		for (TimetableDay day : days)
+		int currentRow=0;
+		for (Element row : gridRows)
 		{
-			day.sortEvents();
+			Elements columns = row.select("td.gridData");
+			resultHandler.onProgress(++currentRow, totalEvents);
+			if (columns.isEmpty()) continue;
+			String day = columns.get(TimetableEvent.GRID_DAY).text();
+			TimetableDay tDay = days.get(day);
+			if (tDay != null)
+			{
+				if (tDay.parseGridRow(this, columns, context))
+					numParsedEvents++;
+			}
 		}
+		
+		for (TimetableDay day : this.days)
+			day.sortEvents();
+		
+		valid = (numParsedEvents > 0);
 		return valid;
+		
 	}
 	
 	public Map<String,String> ToHashMap()
@@ -703,10 +665,6 @@ public class Timetable implements Serializable
 		result.put("Week range", this.weeks);
 		
 		StringBuilder groups = new StringBuilder();
-		for (String group : groupsInTimetable)
-		{
-			if (settings.getHiddenGroups().contains(group) == false) groups.append(group).append(',');
-		}
 		result.put("groups", groups.toString());
 		
 		result.put("username", settings.getUsername());

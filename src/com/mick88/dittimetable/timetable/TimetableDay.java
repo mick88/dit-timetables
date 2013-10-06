@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import android.content.Context;
 
@@ -36,7 +37,10 @@ public class TimetableDay implements Serializable
 	
 	public void clearEvents()
 	{
-		events.clear();
+		synchronized (events)
+		{
+			events.clear();
+		}
 	}
 	
 	public void sortEvents()
@@ -80,6 +84,12 @@ public class TimetableDay implements Serializable
 		return events;
 	}
 	
+	public void getGroups(Set<String> groupSet)
+	{
+		for (TimetableEvent event : events)
+			groupSet.addAll(event.getGroups());
+	}
+	
 	/**
 	 * Get Set of lectures at this time
 	 * @return
@@ -111,17 +121,19 @@ public class TimetableDay implements Serializable
 		return new StringBuilder(start).append(" - ").append(end);
 	}
 	
-	public int parseHtmlEvent(Timetable timetable, Element element, Context context, boolean allowCache)
+	public boolean parseGridRow(Timetable timetable, Elements gridCols, Context context)
 	{
-		int n=0;
-		TimetableEvent c = new TimetableEvent(element, timetable, context, allowCache, id);
-		if (c.isValid() /*&& c.isGroup(timetable.getHiddenGroups())*/) 
+		TimetableEvent event = new TimetableEvent(this.id, gridCols);
+		if (event.isValid())
 		{
-			addClass(c);
-			n++;
+			if (event.loadAdditionalInfo(context, timetable) == false)
+				event.downloadAdditionalInfo(context, timetable);
+			
+			addClass(event);
+			return true;
 		}
-
-		return n;
+		else 
+			return false;
 	}
 	
 	
@@ -169,13 +181,13 @@ public class TimetableDay implements Serializable
 		return builder;
 	}
 	
-	public int importFromString(String string, Timetable timetable)
+	public int importFromString(String string)
 	{
 		int n=0;
 		String [] events = string.split(EXPORT_DAY_SEPARATOR);
 		for (String eventString : events)
 		{
-			TimetableEvent event = new TimetableEvent(eventString, timetable, id);
+			TimetableEvent event = new TimetableEvent(eventString, id);
 			if (event.isValid() /*&& event.isGroup(timetable.hiddenGroups)*/)
 			{
 				n++;
@@ -261,12 +273,18 @@ public class TimetableDay implements Serializable
 		return entries;
 	}
 	
+	/**
+	 * Download details of events that are outdated
+	 */
 	public void downloadAdditionalInfo(Context context, Timetable timetable)
 	{
-		for (TimetableEvent event : events) if (event.isComplete() == false)
+		synchronized (events)
 		{
-			if (timetable.isDisposed()) break;
-			event.downloadAdditionalInfo(context, timetable);
+			for (TimetableEvent event : events) if (event.isUpdated() == false)
+			{
+				if (timetable.isDisposed()) break;
+				event.downloadAdditionalInfo(context, timetable);
+			}
 		}
 	}
 	
