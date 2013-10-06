@@ -11,6 +11,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import com.mick88.dittimetable.web.Connection;
 import com.mick88.dittimetable.web.Cookie;
 
 public class HttpUtils
@@ -29,6 +30,7 @@ public class HttpUtils
 		
 		HttpGet get = new HttpGet(query);
 		get.setHeader("Cookie", cookie.toString());
+		get.setHeader("User-Agent", Connection.USER_AGENT);
 		HttpResponse response = httpClient.execute(get);
 		InputStream stream = response.getEntity().getContent();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
