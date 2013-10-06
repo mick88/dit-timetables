@@ -194,7 +194,7 @@ public class PdfDownloaderService extends Service
 		while ((count = inStream.read(data)) != -1)
 		{
 			total += count;
-			outStream.write(data);
+			outStream.write(data, 0,  count);
 		}
 		outStream.flush();
 		outStream.close();
