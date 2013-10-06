@@ -719,7 +719,8 @@ public class Timetable implements Serializable
 		for (TimetableDay day : this.days)
 			day.sortEvents();
 		
-		return numParsedEvents > 0;
+		valid = (numParsedEvents > 0);
+		return valid;
 		
 	}
 	
