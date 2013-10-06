@@ -131,16 +131,7 @@ public class PdfDownloaderService extends Service
 				
 				if (result != null)
 				{
-					Intent intent = new Intent(Intent.ACTION_VIEW);
-					intent.setData(Uri.fromFile(result));
-					Builder builder = new Builder(getApplicationContext())
-						.setSmallIcon(R.drawable.ic_notification_download)
-						.setTicker("Timetable downloaded")
-						.setContentIntent(PendingIntent.getActivity(getApplicationContext(), NOTIFICATION_ID, intent, 0))
-						.setContentTitle("Dit Timetables")
-						.setContentText("Timetable downloaded");
-					NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-					notificationManager.notify(NOTIFICATION_ID, builder.build());
+					onPdfDownloaded(result);
 				}
 				else
 				{
@@ -157,6 +148,20 @@ public class PdfDownloaderService extends Service
 			}
 			
 		}.execute(timetable);
+	}
+	
+	void onPdfDownloaded(File pdfFile)
+	{
+		Intent intent = new Intent(Intent.ACTION_VIEW);
+		intent.setData(Uri.fromFile(pdfFile));
+		Builder builder = new Builder(getApplicationContext())
+			.setSmallIcon(R.drawable.ic_notification_download)
+			.setTicker("Timetable downloaded")
+			.setContentIntent(PendingIntent.getActivity(getApplicationContext(), NOTIFICATION_ID, intent, 0))
+			.setContentTitle("Dit Timetables")
+			.setContentText("Timetable downloaded");
+		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.notify(NOTIFICATION_ID, builder.build());
 	}
 	
 	private int downloadFile(String url, File outputFile, onDownloadProgressListener progressListener) throws IOException
