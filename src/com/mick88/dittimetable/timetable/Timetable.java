@@ -405,38 +405,42 @@ public class Timetable implements Serializable
 		return result;
 	}
 	
-	public void downloadPdf(Context context, ResultHandler resultHandler)
+	/**
+	 * Fetch page with url to the pdf and retrn url
+	 * @return
+	 */
+	public String getPdfUrl()
 	{
-		String weeksStr;
-		if (weeks.equals(SEMESTER_1)) weeksStr = "S1";
-		else if (weeks.equals(SEMESTER_2)) weeksStr = "S2";
-		else weeksStr = "W"+weeks;
-		String filename = String.format(Locale.getDefault(), "Timetable_%s-%d_%s.pdf", course, year, weeksStr);
-		
-		Log.d(logTag, "Downloading PDF file: "+filename);
-
 		String query = String.format(Locale.getDefault(), 
 				"?reqtype=timetablepdf&sKey=%s%%7C%s&sTitle=DIT&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&sWeeks=%s&sType=course&instCode=-2&instName=",
 				key, course, year, weeks);
-		Log.d(logTag, "Getting content with file address:");
-		
 		String string = connection.getContent(query);
-		if (string == null) 
-		{
-			resultHandler.onDownloadPdfStarted(false);
-			return;
-		}
+		if (TextUtils.isEmpty(string)) 
+			return null;
 		
 		Elements elements = Jsoup.parse(string).select("a[href$=.pdf]");
 		Element pdfLink = elements.first();
 		
-		if (pdfLink == null)
-		{
-			resultHandler.onDownloadPdfStarted(false);
-			return;
-		}
+		return  Connection.ROOT_ADDRESS_PDF + pdfLink.attr("href");
+	}
+	
+	/**
+	 * Generate filename for downloaded PDF
+	 */
+	public String getPdfFileName()
+	{
+		final String weeksStr;
+		if (weeks.equals(SEMESTER_1)) weeksStr = "S1";
+		else if (weeks.equals(SEMESTER_2)) weeksStr = "S2";
+		else weeksStr = "W"+weeks;
 		
-		String address = Connection.ROOT_ADDRESS_PDF + pdfLink.attr("href");
+		return String.format(Locale.getDefault(), "Timetable_%s-%d_%s.pdf", course, year, weeksStr);
+	}
+	
+	public void downloadPdf(Context context, ResultHandler resultHandler)
+	{		
+		String address = getPdfUrl();
+		String filename = getPdfFileName();
 		
 		try
 		{
