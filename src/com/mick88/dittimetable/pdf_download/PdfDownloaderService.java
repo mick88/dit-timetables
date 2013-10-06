@@ -156,7 +156,7 @@ public class PdfDownloaderService extends Service
 			.setType(ACCEPTED_TYPE)
 			.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(pdfFile))
 			.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		PendingIntent sharePendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, shareIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent sharePendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, Intent.createChooser(shareIntent, "Share timetable PDF"), PendingIntent.FLAG_UPDATE_CURRENT);
 		
 		Intent intent = new Intent(Intent.ACTION_VIEW);
 		intent.setData(Uri.fromFile(pdfFile));
