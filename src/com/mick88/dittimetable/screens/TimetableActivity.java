@@ -44,11 +44,11 @@ import com.mick88.dittimetable.swipable_tabs.TimetablePageAdapter;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.Timetable.ErrorCode;
 import com.mick88.dittimetable.utils.FontApplicator;
-import com.mick88.dittimetable.web.Connection;
 
 public class TimetableActivity extends ActionBarActivity 
 									implements Timetable.ResultHandler, GroupSelectionListener, TabListener
 {
+	public static final String EXTRA_ERROR_MESSAGE = "pdf_error_message";
 	final int SETTINGS_REQUEST_CODE = 1;
 	public static final String EXTRA_TIMETABLE = "timetable";
 	
@@ -179,6 +179,16 @@ public class TimetableActivity extends ActionBarActivity
 		Intent intent = getIntent();
 
 		Uri address = intent.getData();
+		
+		Bundle extras = intent.getExtras();
+		if (extras != null && extras.containsKey(EXTRA_ERROR_MESSAGE))
+		{
+			new AlertDialog.Builder(this)
+				.setTitle("Error")
+				.setMessage(extras.getString(EXTRA_ERROR_MESSAGE))
+				.setPositiveButton(android.R.string.ok, null)
+				.show();
+		}
 
 		if (address != null && address.getHost().equalsIgnoreCase("www.dit.ie"))
 		{

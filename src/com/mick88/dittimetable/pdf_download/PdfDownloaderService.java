@@ -36,6 +36,7 @@ import com.mick88.dittimetable.web.Connection;
 
 public class PdfDownloaderService extends Service
 {
+	private static final int INTENT_ID_ERRORMSG = 2;
 	private static final int INTENT_ID_SHARE_URL = 1;
 	private static final int INTENT_ID_SHARE_PDF = 0;
 	private static final String ACCEPTED_TYPE = "application/pdf";	
@@ -75,7 +76,7 @@ public class PdfDownloaderService extends Service
 					.setTicker(getString(R.string.downloading_timetable_))
 					.setContentTitle(getString(R.string.dit_timetables))
 					.setProgress(100, 0, true)
-					.setContentIntent(PendingIntent.getActivity(getApplicationContext(), 30, new Intent(getApplicationContext(), TimetableActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
+					.setContentIntent(PendingIntent.getActivity(getApplicationContext(), INTENT_ID_ERRORMSG, new Intent(getApplicationContext(), TimetableActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
 					.setContentText(getString(R.string.downloading_timetable_));
 				startForeground(NOTIFICATION_ID, progressNotification.build());
 			}
@@ -143,11 +144,15 @@ public class PdfDownloaderService extends Service
 	
 	void showErrorNotification(String message)
 	{
+		Intent intent = new Intent(getApplicationContext(), TimetableActivity.class)
+			.putExtra(TimetableActivity.EXTRA_ERROR_MESSAGE, message)
+			.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
 		Builder builder = new Builder(getApplicationContext())
 			.setSmallIcon(R.drawable.ic_notification_download)
 			.setContentTitle(getString(R.string.dit_timetables))
 			.setTicker(getString(R.string.pdf_download_error_))
-			.setContentIntent(PendingIntent.getActivity(getApplicationContext(), 30, new Intent(getApplicationContext(), TimetableActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
+			.setContentIntent(PendingIntent.getActivity(getApplicationContext(), INTENT_ID_ERRORMSG, intent, PendingIntent.FLAG_UPDATE_CURRENT))
 			.setContentText(message);
 		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.notify(NOTIFICATION_ID, builder.build());
