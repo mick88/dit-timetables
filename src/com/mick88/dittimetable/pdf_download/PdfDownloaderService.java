@@ -36,6 +36,7 @@ import com.mick88.dittimetable.web.Connection;
 
 public class PdfDownloaderService extends Service
 {
+	private static final int INTENT_ID_VIEW_PDF = 3;
 	private static final int INTENT_ID_ERRORMSG = 2;
 	private static final int INTENT_ID_SHARE_URL = 1;
 	private static final int INTENT_ID_SHARE_PDF = 0;
@@ -179,7 +180,7 @@ public class PdfDownloaderService extends Service
 		Builder builder = new Builder(getApplicationContext())
 			.setSmallIcon(R.drawable.ic_notification_download)
 			.setTicker(getString(R.string.timetable_pdf_downloaded))
-			.setContentIntent(PendingIntent.getActivity(getApplicationContext(), NOTIFICATION_ID, intent, 0))
+			.setContentIntent(PendingIntent.getActivity(getApplicationContext(), INTENT_ID_VIEW_PDF, intent, 0))
 			.setContentTitle(getString(R.string.dit_timetables))
 			.addAction(R.drawable.ic_notification_share, getString(R.string.share_pdf), sharePendingIntent)
 			.addAction(R.drawable.ic_notification_share_url, getString(R.string.share_url), shareUrlPendingIntent)
