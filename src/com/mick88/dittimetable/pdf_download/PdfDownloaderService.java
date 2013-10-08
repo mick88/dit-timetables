@@ -92,7 +92,7 @@ public class PdfDownloaderService extends Service
 			{
 				if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) == false)
 				{
-					publishProgress(new RuntimeException("External storage not detected!"));
+					publishProgress(new IOException("External storage not detected!"));
 				}
 				
 				Timetable timetable = params[0];
