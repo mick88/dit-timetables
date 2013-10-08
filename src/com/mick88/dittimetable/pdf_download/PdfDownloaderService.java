@@ -29,12 +29,15 @@ import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.screens.TimetableActivity;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.utils.HttpUtils;
 import com.mick88.dittimetable.web.Connection;
 
 public class PdfDownloaderService extends Service
 {
+	private static final int INTENT_ID_VIEW_PDF = 3;
+	private static final int INTENT_ID_ERRORMSG = 2;
 	private static final int INTENT_ID_SHARE_URL = 1;
 	private static final int INTENT_ID_SHARE_PDF = 0;
 	private static final String ACCEPTED_TYPE = "application/pdf";	
@@ -74,6 +77,7 @@ public class PdfDownloaderService extends Service
 					.setTicker(getString(R.string.downloading_timetable_))
 					.setContentTitle(getString(R.string.dit_timetables))
 					.setProgress(100, 0, true)
+					.setContentIntent(PendingIntent.getActivity(getApplicationContext(), INTENT_ID_ERRORMSG, new Intent(getApplicationContext(), TimetableActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
 					.setContentText(getString(R.string.downloading_timetable_));
 				startForeground(NOTIFICATION_ID, progressNotification.build());
 			}
@@ -88,10 +92,17 @@ public class PdfDownloaderService extends Service
 			@Override
 			protected File doInBackground(Timetable... params)
 			{
+				if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) == false)
+				{
+					publishProgress(new IOException("External storage not detected!"));
+				}
+				
 				Timetable timetable = params[0];
 				url = timetable.getPdfUrl();
 				String filename = timetable.getPdfFileName();
 				File folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+				if (folder.exists() == false)
+					folder.mkdirs();
 				File file = new File(folder, filename);
 				try
 				{
@@ -133,10 +144,15 @@ public class PdfDownloaderService extends Service
 	
 	void showErrorNotification(String message)
 	{
+		Intent intent = new Intent(getApplicationContext(), TimetableActivity.class)
+			.putExtra(TimetableActivity.EXTRA_ERROR_MESSAGE, message)
+			.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+
 		Builder builder = new Builder(getApplicationContext())
 			.setSmallIcon(R.drawable.ic_notification_download)
 			.setContentTitle(getString(R.string.dit_timetables))
 			.setTicker(getString(R.string.pdf_download_error_))
+			.setContentIntent(PendingIntent.getActivity(getApplicationContext(), INTENT_ID_ERRORMSG, intent, PendingIntent.FLAG_UPDATE_CURRENT))
 			.setContentText(message);
 		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.notify(NOTIFICATION_ID, builder.build());
@@ -163,7 +179,7 @@ public class PdfDownloaderService extends Service
 		Builder builder = new Builder(getApplicationContext())
 			.setSmallIcon(R.drawable.ic_notification_download)
 			.setTicker(getString(R.string.timetable_pdf_downloaded))
-			.setContentIntent(PendingIntent.getActivity(getApplicationContext(), NOTIFICATION_ID, intent, 0))
+			.setContentIntent(PendingIntent.getActivity(getApplicationContext(), INTENT_ID_VIEW_PDF, intent, 0))
 			.setContentTitle(getString(R.string.dit_timetables))
 			.addAction(R.drawable.ic_notification_share, getString(R.string.share_pdf), sharePendingIntent)
 			.addAction(R.drawable.ic_notification_share_url, getString(R.string.share_url), shareUrlPendingIntent)
