@@ -106,8 +106,9 @@ public class PdfDownloaderService extends Service
 				{
 					if (downloadFile(url, file) == 0)
 						throw new Exception("Received stream is empty");
+					else publishProgress(new Exception("Test error message"));
 					
-					return file;
+					return null;
 				} 
 				catch (Exception e)
 				{
