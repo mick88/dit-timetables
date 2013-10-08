@@ -29,6 +29,7 @@ import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.screens.TimetableActivity;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.utils.HttpUtils;
 import com.mick88.dittimetable.web.Connection;
@@ -74,6 +75,7 @@ public class PdfDownloaderService extends Service
 					.setTicker(getString(R.string.downloading_timetable_))
 					.setContentTitle(getString(R.string.dit_timetables))
 					.setProgress(100, 0, true)
+					.setContentIntent(PendingIntent.getActivity(getApplicationContext(), 30, new Intent(getApplicationContext(), TimetableActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
 					.setContentText(getString(R.string.downloading_timetable_));
 				startForeground(NOTIFICATION_ID, progressNotification.build());
 			}
@@ -137,6 +139,7 @@ public class PdfDownloaderService extends Service
 			.setSmallIcon(R.drawable.ic_notification_download)
 			.setContentTitle(getString(R.string.dit_timetables))
 			.setTicker(getString(R.string.pdf_download_error_))
+			.setContentIntent(PendingIntent.getActivity(getApplicationContext(), 30, new Intent(getApplicationContext(), TimetableActivity.class), PendingIntent.FLAG_UPDATE_CURRENT))
 			.setContentText(message);
 		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		notificationManager.notify(NOTIFICATION_ID, builder.build());
