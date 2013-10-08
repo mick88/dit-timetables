@@ -90,6 +90,11 @@ public class PdfDownloaderService extends Service
 			@Override
 			protected File doInBackground(Timetable... params)
 			{
+				if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) == false)
+				{
+					publishProgress(new RuntimeException("External storage not detected!"));
+				}
+				
 				Timetable timetable = params[0];
 				url = timetable.getPdfUrl();
 				String filename = timetable.getPdfFileName();
