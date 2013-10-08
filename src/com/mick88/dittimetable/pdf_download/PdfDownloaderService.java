@@ -99,6 +99,8 @@ public class PdfDownloaderService extends Service
 				url = timetable.getPdfUrl();
 				String filename = timetable.getPdfFileName();
 				File folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+				if (folder.exists() == false)
+					folder.mkdirs();
 				File file = new File(folder, filename);
 				try
 				{
