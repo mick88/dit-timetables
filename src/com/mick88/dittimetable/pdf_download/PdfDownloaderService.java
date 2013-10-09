@@ -16,6 +16,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import android.annotation.TargetApi;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -23,6 +24,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat.Builder;
@@ -55,6 +57,17 @@ public class PdfDownloaderService extends Service
 				downloadPdf((Timetable) t);
 		}
 		return START_STICKY;
+	}
+	
+	@TargetApi(Build.VERSION_CODES.FROYO)
+	static File getDownloadsDir()
+	{
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO)
+		{
+			return new File(Environment.getExternalStorageDirectory(), "download");
+		}
+		else return 
+				Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
 	}
 	
 	@Override
@@ -100,7 +113,7 @@ public class PdfDownloaderService extends Service
 				Timetable timetable = params[0];
 				url = timetable.getPdfUrl();
 				String filename = timetable.getPdfFileName();
-				File folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+				File folder = getDownloadsDir();
 				if (folder.exists() == false)
 					folder.mkdirs();
 				File file = new File(folder, filename);
