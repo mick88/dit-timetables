@@ -111,7 +111,15 @@ public class PdfDownloaderService extends Service
 				}
 				
 				Timetable timetable = params[0];
-				url = timetable.getPdfUrl();
+				try
+				{
+					url = timetable.getPdfUrl();
+				}
+				catch (Exception e)
+				{
+					publishProgress(new IOException("Server not responding"));
+					return null;
+				}
 				String filename = timetable.getPdfFileName();
 				File folder = getDownloadsDir();
 				if (folder.exists() == false)
