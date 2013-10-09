@@ -287,8 +287,16 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		this.endMin = time[1];
 		
 		this.room = parseRooms(columns.get(GRID_ROOM).text());
-		this.name = stripCurlyBraces(columns.get(GRID_MODULE_NAME).text());
+		this.name = parseModuleName(columns.get(GRID_MODULE_NAME).text());
 		this.type = parseType(columns.get(GRID_EVENT_TYPE).text());
+	}
+	
+	private String parseModuleName(String s)
+	{
+		String stripped = stripCurlyBraces(s);
+		String [] parts = stripped.split(",");
+		if (parts.length == 0) return s;
+		else return parts[0];
 	}
 	
 	private String parseRooms(String text)
