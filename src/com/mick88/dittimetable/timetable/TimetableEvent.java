@@ -548,7 +548,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	{
 		String [] parts = text.split(" - ");
 		if (parts.length > 1)
-			return parts[1];
+			return parts[parts.length - 1];
 		else 
 			return text;
 	}
