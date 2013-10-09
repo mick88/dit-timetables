@@ -64,7 +64,7 @@ public class PdfDownloaderService extends Service
 	{
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO)
 		{
-			return new File(Environment.getExternalStorageDirectory(), "download");
+			return new File(Environment.getExternalStorageDirectory(), "Download");
 		}
 		else return 
 				Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
