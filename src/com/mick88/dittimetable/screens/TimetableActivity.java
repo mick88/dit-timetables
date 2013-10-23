@@ -74,16 +74,9 @@ public class TimetableActivity extends ActionBarActivity
 	
 	final private Handler uiHandler = new Handler();
 	
-	void toast(final CharSequence message)
+	void toast(CharSequence message)
 	{
-		uiHandler.post(new Runnable()
-		{			
-			@Override
-			public void run()
-			{
-				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();				
-			}
-		});
+		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 	}
 	
 	private Timer timedUpdateTimer = null;
