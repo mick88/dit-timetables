@@ -49,8 +49,33 @@ import com.mick88.dittimetable.timetable.TimetableDownloader.TimetableDownloadLi
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class TimetableActivity extends ActionBarActivity 
-									implements GroupSelectionListener, TabListener
+									implements GroupSelectionListener, TabListener, TimetableDownloadListener
 {
+	private static class RetainedConfiguration
+	{
+		final TimetableDownloader downloader;
+		final Timetable timetable;
+
+		private RetainedConfiguration(TimetableDownloader downloader, Timetable timetable)
+		{
+			super();
+			this.timetable = timetable;
+			this.downloader = downloader;
+			if (downloader != null)
+				downloader.setTimetableDownloadListener(null);
+		}
+		
+		public TimetableDownloader getDownloader()
+		{
+			return downloader;
+		}
+		
+		public Timetable getTimetable()
+		{
+			return timetable;
+		}
+	}	
+	
 	public static final String EXTRA_ERROR_MESSAGE = "pdf_error_message";
 	final int SETTINGS_REQUEST_CODE = 1;
 	public static final String EXTRA_TIMETABLE = "timetable";
@@ -80,43 +105,48 @@ public class TimetableActivity extends ActionBarActivity
 	}
 	
 	private Timer timedUpdateTimer = null;
+	private TimetableDownloader timetableDownloader;
        
     void downloadTimetable()
     {
-    	showProgressPopup("Downloading timetable...");
-    	TimetableDownloader timetableDownloader = new TimetableDownloader(getApplicationContext(), timetable).setTimetableDownloadListener(new TimetableDownloadListener()
-		{
-			
-			@Override
-			public void onTimetableDownloaded(Timetable timetable,
-					RuntimeException exception)
-			{
-				dismissProgresPopup();
-				if (exception == null)
-				{
-					refresh();
-				}
-				else if (exception instanceof Exceptions.SettingsEmptyException)
-				{
-					showSettingsScreen(false);
-				}
-				else
-				{
-					new AlertDialog.Builder(TimetableActivity.this)
-						.setMessage(exception.getMessage())
-						.setPositiveButton(android.R.string.ok, null)
-						.show();
-				}
-			}
-			
-			@Override
-			public void onDownloadProgress(int progress, int max)
-			{
-				onProgress(progress, max);
-			}
-		});
+    	showDownloadProgress();
+    	timetableDownloader = new TimetableDownloader(getApplicationContext(), timetable).setTimetableDownloadListener(this);
     	timetableDownloader.execute();
     }
+    
+    void showDownloadProgress()
+    {
+    	showProgressPopup("Downloading timetable...");
+    }
+    
+	@Override
+	public void onTimetableDownloaded(Timetable timetable,
+			RuntimeException exception)
+	{
+		dismissProgresPopup();
+		timetableDownloader = null;
+		if (exception == null)
+		{
+			refresh();
+		}
+		else if (exception instanceof Exceptions.SettingsEmptyException)
+		{
+			showSettingsScreen(false);
+		}
+		else
+		{
+			new AlertDialog.Builder(TimetableActivity.this)
+				.setMessage(exception.getMessage())
+				.setPositiveButton(android.R.string.ok, null)
+				.show();
+		}
+	}
+	
+	@Override
+	public void onDownloadProgress(int progress, int max)
+	{
+		onProgress(progress, max);
+	}
     
     public void setTitle()
     {
@@ -256,13 +286,29 @@ public class TimetableActivity extends ActionBarActivity
 		fontApplicator.applyFont(getWindow().getDecorView());
 		application = (TimetableApp) getApplication();
 		
+		Object retainedInstance = getLastCustomNonConfigurationInstance();
+		if (retainedInstance instanceof RetainedConfiguration)
+		{
+			RetainedConfiguration configuration = (RetainedConfiguration) retainedInstance;
+			this.timetable = configuration.getTimetable();
+			TimetableDownloader downloader = configuration.getDownloader();
+			if (downloader != null)
+			{
+				showDownloadProgress();
+				downloader.setTimetableDownloadListener(this);
+			}
+			
+		}
 		if (savedInstanceState != null)
 		{
-			Object extraTimetable = savedInstanceState.getSerializable(EXTRA_TIMETABLE);
-			if (extraTimetable instanceof Timetable)
+			if (timetable == null)
 			{
-				this.timetable = (Timetable) extraTimetable;
-				refresh();
+				Object extraTimetable = savedInstanceState.getSerializable(EXTRA_TIMETABLE);
+				if (extraTimetable instanceof Timetable)
+				{
+					this.timetable = (Timetable) extraTimetable;
+					refresh();
+				}
 			}
 		}
 		else processIntent();
@@ -455,6 +501,12 @@ public class TimetableActivity extends ActionBarActivity
 			dialog.setGroups(gArray, hiddenGroups);
 			dialog.show(getSupportFragmentManager(), "GroupSelector");
 		}
+	}
+	
+	@Override
+	public Object onRetainCustomNonConfigurationInstance()
+	{
+		return new RetainedConfiguration(timetableDownloader, this.timetable);
 	}
 	
 	@Override
@@ -662,7 +714,7 @@ public class TimetableActivity extends ActionBarActivity
 	public void onProgress(final int position, final int max)
 	{
 		Log.d(logTag, "Progress update "+String.valueOf(position)+"/"+String.valueOf(max));
-		if (progressDialog == null) showProgressPopup("Downloading timetable...");
+		if (progressDialog == null) showDownloadProgress();
 		if (max >= position)
 		{
 			if (progressDialog != null)
