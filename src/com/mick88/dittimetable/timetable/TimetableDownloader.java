@@ -139,6 +139,7 @@ public abstract class TimetableDownloader extends AsyncTask<Void, Integer, Runti
 				for (TimetableEvent event : day.events)
 				{
 					if (isCancelled()) break;
+					if (event.isUpdated()) continue;
 					try
 					{
 						downloadAdditionalInfo(event);
