@@ -190,8 +190,7 @@ public abstract class TimetableDownloader extends AsyncTask<Void, Integer, Runti
 		{			
 				try
 				{
-					if (loadAdditionalInfo(event) == false)
-						downloadAdditionalInfo(event);
+					downloadAdditionalInfo(event);
 					day.addClass(event);
 					return true;
 				} catch (IOException e)
