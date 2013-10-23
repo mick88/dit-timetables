@@ -19,6 +19,7 @@ import android.util.Log;
 
 import com.flurry.android.FlurryAgent;
 import com.mick88.dittimetable.AppSettings;
+import com.mick88.dittimetable.timetable.Exceptions.ServerConnectionException;
 import com.mick88.dittimetable.web.Connection;
 
 public abstract class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeException>
@@ -87,7 +88,20 @@ public abstract class TimetableDownloader extends AsyncTask<Void, Integer, Runti
 
 		String query = getQueryAddress(timetable);
 		
-		String string = connection.getContent(query);
+		String string;
+		try
+		{
+			string = connection.getContent(query);
+		} 
+		catch (ServerConnectionException e)
+		{
+			throw new Exceptions.TimetableException(e.toString());
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			throw new Exceptions.ServerConnectionException();
+		}
 		
 		if (string == null)
 			throw new Exceptions.ServerConnectionException();
@@ -125,7 +139,14 @@ public abstract class TimetableDownloader extends AsyncTask<Void, Integer, Runti
 				for (TimetableEvent event : day.events)
 				{
 					if (isCancelled()) break;
-					downloadAdditionalInfo(event);
+					try
+					{
+						downloadAdditionalInfo(event);
+					} catch (IOException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 			
@@ -138,8 +159,9 @@ public abstract class TimetableDownloader extends AsyncTask<Void, Integer, Runti
 	
 	/**
 	 * Loads additional information about event from web timetables.
+	 * @throws IOException 
 	 */
-	public void downloadAdditionalInfo(TimetableEvent event)
+	public void downloadAdditionalInfo(TimetableEvent event) throws IOException
 	{
 		Connection connection = timetable.getConnection();
 		String uri = String.format(Locale.getDefault(), "?reqtype=eventdetails&eventId=%s%%7C%d", TimetableDownloader.getDataset(), event.id);
@@ -164,12 +186,21 @@ public abstract class TimetableDownloader extends AsyncTask<Void, Integer, Runti
 	{
 		TimetableEvent event = new TimetableEvent(day.id, gridCols);
 		if (event.isValid())
-		{
-			if (loadAdditionalInfo(event) == false)
-				downloadAdditionalInfo(event);
+		{			
+				try
+				{
+					if (loadAdditionalInfo(event) == false)
+						downloadAdditionalInfo(event);
+					day.addClass(event);
+					return true;
+				} catch (IOException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					return false;
+				}
 			
-			day.addClass(event);
-			return true;
+			
 		}
 		else 
 			return false;

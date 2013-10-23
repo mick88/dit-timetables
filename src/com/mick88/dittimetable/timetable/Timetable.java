@@ -268,8 +268,9 @@ public class Timetable implements Serializable
 	/**
 	 * Fetch page with url to the pdf and retrn url
 	 * @return
+	 * @throws IOException 
 	 */
-	public String getPdfUrl()
+	public String getPdfUrl() throws IOException
 	{
 		String query = String.format(Locale.getDefault(), 
 				"?reqtype=timetablepdf&sKey=%s%%7C%s&sTitle=DIT&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&sWeeks=%s&sType=course&instCode=-2&instName=",

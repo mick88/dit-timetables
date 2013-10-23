@@ -1,5 +1,6 @@
 package com.mick88.dittimetable.web;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -99,23 +100,13 @@ public class Connection implements Serializable
 		}
 	}
 	
-	public String getContent(String address)
+	public String getContent(String address) throws IOException
 	{
 		if (cookie == null || cookie.isValid() == false) logIn();
 		String query = WEBSITE_ADDRESS+address;
 		Log.d(logName, "Query addr: "+query);		
 		
-		try
-		{
-			return HttpUtils.get(query, cookie);
-			
-		} 
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return null;
-		} 		
-		
+		return HttpUtils.get(query, cookie);
 	}
 	
 	
