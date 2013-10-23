@@ -22,13 +22,51 @@ import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.timetable.Exceptions.ServerConnectionException;
 import com.mick88.dittimetable.web.Connection;
 
-public abstract class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeException>
+public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeException>
 {
+	public static interface TimetableDownloadListener
+	{
+		void onTimetableDownloaded(Timetable timetable, RuntimeException exception);
+		void onDownloadProgress(int progress, int max);
+	}
+	
+	private static class DownloadStateSaver implements TimetableDownloadListener
+	{
+		RuntimeException exception;
+		Timetable timetable;
+		int progress, maxProgress;
+		
+		@Override
+		public void onTimetableDownloaded(Timetable timetable,
+				RuntimeException exception)
+		{
+			this.exception = exception;
+			this.timetable = timetable;
+		}
+
+		@Override
+		public void onDownloadProgress(int progress, int max)
+		{
+			this.progress = progress;
+			this.maxProgress = max;			
+		}
+		
+		// update another listener with saved data
+		void readState(TimetableDownloadListener listener)
+		{
+			if (timetable != null)
+				listener.onTimetableDownloaded(timetable, exception);
+			else if (maxProgress > 0)
+				listener.onDownloadProgress(progress, maxProgress);
+		}
+	}
+	
 	private static final String logTag = "TimetableDownloader";
 	final Connection connection;
 	final AppSettings appSettings;
 	final Timetable timetable;
 	final Context context;
+	TimetableDownloadListener timetableDownloadListener = new DownloadStateSaver();
 	
 	public TimetableDownloader(Context context,	Timetable timetable)
 	{
@@ -44,6 +82,21 @@ public abstract class TimetableDownloader extends AsyncTask<Void, Integer, Runti
 		this.appSettings = appSettings;
 		this.timetable = new Timetable(appSettings);
 		this.context = context;
+	}
+	
+	public TimetableDownloader setTimetableDownloadListener(
+			TimetableDownloadListener timetableDownloadListener)
+	{
+		if (timetableDownloadListener == null)
+			this.timetableDownloadListener = new DownloadStateSaver();
+		else
+		{
+			if (this.timetableDownloadListener instanceof DownloadStateSaver)
+				((DownloadStateSaver) this.timetableDownloadListener).readState(timetableDownloadListener);
+			this.timetableDownloadListener = timetableDownloadListener;
+		}
+		
+		return this;		
 	}
 	
 	/** 
@@ -355,7 +408,7 @@ public abstract class TimetableDownloader extends AsyncTask<Void, Integer, Runti
 	protected void onPostExecute(RuntimeException result)
 	{
 		super.onPostExecute(result);
-		onTimetableDownloaded(timetable, result);
+		timetableDownloadListener.onTimetableDownloaded(timetable, result);
 	}
 	
 	@Override
@@ -363,9 +416,6 @@ public abstract class TimetableDownloader extends AsyncTask<Void, Integer, Runti
 	{
 		super.onProgressUpdate(values);
 		if (values.length > 1)
-			onDownloadProgress(values[0], values[1]);
+			timetableDownloadListener.onDownloadProgress(values[0], values[1]);
 	}
-	
-	protected abstract void onTimetableDownloaded(Timetable timetable, RuntimeException exception);
-	protected abstract void onDownloadProgress(int progress, int max);
 }

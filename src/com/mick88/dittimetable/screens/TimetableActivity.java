@@ -45,6 +45,7 @@ import com.mick88.dittimetable.timetable.Exceptions;
 import com.mick88.dittimetable.timetable.Exceptions.NoLocalCopyException;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableDownloader;
+import com.mick88.dittimetable.timetable.TimetableDownloader.TimetableDownloadListener;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class TimetableActivity extends ActionBarActivity 
@@ -90,18 +91,11 @@ public class TimetableActivity extends ActionBarActivity
     void downloadTimetable()
     {
     	showProgressPopup("Downloading timetable...");
-    	TimetableDownloader timetableDownloader = new TimetableDownloader(getApplicationContext(), timetable)
-    	{
-
+    	TimetableDownloader timetableDownloader = new TimetableDownloader(getApplicationContext(), timetable).setTimetableDownloadListener(new TimetableDownloadListener()
+		{
+			
 			@Override
-			protected void onDownloadProgress(int progress, int max)
-			{
-				onProgress(progress, max);
-				
-			}
-
-			@Override
-			protected void onTimetableDownloaded(Timetable timetable,
+			public void onTimetableDownloaded(Timetable timetable,
 					RuntimeException exception)
 			{
 				dismissProgresPopup();
@@ -121,8 +115,13 @@ public class TimetableActivity extends ActionBarActivity
 						.show();
 				}
 			}
-    		
-    	};
+			
+			@Override
+			public void onDownloadProgress(int progress, int max)
+			{
+				onProgress(progress, max);
+			}
+		});
     	timetableDownloader.execute();
     }
     
@@ -669,22 +668,16 @@ public class TimetableActivity extends ActionBarActivity
 
 	public void onProgress(final int position, final int max)
 	{
-		if (progressDialog != null && progressDialog.getMax() >= position)
+		Log.d(logTag, "Progress update "+String.valueOf(position)+"/"+String.valueOf(max));
+		if (progressDialog == null) showProgressPopup("Downloading timetable...");
+		if (max >= position)
 		{
-			uiHandler.postDelayed(new Runnable()
+			if (progressDialog != null)
 			{
-				
-				@Override
-				public void run()
-				{
-					if (progressDialog != null)
-						{
-							progressDialog.setIndeterminate(false);
-							progressDialog.setMax(max);
-							progressDialog.setProgress(position);
-						}
-				}
-			}, 1);
+				progressDialog.setIndeterminate(false);
+				progressDialog.setMax(max);
+				progressDialog.setProgress(position);
+			}
 			
 		}
 		
