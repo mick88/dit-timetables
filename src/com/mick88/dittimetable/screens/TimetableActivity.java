@@ -41,12 +41,14 @@ import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.pdf_download.PdfDownloaderService;
 import com.mick88.dittimetable.swipable_tabs.TimetablePageAdapter;
+import com.mick88.dittimetable.timetable.Exceptions;
+import com.mick88.dittimetable.timetable.Exceptions.NoLocalCopyException;
 import com.mick88.dittimetable.timetable.Timetable;
-import com.mick88.dittimetable.timetable.Timetable.ErrorCode;
+import com.mick88.dittimetable.timetable.TimetableDownloader;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class TimetableActivity extends ActionBarActivity 
-									implements Timetable.ResultHandler, GroupSelectionListener, TabListener
+									implements GroupSelectionListener, TabListener
 {
 	public static final String EXTRA_ERROR_MESSAGE = "pdf_error_message";
 	final int SETTINGS_REQUEST_CODE = 1;
@@ -69,8 +71,6 @@ public class TimetableActivity extends ActionBarActivity
 	
 	TimetableApp application;
 	
-	Thread onlineUpdate=null;
-	
 	final private Handler uiHandler = new Handler();
 	
 	void toast(final CharSequence message)
@@ -85,30 +85,45 @@ public class TimetableActivity extends ActionBarActivity
 		});
 	}
 	
-	private Thread downloadPdf = null;
-	
 	private Timer timedUpdateTimer = null;
        
     void downloadTimetable()
     {
-    	try
+    	showProgressPopup("Downloading timetable...");
+    	TimetableDownloader timetableDownloader = new TimetableDownloader(getApplicationContext(), timetable)
     	{
-    		showProgressPopup("Downloading timetable...");
-    		onlineUpdate = 	new Thread() { 
-    	        public void run() 
-    	        { 
-    	        	timetable.downloadFromWebsite(getApplicationContext(), TimetableActivity.this);
-    	        } 
-    	        
-    		};
-    		onlineUpdate.start();
-    	}
-    	catch (Exception e)
-    	{
-    		e.printStackTrace();
-    		dismissProgresPopup();
-    		showPopupMessage("Error: Downloading thread could not be started.");
-    	}
+
+			@Override
+			protected void onDownloadProgress(int progress, int max)
+			{
+				onProgress(progress, max);
+				
+			}
+
+			@Override
+			protected void onTimetableDownloaded(Timetable timetable,
+					RuntimeException exception)
+			{
+				dismissProgresPopup();
+				if (exception == null)
+				{
+					refresh();
+				}
+				else if (exception instanceof Exceptions.SettingsEmptyException)
+				{
+					showSettingsScreen(false);
+				}
+				else
+				{
+					new AlertDialog.Builder(TimetableActivity.this)
+						.setMessage(exception.getMessage())
+						.setPositiveButton(android.R.string.ok, null)
+						.show();
+				}
+			}
+    		
+    	};
+    	timetableDownloader.execute();
     }
     
     public void setTitle()
@@ -121,16 +136,14 @@ public class TimetableActivity extends ActionBarActivity
     
     void loadTimetable()
     {
-    	showProgressPopup("Loading...");
-		new Thread(new Runnable()
-		{
-			
-			@Override
-			public void run()
-			{
-				timetable.importSavedTimetable(getApplicationContext(), TimetableActivity.this);
-			}
-		}).start();
+    	try
+    	{
+    		timetable.importSavedTimetable(getApplicationContext());
+    	}
+    	catch (NoLocalCopyException e)
+    	{
+    		downloadTimetable();
+    	}
     }
     
     @Override
@@ -268,7 +281,7 @@ public class TimetableActivity extends ActionBarActivity
 
 			if (application.getSettings().isCourseDataSpecified() == false)
 			{
-				onSettingsNotComplete();
+				showSettingsScreen(false);
 			}
 		}
 		setupViewPager();
@@ -404,6 +417,8 @@ public class TimetableActivity extends ActionBarActivity
 	
 	void showSettingsScreen(boolean allowCancel)
 	{
+		if (allowCancel == false)
+			toast("Please fill the settings before using the app.");
 		Intent settingsScreen = new Intent(TimetableActivity.this, SettingsActivity.class);
 		settingsScreen.putExtra(SettingsActivity.EXTRA_ALLOW_CANCEL, allowCancel);
 		startActivity(settingsScreen);
@@ -618,102 +633,6 @@ public class TimetableActivity extends ActionBarActivity
 	}
 
 	@Override
-	public void onTimetableLoadFinish(final ErrorCode errorCode)
-	{		
-		Log.d(logTag, "Timetable finished with code: "+errorCode.toString());
-		
-		if (errorCode == ErrorCode.noError) FlurryAgent.logEvent("Timetable downloaded");
-		else 
-		{
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("error", errorCode.toString());
-			if (timetable != null) map.putAll(timetable.ToHashMap());
-			FlurryAgent.logEvent("Timetable downloaded error", map);
-		}
-		
-		uiHandler.postDelayed(new Runnable()
-		{			
-			@Override
-			public void run()
-			{
-				dismissProgresPopup();
-				switch (errorCode)
-				{
-					case noError:
-						refresh();
-						break;
-					case connectionFailed:
-						showPopupMessage("Server didn't respond");
-						break;
-					case wrongDataReceived:
-						showPopupMessage("Cannot download timetable. Web timetables may be down. Please try again later.");
-						break;
-					case timetableIsEmpty:
-						showPopupMessage("There are no events in selected timetable");
-						break;
-					case wrongLoginDetails:
-						showPopupMessage("Your login details are incorrect. Please attempt login again.");
-						break;
-					case noLocalCopy:
-						downloadTimetable();
-						break;
-					case wrongCourse:
-						showPopupMessage("Selected course does not exist. Please review your settings.");
-						break;
-					case serverLoading:
-						showPopupMessage("The server is loading commonly used data at the moment");
-						break;
-					case usernamePasswordNotPresent:
-						toast("Please provide username and password");
-						break;
-					case sessionExpired:
-						showPopupMessage("Session expired. Please try again.");
-						break;
-					case noEvents:
-						toast("There are no events in selected timetable.");
-						break;
-					default:
-						showPopupMessage("Unknown Error");
-						break;
-				}
-				
-			}
-		}, 10);
-	}
-
-	@Override
-	public void onDebugStringReceived(final String s)
-	{
-		uiHandler.post(new Runnable()
-		{			
-			@Override
-			public void run()
-			{
-				showPopupMessage(s);				
-			}
-		});
-		
-	}
-
-	@Override
-	public void onDownloadPdfStarted(boolean success)
-	{
-		dismissProgresPopup();
-		
-		if (success == false)
-		{
-			toast("Download failed");
-		}
-	}
-
-	@Override
-	public void onSettingsNotComplete()
-	{
-		toast("Please fill the settings before using the app.");
-		showSettingsScreen(false);	
-	}
-
-	@Override
 	public void onGroupsSelected(
 			ArrayList<String> selected,
 			ArrayList<String> unselected)
@@ -748,22 +667,6 @@ public class TimetableActivity extends ActionBarActivity
 		
 	}
 
-	@Override
-	public void onFullDataDownloaded()
-	{
-		uiHandler.post(new Runnable()
-		{
-			
-			@Override
-			public void run()
-			{
-				refresh();
-			}
-		});
-		
-	}
-
-	@Override
 	public void onProgress(final int position, final int max)
 	{
 		if (progressDialog != null && progressDialog.getMax() >= position)

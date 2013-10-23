@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
@@ -37,34 +36,6 @@ public class Timetable implements Serializable
 {
 	
 	private static final long serialVersionUID = 1L;
-
-	public static enum ErrorCode
-	{
-		connectionFailed,
-		noError,
-		noEvents,
-		noLocalCopy,
-		serverLoading,
-		sessionExpired,
-		timetableIsEmpty,
-		usernamePasswordNotPresent,
-		wrongCourse,
-		wrongDataReceived,
-		wrongLoginDetails,
-	}
-	
-	public static interface ResultHandler
-	{
-		public void onDebugStringReceived(String s);
-		public void onDownloadPdfStarted(boolean success);
-		/**
-		 * Called after full data download
-		 */
-		public void onFullDataDownloaded();
-		public void onSettingsNotComplete();
-		public void onTimetableLoadFinish(ErrorCode errorCode);
-		void onProgress(int position, int max);
-	}
 	
 	public static final int 
 		DAY_MONDAY = 0,
@@ -110,22 +81,6 @@ public class Timetable implements Serializable
 		int daysBetween = (int) (milisBetween / 1000 / 60 / 60 / 24);
 		
 		return (daysBetween / 7)+1;		
-	}
-	
-	public static String getDataset()
-	{
-		Calendar c = Calendar.getInstance();
-		int startYear=0;
-		
-		if (getSemester() == 1)
-			startYear = c.get(Calendar.YEAR);
-		else
-			startYear = c.get(Calendar.YEAR)-1;
-		
-		StringBuilder builder = new StringBuilder(6);
-		builder.append(startYear);
-		builder.append((startYear+1) % 100);
-		return builder.toString();
 	}
 	
 	public static int getDayByName(String name)
@@ -211,9 +166,9 @@ public class Timetable implements Serializable
 	Connection connection = null;
 	
 	/*Query data*/
-	private String course = "DT211";
+	protected String course = "DT211";
 	
-	private TimetableDay[] days = new TimetableDay[NUM_DAYS];
+	protected TimetableDay[] days = new TimetableDay[NUM_DAYS];
 	
 	/**
 	 * For saving timetable locally
@@ -221,16 +176,15 @@ public class Timetable implements Serializable
 	private static final String DAY_SEPARATOR = ":day:";
 	
 	boolean disposed=false;
-	
-	private String key = getDataset();// "201213";	
+		
 	Date lastUpdated = null;
 	final String logTag = "Timetable";
 
 	final AppSettings settings;	
-	Boolean valid=true; //changed to false if error is detected	
-	private int weekRange = INVALID_WEEK_RANGE; // alternative to weeks
-		private String weeks = SEMESTER_1;	
-	private int year=2;	
+	protected Boolean valid=true; //changed to false if error is detected	
+	protected int weekRange = INVALID_WEEK_RANGE; // alternative to weeks
+	protected String weeks = SEMESTER_1;	
+	protected int year=2;	
 	
 	/**
 	 * Creates new Timetable object from settings
@@ -309,101 +263,7 @@ public class Timetable implements Serializable
 		Log.d("Timetable", "Timetable disposed "+describe());
 	}
 	
-    /**
-	 * Downloads timetable content from web timetables - graphic view
-	 * @param context
-	 * @return true if successful
-	 */
-	public boolean downloadFromWebsite(Context context, ResultHandler resultHandler)
-	{
-		if (connection.areCredentialsPresent() == false)
-		{
-			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.usernamePasswordNotPresent);
-			return false;
-		}
-
-		String query = getQueryAddress();
-		
-		String string = connection.getContent(query);
-		
-		if (string == null)
-		{
-			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.connectionFailed);
-			return false;
-		}	
-		
-		
-		if (string.contains("You must login again."))
-		{
-			Log.w("Timetable", "Session expired. Loggin-in");
-			this.connection.logIn();
-			return downloadFromWebsite(context, resultHandler);
-		}
-		
-		if (string.contains("There are no events to display."))
-		{
-			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.noEvents);
-			return false;
-		}
-		
-		if (string.contains("The system is loading commonly used data at the moment"))
-		{
-			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.serverLoading);
-			return false;
-		}
-		
-		if (string.contains("Your login details are incorrect. Please attempt login again."))
-		{
-			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.wrongLoginDetails); 
-			return false;
-		}
-		
-		if (string.contains("There are no events in the selected timetable."))
-		{
-			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.noEvents); 
-			return false;
-		}
-		if (string.contains("There are no course records matching the criteria."))
-		{
-			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.wrongCourse); 
-			return false;
-		}
-		
-		/*if (string.contains(STR_TABLE_GRAPHIC_START) == false)
-		{
-			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.wrongDataReceived);
-			Log.d(logTag, string);
-			return false;
-		}*/
-		
-		boolean result = parseGrid(resultHandler, context, string);
-		
-		if (result == true) 
-		{
-			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.noError);
-		}
-		else 
-		{
-			if (resultHandler != null) resultHandler.onTimetableLoadFinish(ErrorCode.wrongDataReceived);
-		}
-		
-		// finalize by saving to file and downloading detailde info
-		if (result == true) 
-		{
-			for (TimetableDay day : days)
-			{
-				if (disposed) break;
-				day.downloadAdditionalInfo(context, this);
-			}
-			
-			if (resultHandler != null) resultHandler.onFullDataDownloaded();
-			exportTimetable(context);
-			Log.i(logTag, "Timetable successfully downloaded");
-			lastUpdated = new Date();
-		}
-
-		return result;
-	}
+    
 	
 	/**
 	 * Fetch page with url to the pdf and retrn url
@@ -413,7 +273,7 @@ public class Timetable implements Serializable
 	{
 		String query = String.format(Locale.getDefault(), 
 				"?reqtype=timetablepdf&sKey=%s%%7C%s&sTitle=DIT&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&sWeeks=%s&sType=course&instCode=-2&instName=",
-				key, course, year, weeks);
+				TimetableDownloader.getDataset(), course, year, weeks);
 		String string = connection.getContent(query);
 		if (TextUtils.isEmpty(string)) 
 			return null;
@@ -422,6 +282,11 @@ public class Timetable implements Serializable
 		Element pdfLink = elements.first();
 		
 		return  Connection.ROOT_ADDRESS_PDF + pdfLink.attr("href");
+	}
+	
+	public int getWeekRangeId()
+	{
+		return weekRange;
 	}
 	
 	/**
@@ -506,7 +371,7 @@ public class Timetable implements Serializable
 	
 	String getFilename()
 	{
-		return String.format(Locale.getDefault(), "%s_%d_%s_%s.txt", course, year, weeks, key);
+		return String.format(Locale.getDefault(), "%s_%d_%s_%s.txt", course, year, weeks, TimetableDownloader.getDataset());
 	}
 	
 	public Set<String> getGroupsInTimetable()
@@ -520,20 +385,6 @@ public class Timetable implements Serializable
 	public int getNumDays()
 	{
 		return days.length;
-	}
-	
-	/** 
-	 * Gets the timetable url
-	 * @return address to the web timetable
-	 */
-	public String getQueryAddress()
-	{
-		if (weekRange == -1) return String.format(Locale.ENGLISH, 
-				"?reqtype=timetable&action=getgrid&sKey=%s%%7C%s&sTitle=Computing&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&sWeeks=%s&sType=course&instCode=-2&instName=", 
-				key, course, year, weeks);
-		else return String.format(Locale.ENGLISH, 
-				"?reqtype=timetable&action=getgrid&sKey=%s%%7C%s&sTitle=Computing&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&weekRange=%d&sType=course&instCode=-2&instName=", 
-				key, course, year, weekRange);
 	}
 	
 	public AppSettings getSettings()
@@ -561,14 +412,13 @@ public class Timetable implements Serializable
 	/**
 	 * Loads timetable from file
 	 */
-	public void importSavedTimetable(Context context, ResultHandler resultHandler)
+	public void importSavedTimetable(Context context)
 	{
 		if (importTimetable(context)) 
 		{
 			valid=true;
-			resultHandler.onTimetableLoadFinish(ErrorCode.noError);
 		}
-		else resultHandler.onTimetableLoadFinish(ErrorCode.noLocalCopy);
+		else throw new Exceptions.NoLocalCopyException();
 	}
 	
 	private boolean importTimetable(Context context)
@@ -595,46 +445,6 @@ public class Timetable implements Serializable
 	public boolean isDisposed()
 	{
 		return disposed;
-	}
-	
-	public boolean parseGrid(ResultHandler resultHandler, Context context, String html)
-	{
-		// put days in a hashmap
-		Map<String, TimetableDay> days = new HashMap<String, TimetableDay>(7);
-		for (TimetableDay day : this.days)
-			days.put(day.getShortName().toString(), day);
-		
-		int numParsedEvents = 0,
-				totalEvents=0;
-		clearEvents();
-				
-		Document document = Jsoup.parse(html);
-		Elements gridRows = document.select("table.gridTable tr");
-		if (gridRows == null || gridRows.isEmpty()) return false;
-		totalEvents = gridRows.size();
-		resultHandler.onProgress(0, totalEvents);
-
-		int currentRow=0;
-		for (Element row : gridRows)
-		{
-			Elements columns = row.select("td.gridData");
-			resultHandler.onProgress(++currentRow, totalEvents);
-			if (columns.isEmpty()) continue;
-			String day = columns.get(TimetableEvent.GRID_DAY).text();
-			TimetableDay tDay = days.get(day);
-			if (tDay != null)
-			{
-				if (tDay.parseGridRow(this, columns, context))
-					numParsedEvents++;
-			}
-		}
-		
-		for (TimetableDay day : this.days)
-			day.sortEvents();
-		
-		valid = (numParsedEvents > 0);
-		return valid;
-		
 	}
 	
 	public Map<String,String> ToHashMap()
