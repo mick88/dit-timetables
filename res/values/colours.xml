@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-     <color name="color_group">#FF0000</color>
+     <color name="color_group">#EE0000</color>
 
-    <color name="color_lecture">#000</color>
-    <color name="color_laboratory">#0000FF</color>
+    <color name="color_lecture">#000000</color>
+    <color name="color_laboratory">#0000EE</color>
     <color name="color_tutorial">#FF8800</color>
     
-    <color name="color_lecturer">#777</color>
+    <color name="color_lecturer">#707070</color>
     
-    <color name="semi_transparent">#C000</color>
+    <color name="semi_transparent">#C0000000</color>
     
      <!-- Card colours -->
     <color name="card">#FFFFFF</color>
