@@ -8,11 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import android.content.Context;
-
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.list.MultiEvent;
@@ -28,7 +23,7 @@ public class TimetableDay implements Serializable
 //	final String name;
 	final int id;
 	final String logTag = "TimetableDay";
-	private List<TimetableEvent> events = new ArrayList<TimetableEvent>();
+	protected List<TimetableEvent> events = new ArrayList<TimetableEvent>();
 	
 	public TimetableDay(int id)
 	{
@@ -119,21 +114,6 @@ public class TimetableDay implements Serializable
 				end = events.get(events.size()-1).getEndTime();
 		
 		return new StringBuilder(start).append(" - ").append(end);
-	}
-	
-	public boolean parseGridRow(Timetable timetable, Elements gridCols, Context context)
-	{
-		TimetableEvent event = new TimetableEvent(this.id, gridCols);
-		if (event.isValid())
-		{
-			if (event.loadAdditionalInfo(context, timetable) == false)
-				event.downloadAdditionalInfo(context, timetable);
-			
-			addClass(event);
-			return true;
-		}
-		else 
-			return false;
 	}
 	
 	
@@ -271,21 +251,6 @@ public class TimetableDay implements Serializable
 		}
 
 		return entries;
-	}
-	
-	/**
-	 * Download details of events that are outdated
-	 */
-	public void downloadAdditionalInfo(Context context, Timetable timetable)
-	{
-		synchronized (events)
-		{
-			for (TimetableEvent event : events) if (event.isUpdated() == false)
-			{
-				if (timetable.isDisposed()) break;
-				event.downloadAdditionalInfo(context, timetable);
-			}
-		}
 	}
 	
 	@Override

@@ -89,8 +89,8 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			;
 	
 	/*Main event data*/
-	private String name="", room="", lecturer = "", weekRange="", groupStr="";
-	private int id=0,
+	protected String name="", room="", lecturer = "", weekRange="", groupStr="";
+	protected int id=0,
 			 startHour=0,
 				startMin=0,
 				endMin=0,
@@ -107,14 +107,20 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	
 	boolean complete =false;
 	// changed to true when event info is loaded from website
-	private transient boolean updated = false;
+	protected transient boolean updated = false;
 	
 	String StripNbsp(String string)
 	{
 		return string.replaceAll(CHAR_NBSP, "");
 	}
 	
-	private String getFileName()
+	public void setWeekRange(String weekRange)
+	{
+		this.weekRange = weekRange;
+		decodeWeeks();
+	}
+	
+	protected String getFileName()
 	{
 		return String.format(Locale.getDefault(), "%d.html", id);
 	}
@@ -329,15 +335,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	}
 	
 	/**
-	 * Creates new object by parsing data and loading/downloading additional data
-	 */
-	public TimetableEvent(Element table, Timetable timetable, Context context, boolean allowCache, int day)
-	{
-		this(day);
-		parseNewHtmlTable(table, context, allowCache, timetable);
-	}
-	
-	/**
 	 * Creates new object by importing data from string
 	 */
 	public TimetableEvent(String importString, int day)
@@ -350,9 +347,9 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	/**
 	 * Parse start/end time of the event
 	 */
-	private void parseTime(String s)
+	public void setTime(String timeString)
 	{
-		String[] hours = StripNbsp(s).split("-");
+		String[] hours = StripNbsp(timeString).split("-");
 		try
 		{
 			startHour = Integer.parseInt(hours[0].split(":")[0]);
@@ -407,31 +404,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			return ClassType.Other;
 		}
 	}
-	
-	/**
-	 * Loads additional information about event from web timetables.
-	 */
-	public void downloadAdditionalInfo(Context context, Timetable timetable)
-	{
-		Connection connection = timetable.getConnection();
-		String uri = String.format(Locale.getDefault(), "?reqtype=eventdetails&eventId=%s%%7C%d", Timetable.getDataset(), id);
 
-		String content = connection.getContent(uri);
-		if (parseAdditionalInfo(content))
-		{
-			complete = true;
-			updated = true;
-			try
-			{
-				saveAdditionalInfo(context, content);
-			} catch (IOException e)
-			{
-			
-				e.printStackTrace();
-			}
-		}
-	}
-	
 	public boolean isComplete()
 	{
 		return complete;
@@ -445,48 +418,8 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	{
 		return updated;
 	}
-
-	public boolean loadAdditionalInfo(Context context, Timetable timetable)
-	{
-		String filename = getFileName();	
-		StringBuffer sb = new StringBuffer();
-		try
-		{
-			if (context.getFileStreamPath(filename).exists() == false)
-			{
-				Log.i(logTag, "Event  could not be loaded from file. File does not exist "+filename);
-				return false;
-			}
-			
-			final int BUFFER_SIZE = 30000;
-			FileInputStream f = context.openFileInput(filename);
-			
-			byte[] buffer = new byte[BUFFER_SIZE];			
-			
-			while (f.read(buffer) > 0)
-			{
-				String line = new String(buffer);
-				sb.append(line);
-				
-				buffer = new byte[BUFFER_SIZE];
-			}
-			
-			f.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return false;
-		}
-		
-		if (parseAdditionalInfo(sb.toString()))
-		{
-			return true;
-		}
-		return false;
-	}
 	
-	private void saveAdditionalInfo(Context context, String content) throws IOException
+	protected void saveAdditionalInfo(Context context, String content) throws IOException
 	{
 		String filename = getFileName();
 		FileOutputStream file = context.openFileOutput(filename, Context.MODE_PRIVATE);			
@@ -507,110 +440,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 
 			addGroup(group);
 		}
-	}
-	
-	/**
-	 * parses the additional info page
-	 */
-	private boolean parseAdditionalInfo(String content)
-	{
-		if (content == null) return false;
-		
-		try
-		{
-			Document doc = Jsoup.parse(content);
-			
-			Elements elements = doc.select("th, td");		
-			for (int i=0; i < elements.size(); i++)
-			{
-				Element element = elements.get(i);
-				if (element.tagName().equalsIgnoreCase("th"))
-				{
-					String headerText = element.text();
-					if (headerText.equals("Class Subgroup"))
-					{
-						setGroups(elements.get(++i).text());
-					} 
-					else if (headerText.equals("Week numbers"))
-					{
-						this.weekRange = elements.get(++i).text();
-						decodeWeeks();
-					}
-					else if (headerText.equals("Lecturer"))
-					{
-						this.lecturer = parseLecturerName(elements.get(++i).text());
-					} 
-				}
-			}
-		}
-		catch (Exception e)
-		{
-			FlurryAgent.onError("parseAdditionalInfo", "TimetableEvent", e);
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
-	
-	private String parseLecturerName(String text)
-	{
-		String [] parts = text.split(" - ");
-		if (parts.length > 1)
-			return parts[parts.length - 1];
-		else 
-			return text;
-	}
-	
-	/** 
-	 * Parses the new timetable
-	 * @param	table	Element containing event table 
-	 */
-	public void parseNewHtmlTable(Element table, Context context, boolean allowCache, Timetable timetable)
-	{
-		try
-		{
-			String idString = table.id();
-			if (idString.charAt(0) == 'c')
-			{
-				id = Integer.valueOf(idString.substring(1));
-			}
-			else Log.e(logTag, "Event id incorrect: "+idString);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-			
-		Elements elements = table.select("td");
-
-		for (Element element : elements)
-		{
-			EventElement e = new EventElement(element);
-			if (e.color.equalsIgnoreCase(COLOR_NAME))
-			{
-				if (TextUtils.isEmpty(name)) name = e.getText();
-			}
-			else if (e.color.equalsIgnoreCase(COLOR_LOCATION)) setRoom(e.getText());
-			else if (e.color.equalsIgnoreCase(COLOR_TIME)) parseTime(e.getText());
-			else if (e.color.equalsIgnoreCase(COLOR_TYPE)) parseType(e.getText());
-			else if (e.color.equalsIgnoreCase(COLOR_LECTURER)) lecturer = e.getText();
-		}
-		
-		if (isValid() == true)
-		{
-			if (id == 0)
-			{
-				Log.e(logTag, "Event id is incorrect: "+id);
-			}
-			else if (allowCache==false)
-			{
-				if (loadAdditionalInfo(context, timetable)==false)
-				{
-					downloadAdditionalInfo(context, timetable);
-				}
-			}
-		}
-		
 	}
 	
 	@Override
