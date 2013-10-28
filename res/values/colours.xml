@@ -16,7 +16,7 @@
     <color name="card_selected">#33B5E5</color>
     <color name="card_semi_selected">#ADD1DD</color>
     <color name="card_shadow">#ccc</color>
-    <color name="card_shadow_selected">#0385b5</color>
+    <color name="card_shadow_selected">#0099CC</color>
     <color name="card_shadow_semi_selected">#7da1ad</color>
     
     <!-- DIT Colours -->
