@@ -61,8 +61,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 					view.findViewById(R.id.timetable_event_small));
 		}
 	}
-	
-	private static final String CHAR_NBSP = "\u00A0";	
+		
 	public static enum ClassType {Other, Lecture, Laboratory, Tutorial};
 	public static final int 
 		MIN_START_TIME = 8,
@@ -70,15 +69,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	
 	private static final String GROUP_SEPARATOR = ", ";
 	final static String logTag = "TimetableEvent";
-	final static String 
-			COLOR_NAME = "#987E06", 
-			COLOR_GROUP = "#987E06",
-			COLOR_TYPE = "#E32198", //E32198
-			COLOR_LOCATION = "#062F98", //062F98
-			COLOR_LECTURER = "#069810", //069810
-			COLOR_TIME = "#940AA8", //940AA8
-			COLOR_WEEKS = "#177F23";
-			;
 	
 	/*Main event data*/
 	protected String name="", room="", lecturer = "", weekRange="", groupStr="";
@@ -100,11 +90,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	boolean complete =false;
 	// changed to true when event info is loaded from website
 	protected transient boolean updated = false;
-	
-	String StripNbsp(String string)
-	{
-		return string.replaceAll(CHAR_NBSP, "");
-	}
 	
 	public void setWeekRange(String weekRange)
 	{
@@ -260,24 +245,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	{
 		this(day);
 		importFromString(importString);
-//		this.duration = this.endTime - this.startTime;
-	}
-	
-	/**
-	 * Parse start/end time of the event
-	 */
-	public void setTime(String timeString)
-	{
-		String[] hours = StripNbsp(timeString).split("-");
-		try
-		{
-			startHour = Integer.parseInt(hours[0].split(":")[0]);
-			endHour = Integer.parseInt(hours[1].split(":")[0]);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
 	
 	public boolean isGroup(Set<String> hiddenGroups)
@@ -575,9 +542,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 					.getResources()
 					.getColor(colourRes));
 		}
-		
-		
-		
 		return view;		
 	}
 }
