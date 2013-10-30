@@ -157,7 +157,7 @@ public class SettingsActivity extends ActionBarActivity
 	void loadSettings()
 	{
 		String courseCode="",
-			weeks=Timetable.getSemester()==1?Timetable.SEMESTER_1:Timetable.SEMESTER_2,
+			weeks=Timetable.getCurrentSemester()==1?Timetable.SEMESTER_1:Timetable.SEMESTER_2,
 					username="", 
 					password="";
 		int year=1;
@@ -169,7 +169,7 @@ public class SettingsActivity extends ActionBarActivity
 		username = appSettings.getUsername();
 		password = appSettings.getPassword();
 		
-		if (TextUtils.isEmpty(weeks)) weeks = Timetable.getSemester()==1?Timetable.SEMESTER_1:Timetable.SEMESTER_2;
+		if (TextUtils.isEmpty(weeks)) weeks = Timetable.getCurrentSemester()==1?Timetable.SEMESTER_1:Timetable.SEMESTER_2;
 		
 		if (weeks.equals(Timetable.SEMESTER_1)) semesterSelector.setSelection(SEM_1_ID);
 		else if (weeks.equals(Timetable.SEMESTER_2)) semesterSelector.setSelection(SEM_2_ID);

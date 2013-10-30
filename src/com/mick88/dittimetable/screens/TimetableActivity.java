@@ -251,7 +251,7 @@ public class TimetableActivity extends ActionBarActivity
 
 				String course = values.get("sKey").split("%7C")[1], 
 						weeks = (Timetable
-						.getSemester() == 1) ? Timetable.SEMESTER_1
+						.getCurrentSemester() == 1) ? Timetable.SEMESTER_1
 						: Timetable.SEMESTER_2;
 				int weekRange = Timetable.INVALID_WEEK_RANGE;
 				try
