@@ -146,7 +146,7 @@ public class SettingsActivity extends ActionBarActivity
 		appSettings.setPassword(editPassword.getText().toString().trim());
 		
 		appSettings.setCourse(editCourse.getText().toString().toUpperCase(Locale.ENGLISH));
-		appSettings.setWeeks(editWeeks.getText().toString());
+		appSettings.setWeekRange(editWeeks.getText().toString());
 		appSettings.setYear((int) (yearSelector.getSelectedItemId()+1));
 		appSettings.setOnlyCurrentWeek(weekCheckBox.isChecked());
 		
@@ -164,7 +164,7 @@ public class SettingsActivity extends ActionBarActivity
 		int year=1;
 		
 		courseCode = appSettings.getCourse();
-		weeks = appSettings.getWeeks();
+		weeks = appSettings.getWeekRange();
 		year = appSettings.getYear();
 		
 		username = appSettings.getUsername();

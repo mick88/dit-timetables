@@ -123,7 +123,7 @@ public class Timetable implements Serializable
 		this();
 		this.course = settings.getCourse();
 		this.year = settings.getYear();
-		this.weekRange = settings.getWeeks();			
+		this.weekRange = settings.getWeekRange();			
 	}
 	
 	/**

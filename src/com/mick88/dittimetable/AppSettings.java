@@ -22,7 +22,7 @@ public class AppSettings implements Serializable
 	String username, 
 		password;	
 	String
-		course, weeks;
+		course, weekRange;
 	int year;
 	boolean onlyCurrentWeek;
 	Set<String> hiddenGroups;
@@ -33,7 +33,7 @@ public class AppSettings implements Serializable
 		password = new String();
 		
 		course = new String();
-		weeks = new String();
+		weekRange = new String();
 		year = 0;
 		
 		onlyCurrentWeek = false;
@@ -42,7 +42,7 @@ public class AppSettings implements Serializable
 	
 	public boolean isCourseDataSpecified()
 	{
-		return TextUtils.isEmpty(course) == false && TextUtils.isEmpty(weeks) == false && year > 0;
+		return TextUtils.isEmpty(course) == false && TextUtils.isEmpty(weekRange) == false && year > 0;
 	}
 	
 	public AppSettings(Context context, boolean loadSettings)
@@ -62,12 +62,12 @@ public class AppSettings implements Serializable
 		password = sharedPreferences.getString("password", DEFAULT_PASSWORD);
 		
 		course = sharedPreferences.getString("course", "");
-		weeks = sharedPreferences.getString("weeks", "");
+		weekRange = sharedPreferences.getString("weeks", "");
 		year = sharedPreferences.getInt("year", 0);
 		
 		onlyCurrentWeek = sharedPreferences.getBoolean("only_current_week", false);
 		
-		setHiddenGroupsString(sharedPreferences.getString("hidden_groups", ""));
+		setHiddenGroups(sharedPreferences.getString("hidden_groups", ""));
 		
 		Log.i(toString(), "Settings loaded");
 	}
@@ -84,7 +84,7 @@ public class AppSettings implements Serializable
 			.putString("password", password)
 			
 			.putString("course", course)
-			.putString("weeks", weeks)
+			.putString("weeks", weekRange)
 			.putInt("year", year)
 			
 			.putString("hidden_groups", getHiddenGroupsString())
@@ -107,10 +107,10 @@ public class AppSettings implements Serializable
 	/**
 	 * Sets hidden groups and clears previous values
 	 */
-	private void setHiddenGroupsString(String groupString)
+	private void setHiddenGroups(String groupString)
 	{
 		String [] groups = groupString.split(GROUP_SEPARATOR);
-		this.hiddenGroups = new HashSet<String>(groups.length);
+		hiddenGroups.clear();
 		for (String group : groups)
 		{
 			this.hiddenGroups.add(group);
@@ -156,9 +156,9 @@ public class AppSettings implements Serializable
 		return onlyCurrentWeek;
 	}
 	
-	public String getWeeks()
+	public String getWeekRange()
 	{
-		return weeks;
+		return weekRange;
 	}
 	
 	public void setCourse(String course)
@@ -171,9 +171,9 @@ public class AppSettings implements Serializable
 		this.year = year;
 	}
 	
-	public void setWeeks(String weeks)
+	public void setWeekRange(String weekRange)
 	{
-		this.weeks = weeks;
+		this.weekRange = weekRange;
 	}
 	
 	public Set<String> getHiddenGroups()
@@ -186,15 +186,9 @@ public class AppSettings implements Serializable
 		this.onlyCurrentWeek = onlyCurrentWeek;
 	}
 	
-	
-	
 	public void hideGroup(String groupCode)
 	{
-//		if (groupCode.equals(getCourseYearCode())) return; //cannot hide whole class
-		if (hiddenGroups.contains(groupCode) == false)
-		{
-			hiddenGroups.add(groupCode);
-		}	
+		hiddenGroups.add(groupCode);
 	}
 	
 	public void unhideGroup(String group)
