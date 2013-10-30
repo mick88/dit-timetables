@@ -399,9 +399,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		}
 		
 		for (TimetableDay day : timetable.days)
-			day.sortEvents();
-		
-		timetable.valid = (numParsedEvents > 0);		
+			day.sortEvents();	
 	}
 
 	@Override

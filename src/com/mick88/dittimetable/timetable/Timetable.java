@@ -116,7 +116,6 @@ public class Timetable implements Serializable
 	Date lastUpdated = null;
 	final String logTag = "Timetable";
 
-	protected Boolean valid=true; //changed to false if error is detected	
 	protected int weekRange = INVALID_WEEK_RANGE; // alternative to weeks
 	protected String weeks = SEMESTER_1;
 	protected String course = "DT211";
@@ -162,7 +161,6 @@ public class Timetable implements Serializable
 	
 	void clearEvents()
 	{
-		valid=false;
 		for (int i=0; i < NUM_DAYS; i++)
 		{
 			days[i].clearEvents();
@@ -321,11 +319,8 @@ public class Timetable implements Serializable
 	 */
 	public void importSavedTimetable(Context context)
 	{
-		if (importTimetable(context)) 
-		{
-			valid=true;
-		}
-		else throw new Exceptions.NoLocalCopyException();
+		if (importTimetable(context) == false) 
+			throw new Exceptions.NoLocalCopyException();
 	}
 	
 	private boolean importTimetable(Context context)
