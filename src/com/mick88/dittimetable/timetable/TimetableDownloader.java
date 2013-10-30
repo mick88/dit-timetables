@@ -179,37 +179,29 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		if (string.contains("There are no course records matching the criteria."))
 			throw new Exceptions.WrongCourseException();
 		
-		boolean result = parseGrid(string);
-		
-		if (result == false) 
-		{
-			throw new Exceptions.InvalidDataException();
-		}
+		parseGrid(string);
 		
 		// finalize by saving to file and downloading detailde info
-		if (result == true) 
+		for (TimetableDay day : timetable.days)
 		{
-			for (TimetableDay day : timetable.days)
+			for (TimetableEvent event : day.events)
 			{
-				for (TimetableEvent event : day.events)
+				if (isCancelled()) break;
+				if (event.isUpdated()) continue;
+				try
 				{
-					if (isCancelled()) break;
-					if (event.isUpdated()) continue;
-					try
-					{
-						downloadAdditionalInfo(event);
-					} catch (IOException e)
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					downloadAdditionalInfo(event);
+				} catch (IOException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
-			
-			timetable.exportTimetable(context);
-			Log.i(logTag, "Timetable successfully downloaded");
-			timetable.lastUpdated = new Date();
 		}
+		
+		timetable.exportTimetable(context);
+		Log.i(logTag, "Timetable successfully downloaded");
+		timetable.lastUpdated = new Date();
 	}
 	
 	
@@ -393,7 +385,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	}
 	
 	
-	public boolean parseGrid(String html)
+	public void parseGrid(String html)
 	{
 		// put days in a hashmap
 		Map<String, TimetableDay> days = new HashMap<String, TimetableDay>(7);
@@ -406,7 +398,8 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 				
 		Document document = Jsoup.parse(html);
 		Elements gridRows = document.select("table.gridTable tr");
-		if (gridRows == null || gridRows.isEmpty()) return false;
+		if (gridRows == null || gridRows.isEmpty())
+			throw new Exceptions.InvalidDataException();
 		totalEvents = gridRows.size();
 
 		int currentRow=0;
@@ -427,9 +420,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		for (TimetableDay day : timetable.days)
 			day.sortEvents();
 		
-		timetable.valid = (numParsedEvents > 0);
-		return timetable.valid;
-		
+		timetable.valid = (numParsedEvents > 0);		
 	}
 
 	@Override
