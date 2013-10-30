@@ -70,9 +70,9 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	final Context context;
 	TimetableDownloadListener timetableDownloadListener = new DownloadStateSaver();
 	
-	public TimetableDownloader(Context context,	Timetable timetable)
+	public TimetableDownloader(Context context,	Timetable timetable, AppSettings settings)
 	{
-		this.appSettings = timetable.getSettings();
+		this.appSettings = settings;
 		this.connection = new Connection(appSettings);
 		this.timetable = timetable;
 		this.context = context;

@@ -37,6 +37,7 @@ import android.widget.Toast;
 import com.flurry.android.FlurryAgent;
 import com.mick88.dittimetable.GroupSelectionDialog;
 import com.mick88.dittimetable.GroupSelectionDialog.GroupSelectionListener;
+import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.pdf_download.PdfDownloaderService;
@@ -110,7 +111,7 @@ public class TimetableActivity extends ActionBarActivity
     void downloadTimetable()
     {
     	showDownloadProgress();
-    	timetableDownloader = new TimetableDownloader(getApplicationContext(), timetable).setTimetableDownloadListener(this);
+    	timetableDownloader = new TimetableDownloader(getApplicationContext(), timetable, application.getSettings()).setTimetableDownloadListener(this);
     	timetableDownloader.execute();
     }
     
@@ -426,6 +427,11 @@ public class TimetableActivity extends ActionBarActivity
 			e.printStackTrace();
 		}
 	}
+	
+	AppSettings getSettings()
+	{
+		return application.getSettings();
+	}
 
 	
 	public void setTimetable(Timetable timetable)
@@ -433,7 +439,7 @@ public class TimetableActivity extends ActionBarActivity
 		if (this.timetable != null) this.timetable.dispose();
 		this.timetable = timetable;
 		
-		if (this.timetable.getSettings().isCourseDataSpecified()) 
+		if (timetable.isCourseDataSpecified()) 
 		{
 			setTitle();
 			loadTimetable();

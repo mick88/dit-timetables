@@ -1,7 +1,5 @@
 package com.mick88.dittimetable.timetable;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -489,7 +487,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 				Intent intent = new Intent(context, EventDetailsSwipableActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				intent.putExtra(EventDetailsSwipableActivity.EXTRA_SELECTED_EVENT, TimetableEvent.this);
-				intent.putExtra(EventDetailsSwipableActivity.EXTRA_SETTINGS, timetable.getSettings());
 				intent.putExtra(EventDetailsSwipableActivity.EXTRA_DAY, timetable.getDay(day));
 				context.startActivity(intent);				
 			}

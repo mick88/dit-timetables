@@ -63,9 +63,9 @@ public class UnfoldActivity extends Activity implements OnClickListener
 						@Override
 						public void onClick(View v)
 						{
+							TimetableApp application = (TimetableApp) getApplication();
 							Intent intent = new Intent(getApplicationContext(), EventDetailsSwipableActivity.class);
 							intent.putExtra(EventDetailsSwipableActivity.EXTRA_SELECTED_EVENT, event);
-							intent.putExtra(EventDetailsSwipableActivity.EXTRA_SETTINGS, timetable.getSettings());
 							intent.putExtra(EventDetailsSwipableActivity.EXTRA_DAY, timetable.getDay(event.getDay()));
 							startActivity(intent);
 						}

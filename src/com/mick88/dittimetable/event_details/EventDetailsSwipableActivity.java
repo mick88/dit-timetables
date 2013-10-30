@@ -20,7 +20,6 @@ public class EventDetailsSwipableActivity extends ActionBarActivity
 {
 	public static final String
 		EXTRA_SELECTED_EVENT = "event",
-		EXTRA_SETTINGS = "settings",
 		EXTRA_DAY = "day";
 	
 	private TimetableDay timetableDay;
@@ -36,11 +35,12 @@ public class EventDetailsSwipableActivity extends ActionBarActivity
 		
 		Bundle extras = getIntent().getExtras();
 		TimetableEvent selectedEvent;
+		TimetableApp application = (TimetableApp) getApplication();
+		this.appSettings = application.getSettings();
 		
 		if (extras != null)
 		{
 			this.timetableDay = (TimetableDay) extras.getSerializable(EXTRA_DAY);
-			this.appSettings = (AppSettings) extras.getSerializable(EXTRA_SETTINGS);
 			selectedEvent = (TimetableEvent) extras.getSerializable(EXTRA_SELECTED_EVENT);
 		}
 		else

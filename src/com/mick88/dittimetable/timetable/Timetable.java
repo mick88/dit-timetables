@@ -178,7 +178,6 @@ public class Timetable implements Serializable
 	Date lastUpdated = null;
 	final String logTag = "Timetable";
 
-	AppSettings settings;	
 	protected Boolean valid=true; //changed to false if error is detected	
 	protected int weekRange = INVALID_WEEK_RANGE; // alternative to weeks
 	protected String weeks = SEMESTER_1;	
@@ -195,7 +194,6 @@ public class Timetable implements Serializable
 	public Timetable(AppSettings settings)
 	{
 		this();
-		this.settings = settings;
 		this.course = settings.getCourse();
 		this.year = settings.getYear();
 		this.weeks = settings.getWeeks();			
@@ -372,11 +370,6 @@ public class Timetable implements Serializable
 		return days.length;
 	}
 	
-	public AppSettings getSettings()
-	{
-		return settings;
-	}
-	
 	/**
 	 * gets id of the current day
 	 * @param defaultMonday if true, returns monday for if weekend
@@ -388,7 +381,7 @@ public class Timetable implements Serializable
 		return days[id];
 	}
 	
-	public void hideGroup(String groupCode)
+	public void hideGroup(String groupCode, AppSettings settings)
 	{
 		if (groupCode.equals(getCourseYearCode())) return; //cannot hide whole class
 		settings.hideGroup(groupCode);
@@ -439,17 +432,10 @@ public class Timetable implements Serializable
 		result.put("Year", Integer.toString(this.year));
 		result.put("Week range", this.weeks);
 		
-		StringBuilder groups = new StringBuilder();
-		result.put("groups", groups.toString());
-		
-		result.put("username", settings.getUsername());
-		result.put("password", settings.getPassword());
-		
 		return result;
 	}
 	
-	@Override
-	public String toString()
+	public String toString(AppSettings settings)
 	{
 		StringBuilder builder= new StringBuilder();
 		int n=0,
@@ -465,6 +451,11 @@ public class Timetable implements Serializable
 			n++;
 		}
 		return builder.toString();
+	}
+	
+	public boolean isCourseDataSpecified()
+	{
+		return TextUtils.isEmpty(course) == false && TextUtils.isEmpty(weeks) == false && year > 0;
 	}
 	
 	public void writeFile(Context context, String filename, String content) throws IOException
