@@ -1,6 +1,7 @@
 package com.mick88.dittimetable.timetable;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
@@ -20,6 +21,7 @@ import android.util.Log;
 import com.flurry.android.FlurryAgent;
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.timetable.Exceptions.ServerConnectionException;
+import com.mick88.dittimetable.timetable.TimetableEvent.ClassType;
 import com.mick88.dittimetable.web.Connection;
 
 public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeException>
@@ -68,9 +70,9 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	final Context context;
 	TimetableDownloadListener timetableDownloadListener = new DownloadStateSaver();
 	
-	public TimetableDownloader(Context context,	Timetable timetable)
+	public TimetableDownloader(Context context,	Timetable timetable, AppSettings settings)
 	{
-		this.appSettings = timetable.getSettings();
+		this.appSettings = settings;
 		this.connection = new Connection(appSettings);
 		this.timetable = timetable;
 		this.context = context;
@@ -177,37 +179,11 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		if (string.contains("There are no course records matching the criteria."))
 			throw new Exceptions.WrongCourseException();
 		
-		boolean result = parseGrid(string);
+		parseGrid(string);
 		
-		if (result == false) 
-		{
-			throw new Exceptions.InvalidDataException();
-		}
-		
-		// finalize by saving to file and downloading detailde info
-		if (result == true) 
-		{
-			for (TimetableDay day : timetable.days)
-			{
-				for (TimetableEvent event : day.events)
-				{
-					if (isCancelled()) break;
-					if (event.isUpdated()) continue;
-					try
-					{
-						downloadAdditionalInfo(event);
-					} catch (IOException e)
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-			
-			timetable.exportTimetable(context);
-			Log.i(logTag, "Timetable successfully downloaded");
-			timetable.lastUpdated = new Date();
-		}
+		timetable.exportTimetable(context);
+		Log.i(logTag, "Timetable successfully downloaded");
+		timetable.lastUpdated = new Date();
 	}
 	
 	
@@ -217,7 +193,6 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	 */
 	public void downloadAdditionalInfo(TimetableEvent event) throws IOException
 	{
-		Connection connection = timetable.getConnection();
 		String uri = String.format(Locale.getDefault(), "?reqtype=eventdetails&eventId=%s%%7C%d", TimetableDownloader.getDataset(), event.id);
 
 		String content = connection.getContent(uri);
@@ -225,43 +200,83 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		{
 			event.complete = true;
 			event.updated = true;
-			try
-			{
-				event.saveAdditionalInfo(context, content);
-			} catch (IOException e)
-			{
-			
-				e.printStackTrace();
-			}
 		}
 	}
 	
 	public boolean parseGridRow(TimetableDay day, Elements gridCols)
 	{
-		TimetableEvent event = new TimetableEvent(day.id, gridCols);
+		TimetableEvent event = parseEvent(day, gridCols);
 		if (event.isValid())
 		{			
-				try
-				{
-					downloadAdditionalInfo(event);
-					day.addClass(event);
-					return true;
-				} catch (IOException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return false;
-				}
-			
-			
+			day.addClass(event);
+			try
+			{
+				downloadAdditionalInfo(event);
+				
+				return true;
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+				return false;
+			}
 		}
 		else 
 			return false;
 	}
 	
+	// Grid columns for event info
+	public static final int
+		GRID_ID = 1,
+		GRID_DAY = 2,
+		GRID_TIME_START = 3,
+		GRID_TIME_FINISH = 4,
+		GRID_ROOM = 5,
+		GRID_MODULE_CODE = 7,
+		GRID_MODULE_NAME = 8,
+		GRID_EVENT_TYPE = 9;
+	
+	private TimetableEvent parseEvent(TimetableDay day, Elements gridColumns)
+	{
+		TimetableEvent event = new TimetableEvent(day.id);
+		event.id = Integer.parseInt(gridColumns.get(GRID_ID).text());
+		
+		int [] time = parseHour(gridColumns.get(GRID_TIME_START).text());
+		event.startHour = time[0];
+		event.startMin = time[1];
+		
+		time = parseHour(gridColumns.get(GRID_TIME_FINISH).text());
+		event.endHour = time[0];
+		event.endMin = time[1];
+		
+		event.room = parseRooms(gridColumns.get(GRID_ROOM).text());
+		event.name = parseModuleName(gridColumns.get(GRID_MODULE_NAME).text());
+		event.type = parseType(gridColumns.get(GRID_EVENT_TYPE).text());
+		
+		return event;
+	}
+	
+	/**
+	 * Gets filename for event chaced data
+	 * @return
+	 */
+	protected String getEventFileName(TimetableEvent event)
+	{
+		return String.format(Locale.getDefault(), "%d.html", event.id);
+	}
+	
+	protected void saveAdditionalInfo(TimetableEvent event, String content) throws IOException
+	{
+		String filename = getEventFileName(event);
+		FileOutputStream file = context.openFileOutput(filename, Context.MODE_PRIVATE);			
+		byte[] buffer = content.getBytes();
+		file.write(buffer);
+		file.flush();
+		file.close();
+	}
+	
 	public boolean loadAdditionalInfo(TimetableEvent event)
 	{
-		String filename = event.getFileName();	
+		String filename = getEventFileName(event);	
 		StringBuffer sb = new StringBuffer();
 		try
 		{
@@ -351,7 +366,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	}
 	
 	
-	public boolean parseGrid(String html)
+	public void parseGrid(String html)
 	{
 		// put days in a hashmap
 		Map<String, TimetableDay> days = new HashMap<String, TimetableDay>(7);
@@ -364,7 +379,8 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 				
 		Document document = Jsoup.parse(html);
 		Elements gridRows = document.select("table.gridTable tr");
-		if (gridRows == null || gridRows.isEmpty()) return false;
+		if (gridRows == null || gridRows.isEmpty())
+			throw new Exceptions.InvalidDataException();
 		totalEvents = gridRows.size();
 
 		int currentRow=0;
@@ -373,7 +389,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 			Elements columns = row.select("td.gridData");
 			this.publishProgress(++currentRow, totalEvents);
 			if (columns.isEmpty()) continue;
-			String day = columns.get(TimetableEvent.GRID_DAY).text();
+			String day = columns.get(GRID_DAY).text();
 			TimetableDay tDay = days.get(day);
 			if (tDay != null)
 			{
@@ -385,9 +401,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		for (TimetableDay day : timetable.days)
 			day.sortEvents();
 		
-		timetable.valid = (numParsedEvents > 0);
-		return timetable.valid;
-		
+		timetable.valid = (numParsedEvents > 0);		
 	}
 
 	@Override
@@ -417,5 +431,55 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		super.onProgressUpdate(values);
 		if (values.length > 1)
 			timetableDownloadListener.onDownloadProgress(values[0], values[1]);
+	}
+	
+	private static String parseModuleName(String s)
+	{
+		String stripped = stripCurlyBraces(s);
+		String [] parts = stripped.split(",");
+		if (parts.length == 0) return s;
+		else return parts[0];
+	}
+	
+	private static String parseRooms(String text)
+	{
+		return stripCurlyBraces(text);
+	}
+	
+	private static String stripCurlyBraces(String text)
+	{
+		int start = text.indexOf('{')+1;
+		if (start > 0)
+		{
+			int end = text.indexOf('}', start);
+			if (end > -1)
+				return text.substring(start, end);
+		}
+		return text;
+	}
+	
+	/**
+	 * return hour as integer from hh:mm string
+	 */
+	private static int [] parseHour(String time)
+	{
+		String [] parts = time.split(":");
+		int [] result = new int [parts.length];
+		for (int i=0; i < parts.length; i++)
+			result[i] = Integer.parseInt(parts[i]);
+		return result;
+	}
+	
+	private static ClassType parseType(String s)
+	{
+		try
+		{
+			return Enum.valueOf(ClassType.class, s);
+		}
+		catch (IllegalArgumentException e)
+		{
+			e.printStackTrace();
+			return ClassType.Other;
+		}
 	}
 }

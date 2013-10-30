@@ -51,7 +51,7 @@ public abstract class Exceptions
 	{
 		public SessionExpiredException()
 		{
-			super("Sesstion Expired.");
+			super("Session Expired.");
 		}
 	}
 	

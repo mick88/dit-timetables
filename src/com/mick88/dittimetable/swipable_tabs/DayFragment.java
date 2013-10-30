@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.list.EventAdapter;
 import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.timetable.Timetable;
@@ -24,8 +25,7 @@ public class DayFragment extends Fragment
 {
 	public static final String
 		EXTRA_DAY = "day",
-		EXTRA_TIMETABLE = "timetable",
-		EXTRA_SETTINGS ="settings";
+		EXTRA_TIMETABLE = "timetable";
 	
 	TimetableDay timetableDay = null;
 	Timetable timetable = null;
@@ -41,9 +41,9 @@ public class DayFragment extends Fragment
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);	
-		
+		TimetableApp application = (TimetableApp) getActivity().getApplication();
+		appSettings = application.getSettings();
 		timetableDay = (TimetableDay) getArguments().getSerializable(EXTRA_DAY);
-		appSettings = (AppSettings) getArguments().getSerializable(EXTRA_SETTINGS);
 		timetable = (Timetable) getArguments().getSerializable(EXTRA_TIMETABLE);
 	}
 	

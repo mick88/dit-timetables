@@ -1,6 +1,5 @@
 package com.mick88.dittimetable.screens;
 
-import java.io.IOException;
 import java.util.Locale;
 
 import android.content.Intent;
@@ -18,7 +17,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
@@ -152,15 +150,8 @@ public class SettingsActivity extends ActionBarActivity
 		appSettings.setOnlyCurrentWeek(weekCheckBox.isChecked());
 		
 		appSettings.saveSettings(this);
-		try
-		{
-			Timetable.writeSettings(getApplicationContext(), settings);
-			return true;
-		} catch (IOException e)
-		{
-			Toast.makeText(getApplicationContext(), "Settings could not be saved", Toast.LENGTH_LONG).show();
-		}
-		return false;
+		
+		return true;
 	}
 	
 	void loadSettings()

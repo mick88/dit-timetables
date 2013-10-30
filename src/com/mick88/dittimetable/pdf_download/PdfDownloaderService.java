@@ -30,6 +30,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 
+import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.screens.TimetableActivity;
 import com.mick88.dittimetable.timetable.Timetable;
@@ -113,7 +114,7 @@ public class PdfDownloaderService extends Service
 				Timetable timetable = params[0];
 				try
 				{
-					url = timetable.getPdfUrl();
+					url = timetable.getPdfUrl(new Connection(new AppSettings(getApplicationContext(), true)));
 				}
 				catch (Exception e)
 				{

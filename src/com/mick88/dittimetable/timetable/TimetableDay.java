@@ -20,7 +20,6 @@ import com.mick88.dittimetable.list.Space;
 public class TimetableDay implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-//	final String name;
 	final int id;
 	final String logTag = "TimetableDay";
 	protected List<TimetableEvent> events = new ArrayList<TimetableEvent>();
