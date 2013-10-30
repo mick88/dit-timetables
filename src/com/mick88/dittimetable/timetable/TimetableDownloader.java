@@ -20,6 +20,7 @@ import android.util.Log;
 import com.flurry.android.FlurryAgent;
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.timetable.Exceptions.ServerConnectionException;
+import com.mick88.dittimetable.timetable.TimetableEvent.ClassType;
 import com.mick88.dittimetable.web.Connection;
 
 public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeException>
@@ -238,25 +239,54 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	
 	public boolean parseGridRow(TimetableDay day, Elements gridCols)
 	{
-		TimetableEvent event = new TimetableEvent(day.id, gridCols);
+		TimetableEvent event = parseEvent(day, gridCols);
 		if (event.isValid())
 		{			
-				try
-				{
-					downloadAdditionalInfo(event);
-					day.addClass(event);
-					return true;
-				} catch (IOException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					return false;
-				}
-			
-			
+			day.addClass(event);
+			try
+			{
+				downloadAdditionalInfo(event);
+				
+				return true;
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+				return false;
+			}
 		}
 		else 
 			return false;
+	}
+	
+	// Grid columns for event info
+	public static final int
+		GRID_ID = 1,
+		GRID_DAY = 2,
+		GRID_TIME_START = 3,
+		GRID_TIME_FINISH = 4,
+		GRID_ROOM = 5,
+		GRID_MODULE_CODE = 7,
+		GRID_MODULE_NAME = 8,
+		GRID_EVENT_TYPE = 9;
+	
+	private TimetableEvent parseEvent(TimetableDay day, Elements gridColumns)
+	{
+		TimetableEvent event = new TimetableEvent(day.id);
+		event.id = Integer.parseInt(gridColumns.get(GRID_ID).text());
+		
+		int [] time = parseHour(gridColumns.get(GRID_TIME_START).text());
+		event.startHour = time[0];
+		event.startMin = time[1];
+		
+		time = parseHour(gridColumns.get(GRID_TIME_FINISH).text());
+		event.endHour = time[0];
+		event.endMin = time[1];
+		
+		event.room = parseRooms(gridColumns.get(GRID_ROOM).text());
+		event.name = parseModuleName(gridColumns.get(GRID_MODULE_NAME).text());
+		event.type = parseType(gridColumns.get(GRID_EVENT_TYPE).text());
+		
+		return event;
 	}
 	
 	public boolean loadAdditionalInfo(TimetableEvent event)
@@ -373,7 +403,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 			Elements columns = row.select("td.gridData");
 			this.publishProgress(++currentRow, totalEvents);
 			if (columns.isEmpty()) continue;
-			String day = columns.get(TimetableEvent.GRID_DAY).text();
+			String day = columns.get(GRID_DAY).text();
 			TimetableDay tDay = days.get(day);
 			if (tDay != null)
 			{
@@ -417,5 +447,55 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		super.onProgressUpdate(values);
 		if (values.length > 1)
 			timetableDownloadListener.onDownloadProgress(values[0], values[1]);
+	}
+	
+	private static String parseModuleName(String s)
+	{
+		String stripped = stripCurlyBraces(s);
+		String [] parts = stripped.split(",");
+		if (parts.length == 0) return s;
+		else return parts[0];
+	}
+	
+	private static String parseRooms(String text)
+	{
+		return stripCurlyBraces(text);
+	}
+	
+	private static String stripCurlyBraces(String text)
+	{
+		int start = text.indexOf('{')+1;
+		if (start > 0)
+		{
+			int end = text.indexOf('}', start);
+			if (end > -1)
+				return text.substring(start, end);
+		}
+		return text;
+	}
+	
+	/**
+	 * return hour as integer from hh:mm string
+	 */
+	private static int [] parseHour(String time)
+	{
+		String [] parts = time.split(":");
+		int [] result = new int [parts.length];
+		for (int i=0; i < parts.length; i++)
+			result[i] = Integer.parseInt(parts[i]);
+		return result;
+	}
+	
+	private static ClassType parseType(String s)
+	{
+		try
+		{
+			return Enum.valueOf(ClassType.class, s);
+		}
+		catch (IllegalArgumentException e)
+		{
+			e.printStackTrace();
+			return ClassType.Other;
+		}
 	}
 }
