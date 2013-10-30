@@ -18,7 +18,6 @@ public class TimetableApp extends Application
 		super.onCreate();
 		
 		settings = new AppSettings(getApplicationContext(), true);
-		settings.loadSettings(getApplicationContext());
 	}
 	
 	public AppSettings getSettings()
