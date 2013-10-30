@@ -81,10 +81,10 @@ public class UnfoldActivity extends Activity implements OnClickListener
 		container.setOnClickListener(this);
 	}
 	
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	void animateTile(View view, int fromY)
 	{
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) return;
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
 		
 		AnimatorSet set = new AnimatorSet();
 		set.play(ObjectAnimator.ofFloat(view, View.Y, fromY));
