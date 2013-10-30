@@ -163,8 +163,6 @@ public class Timetable implements Serializable
 		file.close();
 	}
 	
-	Connection connection = null;
-	
 	/*Query data*/
 	protected String course = "DT211";
 	
@@ -203,7 +201,6 @@ public class Timetable implements Serializable
 		this.days[DAY_FRIDAY] = new TimetableDay(DAY_NAMES[DAY_FRIDAY], this);
 		this.days[DAY_SATURDAY] = new TimetableDay(DAY_NAMES[DAY_SATURDAY], this);*/
 		
-		this.connection = new Connection(settings);
 //		this.key = getDataset();
 		
 		
@@ -270,7 +267,7 @@ public class Timetable implements Serializable
 	 * @return
 	 * @throws IOException 
 	 */
-	public String getPdfUrl() throws IOException
+	public String getPdfUrl(Connection connection) throws IOException
 	{
 		String query = String.format(Locale.getDefault(), 
 				"?reqtype=timetablepdf&sKey=%s%%7C%s&sTitle=DIT&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&sWeeks=%s&sType=course&instCode=-2&instName=",
@@ -321,11 +318,6 @@ public class Timetable implements Serializable
 		{
 			e.printStackTrace();
 		}
-	}
-	
-	public Connection getConnection()
-	{
-		return connection;
 	}
 	
 	public String getCourse()

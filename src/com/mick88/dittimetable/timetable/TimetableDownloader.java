@@ -193,7 +193,6 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	 */
 	public void downloadAdditionalInfo(TimetableEvent event) throws IOException
 	{
-		Connection connection = timetable.getConnection();
 		String uri = String.format(Locale.getDefault(), "?reqtype=eventdetails&eventId=%s%%7C%d", TimetableDownloader.getDataset(), event.id);
 
 		String content = connection.getContent(uri);
