@@ -70,15 +70,6 @@ public class Timetable implements Serializable
 		return (daysBetween / 7)+1;		
 	}
 	
-	public static int getDayByName(String name)
-	{
-		for (int i=0; i < DAY_NAMES.length; i++)
-		{
-			if (DAY_NAMES[i].contains(name)) return i;
-		}
-		return -1;
-	}
-	
 	/**
 	 * Gets current calendar semester
 	 */
@@ -114,7 +105,6 @@ public class Timetable implements Serializable
 	private static final String DAY_SEPARATOR = ":day:";
 		
 	Date lastUpdated = null;
-	final String logTag = "Timetable";
 
 	protected int weekRange = INVALID_WEEK_RANGE; // alternative to weeks
 	protected String weeks = SEMESTER_1;
@@ -143,19 +133,15 @@ public class Timetable implements Serializable
 	 */
 	public Timetable(String course, int year, int weekRange)
 	{
-		this();
-		
+		this();		
 		this.course = course;
 		this.year = year;
 		this.weekRange = weekRange;
 	}	
 	
-	public Timetable(String course, int year, String weeks, AppSettings settings)
+	public Timetable(String course, int year, String weeks)
 	{
-		this(settings);
-		
-		this.course = course;
-		this.year = year;
+		this(course, year, INVALID_WEEK_RANGE);
 		this.weeks = weeks;		
 	}
 	
@@ -197,11 +183,6 @@ public class Timetable implements Serializable
 		Element pdfLink = elements.first();
 		
 		return  Connection.ROOT_ADDRESS_PDF + pdfLink.attr("href");
-	}
-	
-	public int getWeekRangeId()
-	{
-		return weekRange;
 	}
 	
 	/**
@@ -252,33 +233,6 @@ public class Timetable implements Serializable
 		return days[id];
 	}
 	
-	List<TimetableDay> getDayOrder(Element table)
-	{
-		ArrayList<TimetableDay> result = new ArrayList<TimetableDay>();
-		if (table != null)
-		{
-			Elements days = table.select("div");
-			for (Element day : days)
-			{
-				String dayStr = day.text().trim();
-				for (TimetableDay d : this.days)
-				{
-					if (d.getName().contains(dayStr))
-					{
-						result.add(d);
-						break;
-					}
-				}
-			}
-		}
-		return result;
-	}
-	
-	public TimetableDay getDayTimetable(int day)
-	{
-		return days[day];
-	}
-	
 	String getFilename()
 	{
 		return String.format(Locale.getDefault(), "%s_%d_%s_%s.txt", course, year, weeks, TimetableDownloader.getDataset());
@@ -290,22 +244,6 @@ public class Timetable implements Serializable
 		for (TimetableDay day : days)
 			day.getGroups(groups);
 		return groups;
-	}
-	
-	public int getNumDays()
-	{
-		return days.length;
-	}
-	
-	/**
-	 * gets id of the current day
-	 * @param defaultMonday if true, returns monday for if weekend
-	 */
-	public TimetableDay getToday(boolean defaultMonday)
-	{
-		int id = getTodayId(defaultMonday);
-		if (id == -1 | id >= days.length) return null;
-		return days[id];
 	}
 	
 	public void hideGroup(String groupCode, AppSettings settings)
