@@ -314,6 +314,12 @@ public class Timetable implements Serializable
 		return TextUtils.isEmpty(course) == false && TextUtils.isEmpty(weekRange) == false && year > 0;
 	}
 	
+	@Override
+	public String toString()
+	{
+		return describe().toString();
+	}
+	
 	public void writeFile(Context context, String filename, String content) throws IOException
 	{
 		FileOutputStream file = context.openFileOutput(filename, Context.MODE_PRIVATE);			
