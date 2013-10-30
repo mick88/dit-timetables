@@ -559,7 +559,7 @@ public class TimetableActivity extends ActionBarActivity
 		case R.id.share_timetable:
 			Intent intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain");
-			intent.putExtra(Intent.EXTRA_TEXT, timetable.toString());
+			intent.putExtra(Intent.EXTRA_TEXT, timetable.toString(application.getSettings()));
 			startActivity(Intent.createChooser(intent, "Share timetable via..."));
 			FlurryAgent.onEvent("Share timetable");
 			return true;
