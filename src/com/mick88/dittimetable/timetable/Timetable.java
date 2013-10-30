@@ -141,9 +141,9 @@ public class Timetable implements Serializable
 	/**
 	 * Creates new tiemtable object with custom settings
 	 */
-	public Timetable(String course, int year, int weekRange, AppSettings settings)
+	public Timetable(String course, int year, int weekRange)
 	{
-		this(settings);
+		this();
 		
 		this.course = course;
 		this.year = year;

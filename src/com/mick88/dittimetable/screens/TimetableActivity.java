@@ -270,7 +270,7 @@ public class TimetableActivity extends ActionBarActivity
 					return;
 				}
 				if (weekRange == Timetable.INVALID_WEEK_RANGE) setTimetable(new Timetable(course, year, weeks, application.getSettings()));
-				else setTimetable(new Timetable(course, year, weekRange, application.getSettings()));
+				else setTimetable(new Timetable(course, year, weekRange));
 				
 //				loadTimetable();
 				isTemporaryTimetable = true;
