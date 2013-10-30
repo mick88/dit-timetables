@@ -63,7 +63,7 @@ public class EventDetailsActivity extends ActionBarActivity
 		result.add(new KeyValue("Time:", String.format(Locale.getDefault(), "%s - %s", event.getStartTime(), event.getEndTime())));
 		result.add(new KeyValue("Room:", event.getRoom()));
 		result.add(new KeyValue("Lecturer:",event.getLecturer()));
-		result.add(new KeyValue("Type:", event.getType().toString()));
+		result.add(new KeyValue("Type:", event.getEventType().toString()));
 		
 		final String groups;
 		Collection<String> groupsCollection = event.getGroups();
@@ -85,7 +85,7 @@ public class EventDetailsActivity extends ActionBarActivity
 
 		result.add(new KeyValue("Groups:", groups));
 		result.add(new KeyValue("Weeks:", event.getWeeks()));
-		result.add(new KeyValue("Duration:", String.format("%d hours", event.getLength())));
+		result.add(new KeyValue("Duration:", String.format("%d hours", event.getDuration())));
 		result.add(new KeyValue("ID:", String.valueOf(event.getId())));
 		
 		return result;

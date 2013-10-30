@@ -67,7 +67,7 @@ public class TimetableDay implements Serializable
 	{
 		int n=0;
 		for (TimetableEvent event : events) 
-			if (event.getStartHour() == hour && event.isInWeek(week) && event.isGroup(hiddenGroups))
+			if (event.getStartHour() == hour && event.isInWeek(week) && event.isVisibleForGroupExcluding(hiddenGroups))
 				n++;
 		return n;
 	}
@@ -137,7 +137,7 @@ public class TimetableDay implements Serializable
 		int n=0;
 		StringBuilder builder = new StringBuilder(getName());
 		
-		for (TimetableEvent event : events) if (event.isInWeek(week) && event.isGroup(hiddenGroups))
+		for (TimetableEvent event : events) if (event.isInWeek(week) && event.isVisibleForGroupExcluding(hiddenGroups))
 		{
 			builder.append('\n');
 			builder.append(event.toString());
@@ -186,7 +186,7 @@ public class TimetableDay implements Serializable
 		int	showWeek = settings.getOnlyCurrentWeek() ? Timetable.getCurrentWeek() : 0;
 		
 		for (TimetableEvent event : this.events) 
-			if (event.isGroup(settings.getHiddenGroups()) && event.isInWeek(showWeek))
+			if (event.isVisibleForGroupExcluding(settings.getHiddenGroups()) && event.isInWeek(showWeek))
 			{
 				events.add(event);
 			}
@@ -209,7 +209,7 @@ public class TimetableDay implements Serializable
 		synchronized (events)
 		{
 			for (TimetableEvent event : events) 
-				if (event.isGroup(settings.getHiddenGroups()) && event.isInWeek(showWeek))
+				if (event.isVisibleForGroupExcluding(settings.getHiddenGroups()) && event.isInWeek(showWeek))
 			{
 				if (lastEvent != null)
 				{

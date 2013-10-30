@@ -86,8 +86,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	final Set<Integer> weeks;
 	
 	boolean complete =false;
-	// changed to true when event info is loaded from website
-	protected transient boolean updated = false;
 	
 	public void setWeekRange(String weekRange)
 	{
@@ -110,7 +108,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		return id;
 	}
 	
-	public ClassType getType()
+	public ClassType getEventType()
 	{
 		return type;
 	}
@@ -135,11 +133,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 				.replace(',', '\n');
 	}
 	
-	public ClassType getClassType()
-	{
-		return type;
-	}
-	
 	public Set<String> getGroups()
 	{
 		return groups;
@@ -160,11 +153,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			builder.append(g);
 		}
 		return builder.toString();
-	}
-	
-	public String getRoomShort()
-	{
-		return room;
 	}
 	
 	public int getStartHour()
@@ -190,7 +178,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	/**
 	 * Gets duration of this event in hours
 	 */
-	public int getLength()
+	public int getDuration()
 	{
 		return endHour - startHour;
 	}
@@ -240,18 +228,20 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		importFromString(importString);
 	}
 	
-	public boolean isGroup(Set<String> hiddenGroups)
+	/**
+	 * Returns true if class should be shown to user.
+	 * It will be shown if at least 1 group in this class is not hidden
+	 * @param hiddenGroups collection of groups that are hidden
+	 * @return
+	 */
+	public boolean isVisibleForGroupExcluding(Set<String> hiddenGroups)
 	{
 		if (groups.isEmpty()) return true;
-		/*Returns true if class should be shown to user.
-		 * It will be shown if at least 1 group in this class is not hidden */
 		
 		for (String groupCode : groups)
 		{
 			if (hiddenGroups.contains(groupCode) == false)
-			{
 				return true;
-			}
 		}
 		
 		return false;
@@ -259,7 +249,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	
 	void addGroup(String group)
 	{
-		if (TextUtils.isEmpty(group) == false && groups.contains(group) == false)
+		if (TextUtils.isEmpty(group) == false)
 		{
 			groups.add(group);
 			groupStr = groupToString();
@@ -269,20 +259,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	public String getGroupStr()
 	{
 		return groupStr;
-	}
-
-	public boolean isComplete()
-	{
-		return complete;
-	}
-	
-	/**
-	 * Tells whether the event details have just been downloaded
-	 * @return
-	 */
-	public boolean isUpdated()
-	{
-		return updated;
 	}
 	
 	void setGroups(String groupString)
@@ -301,7 +277,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	@Override
 	public String toString()
 	{
-		return String.format(Locale.ENGLISH, "%d:%02d-%d:%02d %s (%s)", startHour, startMin, endHour, endMin, name, room);
+		return String.format(Locale.ENGLISH, "%s: %s (%s)", getStartTime(), name, room);
 	}
 	
 	final String exportItemSeparator = ";";
@@ -496,11 +472,11 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		viewHolder.tvEventLecturer.setText(getLecturer());
 		viewHolder.tvEventLocation.setText(getRoom());
 		viewHolder.tvEventTime.setText(getEventTimeString());
-		viewHolder.tvEventType.setText(getClassType().toString());
+		viewHolder.tvEventType.setText(getEventType().toString());
 		viewHolder.tvEventTitle.setText(getName());
 		
 		int colourRes = 0;
-		switch (getType())
+		switch (getEventType())
 		{
 			case Laboratory:
 				colourRes = R.color.color_laboratory;

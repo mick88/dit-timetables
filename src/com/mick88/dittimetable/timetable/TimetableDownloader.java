@@ -199,7 +199,6 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		if (parseAdditionalInfo(event, content))
 		{
 			event.complete = true;
-			event.updated = true;
 		}
 	}
 	
