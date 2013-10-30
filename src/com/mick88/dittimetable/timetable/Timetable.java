@@ -1,6 +1,5 @@
 package com.mick88.dittimetable.timetable;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -48,13 +47,7 @@ public class Timetable implements Serializable
 		NUM_DAYS = DAY_SATURDAY+1,
 		INVALID_WEEK_RANGE = -1,
 		START_MONTH = Calendar.AUGUST,
-		START_DAY = 26,
-		
-		SETTINGS_ID_COURSE = 0,
-		SETTINGS_ID_YEAR=1,
-		SETTINGS_ID_WEEKS=2,
-		SETTING_ID_USERNAME=3,
-		SETTING_ID_PASSWORD=4;
+		START_DAY = 26;
 	
 	public static final String [] 
 			DAY_NAMES = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
@@ -62,12 +55,7 @@ public class Timetable implements Serializable
 	public static final String 
 			SEMESTER_1 = "4-20",
 			SEMESTER_2  = "23-30,33-37",
-			ALL_WEEKS  = "1-52",
-			SETTINGS_FILE_NAME = "settings.dat",
-			GROUPS_FILE_NAME = "groups.dat",
-			SETTINGS_SPLITTER = "\n",
-			GROUP_SPLITTER = ",",
-			STR_TABLE_GRAPHIC_START = "id=\"scrollContent\""; // this is how I know the page shows timetable 
+			ALL_WEEKS  = "1-52";
 			
 	public static int getCurrentWeek()
 	{
@@ -120,48 +108,6 @@ public class Timetable implements Serializable
 		else 
 			return (day > DAY_FRIDAY) ? -1 : day;
     }
-	
-	/**
-	 * Loads settings from the settings file into the array
-	 */
-	public static String [] readSettings(Context context) throws IOException
-	{
-		final int BUFFER_SIZE = 500;
-		FileInputStream f = context.openFileInput(SETTINGS_FILE_NAME);
-		
-		byte[] buffer = new byte[BUFFER_SIZE];				
-		
-		StringBuffer sb = new StringBuffer();
-		while (f.read(buffer) > 0)
-		{
-			String line = new String(buffer);
-			sb.append(line);
-			
-			buffer = new byte[BUFFER_SIZE];
-		}
-		
-		f.close();
-		return sb.toString().split(SETTINGS_SPLITTER);
-	}
-	
-	/**
-	 * Saves settings
-	 */
-	public static void writeSettings(Context context, String[] settingString) throws IOException
-	{
-		StringBuilder builder = new StringBuilder();
-		for (String s : settingString) 
-		{
-			builder.append(s);
-			builder.append(SETTINGS_SPLITTER);
-		}
-		FileOutputStream file = context.openFileOutput(SETTINGS_FILE_NAME, Context.MODE_PRIVATE);
-		
-		byte[] buffer = builder.toString().getBytes();
-		file.write(buffer);
-		file.flush();
-		file.close();
-	}
 	
 	/*Query data*/
 	protected String course = "DT211";
