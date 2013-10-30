@@ -227,14 +227,6 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		{
 			event.complete = true;
 			event.updated = true;
-			try
-			{
-				saveAdditionalInfo(event, content);
-			} catch (IOException e)
-			{
-			
-				e.printStackTrace();
-			}
 		}
 	}
 	
