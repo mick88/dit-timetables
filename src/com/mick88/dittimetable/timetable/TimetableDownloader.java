@@ -107,12 +107,12 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	 */
 	public String getQueryAddress(Timetable timetable)
 	{
-		if (timetable.weekRange == -1) return String.format(Locale.ENGLISH, 
+		if (timetable.weekRangeId == -1) return String.format(Locale.ENGLISH, 
 				"?reqtype=timetable&action=getgrid&sKey=%s%%7C%s&sTitle=Computing&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&sWeeks=%s&sType=course&instCode=-2&instName=", 
-				getDataset(), timetable.course, timetable.year, timetable.weeks);
+				getDataset(), timetable.course, timetable.year, timetable.weekRange);
 		else return String.format(Locale.ENGLISH, 
 				"?reqtype=timetable&action=getgrid&sKey=%s%%7C%s&sTitle=Computing&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&weekRange=%d&sType=course&instCode=-2&instName=", 
-				getDataset(), timetable.course, timetable.year, timetable.weekRange);
+				getDataset(), timetable.course, timetable.year, timetable.weekRangeId);
 	}
 	
 	public static String getDataset()
@@ -120,7 +120,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		Calendar c = Calendar.getInstance();
 		int startYear=0;
 		
-		if (Timetable.getSemester() == 1)
+		if (Timetable.getCurrentSemester() == 1)
 			startYear = c.get(Calendar.YEAR);
 		else
 			startYear = c.get(Calendar.YEAR)-1;
@@ -399,9 +399,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		}
 		
 		for (TimetableDay day : timetable.days)
-			day.sortEvents();
-		
-		timetable.valid = (numParsedEvents > 0);		
+			day.sortEvents();	
 	}
 
 	@Override

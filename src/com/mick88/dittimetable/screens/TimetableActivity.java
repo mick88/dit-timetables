@@ -251,7 +251,7 @@ public class TimetableActivity extends ActionBarActivity
 
 				String course = values.get("sKey").split("%7C")[1], 
 						weeks = (Timetable
-						.getSemester() == 1) ? Timetable.SEMESTER_1
+						.getCurrentSemester() == 1) ? Timetable.SEMESTER_1
 						: Timetable.SEMESTER_2;
 				int weekRange = Timetable.INVALID_WEEK_RANGE;
 				try
@@ -269,8 +269,8 @@ public class TimetableActivity extends ActionBarActivity
 				{
 					return;
 				}
-				if (weekRange == Timetable.INVALID_WEEK_RANGE) setTimetable(new Timetable(course, year, weeks, application.getSettings()));
-				else setTimetable(new Timetable(course, year, weekRange, application.getSettings()));
+				if (weekRange == Timetable.INVALID_WEEK_RANGE) setTimetable(new Timetable(course, year, weeks));
+				else setTimetable(new Timetable(course, year, weekRange));
 				
 //				loadTimetable();
 				isTemporaryTimetable = true;
