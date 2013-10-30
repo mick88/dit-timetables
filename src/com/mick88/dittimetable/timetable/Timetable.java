@@ -20,7 +20,6 @@ import org.jsoup.select.Elements;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.utils.FileUtils;
@@ -118,8 +117,6 @@ public class Timetable implements Serializable
 	 * For saving timetable locally
 	 */
 	private static final String DAY_SEPARATOR = ":day:";
-	
-	boolean disposed=false;
 		
 	Date lastUpdated = null;
 	final String logTag = "Timetable";
@@ -186,17 +183,6 @@ public class Timetable implements Serializable
 		else if (weeks.equals(SEMESTER_2)) return "Semester 2";
 		return new StringBuilder("Weeks ").append(weeks);
 	}
-	
-	/**
-	 * Cancel current tasks and remove listeners.
-	 */
-	public void dispose()
-	{
-		disposed=true;
-		Log.d("Timetable", "Timetable disposed "+describe());
-	}
-	
-    
 	
 	/**
 	 * Fetch page with url to the pdf and retrn url
@@ -364,11 +350,6 @@ public class Timetable implements Serializable
 			}
 		}
 		return (n > 0);
-	}
-	
-	public boolean isDisposed()
-	{
-		return disposed;
 	}
 	
 	public Map<String,String> ToHashMap()

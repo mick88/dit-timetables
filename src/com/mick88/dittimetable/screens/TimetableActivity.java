@@ -436,7 +436,6 @@ public class TimetableActivity extends ActionBarActivity
 	
 	public void setTimetable(Timetable timetable)
 	{
-		if (this.timetable != null) this.timetable.dispose();
 		this.timetable = timetable;
 		
 		if (timetable.isCourseDataSpecified()) 
