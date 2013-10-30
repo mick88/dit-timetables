@@ -178,32 +178,24 @@ public class Timetable implements Serializable
 	Date lastUpdated = null;
 	final String logTag = "Timetable";
 
-	final AppSettings settings;	
+	AppSettings settings;	
 	protected Boolean valid=true; //changed to false if error is detected	
 	protected int weekRange = INVALID_WEEK_RANGE; // alternative to weeks
 	protected String weeks = SEMESTER_1;	
 	protected int year=2;	
 	
+	public Timetable()
+	{
+		for (int i = 0; i < NUM_DAYS; i++)
+			this.days[i] = new TimetableDay(i);
+	}
 	/**
 	 * Creates new Timetable object from settings
 	 */
 	public Timetable(AppSettings settings)
 	{
+		this();
 		this.settings = settings;
-		/*Initialize days*/
-		for (int i = 0; i < NUM_DAYS; i++)
-			this.days[i] = new TimetableDay(i);
-		
-		/*this.days[DAY_MONDAY] = new TimetableDay(DAY_NAMES[DAY_MONDAY], this);
-		this.days[DAY_TUESDAY] = new TimetableDay(DAY_NAMES[DAY_TUESDAY], this);
-		this.days[DAY_WEDNESDAY] = new TimetableDay(DAY_NAMES[DAY_WEDNESDAY], this);
-		this.days[DAY_THURSDAY] = new TimetableDay(DAY_NAMES[DAY_THURSDAY], this);
-		this.days[DAY_FRIDAY] = new TimetableDay(DAY_NAMES[DAY_FRIDAY], this);
-		this.days[DAY_SATURDAY] = new TimetableDay(DAY_NAMES[DAY_SATURDAY], this);*/
-		
-//		this.key = getDataset();
-		
-		
 		this.course = settings.getCourse();
 		this.year = settings.getYear();
 		this.weeks = settings.getWeeks();			
