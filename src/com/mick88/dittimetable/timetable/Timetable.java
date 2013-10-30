@@ -108,11 +108,6 @@ public class Timetable implements Serializable
 			return (day > DAY_FRIDAY) ? -1 : day;
     }
 	
-	/*Query data*/
-	protected String course = "DT211";
-	
-	protected TimetableDay[] days = new TimetableDay[NUM_DAYS];
-	
 	/**
 	 * For saving timetable locally
 	 */
@@ -123,8 +118,10 @@ public class Timetable implements Serializable
 
 	protected Boolean valid=true; //changed to false if error is detected	
 	protected int weekRange = INVALID_WEEK_RANGE; // alternative to weeks
-	protected String weeks = SEMESTER_1;	
+	protected String weeks = SEMESTER_1;
+	protected String course = "DT211";
 	protected int year=2;	
+	protected TimetableDay[] days = new TimetableDay[NUM_DAYS];
 	
 	public Timetable()
 	{
