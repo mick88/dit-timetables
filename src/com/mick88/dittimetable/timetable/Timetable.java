@@ -160,6 +160,7 @@ public class Timetable implements Serializable
 	{
 		if (weekRange.equals(SEMESTER_1)) return "Semester 1";
 		else if (weekRange.equals(SEMESTER_2)) return "Semester 2";
+		else if (weekRange.equals(ALL_WEEKS)) return "Year "+String.valueOf(year);
 		return new StringBuilder("Weeks ").append(weekRange);
 	}
 	

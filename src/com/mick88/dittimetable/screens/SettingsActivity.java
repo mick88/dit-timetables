@@ -44,6 +44,7 @@ public class SettingsActivity extends ActionBarActivity
 	
 	final int SEM_1_ID=0,
 			SEM_2_ID=1,
+			SEM_ALL_ID=2,
 			CUSTOM_ID=4;
 	int currentWeek = Timetable.getCurrentWeek();
 	
@@ -173,6 +174,7 @@ public class SettingsActivity extends ActionBarActivity
 		
 		if (weeks.equals(Timetable.SEMESTER_1)) semesterSelector.setSelection(SEM_1_ID);
 		else if (weeks.equals(Timetable.SEMESTER_2)) semesterSelector.setSelection(SEM_2_ID);
+		else if (weeks.equals(Timetable.ALL_WEEKS)) semesterSelector.setSelection(SEM_ALL_ID);
 		else semesterSelector.setSelection(CUSTOM_ID);
 		
 		editCourse.setText(courseCode);
