@@ -21,8 +21,8 @@ public class TimetableDay implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	final int id;
-	final String logTag = "TimetableDay";
 	protected List<TimetableEvent> events = new ArrayList<TimetableEvent>();
+	private final String EXPORT_DAY_SEPARATOR = "\n";
 	
 	public TimetableDay(int id)
 	{
@@ -45,11 +45,11 @@ public class TimetableDay implements Serializable
 		}		
 	}
 	
-	public void addClass(TimetableEvent c)
+	public void addEvent(TimetableEvent event)
 	{
 		synchronized (events)
 		{
-			events.add(c);
+			events.add(event);
 		}		
 	}
 	
@@ -63,17 +63,16 @@ public class TimetableDay implements Serializable
 		return getName().subSequence(0, 3);
 	}
 	
-	public int getNumEvents(int hour, Set<String> hiddenGroups, int week)
+	public int getNumEventsAt(int hour, Set<String> hiddenGroups, int week)
 	{
 		int n=0;
-		for (TimetableEvent event : events) if (event.getStartHour() == hour && event.isInWeek(week))
-		{
-			if (event.isGroup(hiddenGroups)) n++;
-		}
+		for (TimetableEvent event : events) 
+			if (event.getStartHour() == hour && event.isInWeek(week) && event.isGroup(hiddenGroups))
+				n++;
 		return n;
 	}
 	
-	public List<TimetableEvent> getClasses()
+	public List<TimetableEvent> getEvents()
 	{
 		return events;
 	}
@@ -149,7 +148,6 @@ public class TimetableDay implements Serializable
 		else return builder.toString();
 	}
 	
-	private final String EXPORT_DAY_SEPARATOR = "\n";
 	public CharSequence export()
 	{
 		StringBuilder builder = new StringBuilder();
@@ -170,7 +168,7 @@ public class TimetableDay implements Serializable
 			if (event.isValid() /*&& event.isGroup(timetable.hiddenGroups)*/)
 			{
 				n++;
-				addClass(event);
+				addEvent(event);
 			}
 		}
 		return n;
@@ -179,15 +177,13 @@ public class TimetableDay implements Serializable
 	public boolean isToday()
 	{
 		return Timetable.getTodayId(false) == this.id;
-//		return Timetable.getToday(false) == this;
 	}
 	
 	public List<TimetableEvent> getEvents(AppSettings settings)
 	{
 		List<TimetableEvent> events = new ArrayList<TimetableEvent>();
 		
-		int currentWeek = Timetable.getCurrentWeek(),
-				showWeek = settings.getOnlyCurrentWeek()?currentWeek : 0;
+		int	showWeek = settings.getOnlyCurrentWeek() ? Timetable.getCurrentWeek() : 0;
 		
 		for (TimetableEvent event : this.events) 
 			if (event.isGroup(settings.getHiddenGroups()) && event.isInWeek(showWeek))
@@ -224,7 +220,7 @@ public class TimetableDay implements Serializable
 					}
 				}
 				
-				int numEvents = getNumEvents(event.getStartHour(), settings.getHiddenGroups(), showWeek);
+				int numEvents = getNumEventsAt(event.getStartHour(), settings.getHiddenGroups(), showWeek);
 				boolean singleEvent = (numEvents == 1);
 				
 				if (singleEvent)

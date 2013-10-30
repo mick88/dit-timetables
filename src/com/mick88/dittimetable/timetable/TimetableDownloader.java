@@ -208,7 +208,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		TimetableEvent event = parseEvent(day, gridCols);
 		if (event.isValid())
 		{			
-			day.addClass(event);
+			day.addEvent(event);
 			try
 			{
 				downloadAdditionalInfo(event);

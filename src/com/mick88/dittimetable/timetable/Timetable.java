@@ -298,7 +298,7 @@ public class Timetable implements Serializable
 			week = getCurrentWeek();
 		for (TimetableDay day : days)
 		{
-			if (day.getClasses().isEmpty()) continue;
+			if (day.getEvents().isEmpty()) continue;
 			String s = day.toString(settings.getHiddenGroups(), settings.getOnlyCurrentWeek()?week:0);
 			if (TextUtils.isEmpty(s)) continue;
 			
