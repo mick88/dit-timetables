@@ -1,6 +1,7 @@
 package com.mick88.dittimetable.timetable;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
@@ -228,7 +229,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 			event.updated = true;
 			try
 			{
-				event.saveAdditionalInfo(context, content);
+				saveAdditionalInfo(event, content);
 			} catch (IOException e)
 			{
 			
@@ -289,9 +290,28 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		return event;
 	}
 	
+	/**
+	 * Gets filename for event chaced data
+	 * @return
+	 */
+	protected String getEventFileName(TimetableEvent event)
+	{
+		return String.format(Locale.getDefault(), "%d.html", event.id);
+	}
+	
+	protected void saveAdditionalInfo(TimetableEvent event, String content) throws IOException
+	{
+		String filename = getEventFileName(event);
+		FileOutputStream file = context.openFileOutput(filename, Context.MODE_PRIVATE);			
+		byte[] buffer = content.getBytes();
+		file.write(buffer);
+		file.flush();
+		file.close();
+	}
+	
 	public boolean loadAdditionalInfo(TimetableEvent event)
 	{
-		String filename = event.getFileName();	
+		String filename = getEventFileName(event);	
 		StringBuffer sb = new StringBuffer();
 		try
 		{

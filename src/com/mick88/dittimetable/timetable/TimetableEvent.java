@@ -97,11 +97,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		decodeWeeks();
 	}
 	
-	protected String getFileName()
-	{
-		return String.format(Locale.getDefault(), "%d.html", id);
-	}
-	
 	public String getDayName()
 	{
 		return Timetable.DAY_NAMES[day];
@@ -290,17 +285,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	public boolean isUpdated()
 	{
 		return updated;
-	}
-	
-	@Deprecated
-	protected void saveAdditionalInfo(Context context, String content) throws IOException
-	{
-		String filename = getFileName();
-		FileOutputStream file = context.openFileOutput(filename, Context.MODE_PRIVATE);			
-		byte[] buffer = content.getBytes();
-		file.write(buffer);
-		file.flush();
-		file.close();
 	}
 	
 	void setGroups(String groupString)
