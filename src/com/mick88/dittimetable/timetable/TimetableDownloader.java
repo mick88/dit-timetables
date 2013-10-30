@@ -181,24 +181,6 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		
 		parseGrid(string);
 		
-		// finalize by saving to file and downloading detailde info
-		for (TimetableDay day : timetable.days)
-		{
-			for (TimetableEvent event : day.events)
-			{
-				if (isCancelled()) break;
-				if (event.isUpdated()) continue;
-				try
-				{
-					downloadAdditionalInfo(event);
-				} catch (IOException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		
 		timetable.exportTimetable(context);
 		Log.i(logTag, "Timetable successfully downloaded");
 		timetable.lastUpdated = new Date();
