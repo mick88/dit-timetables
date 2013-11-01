@@ -389,4 +389,20 @@ public class Timetable implements Serializable
 		this.days = days;
 	}
 	
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o instanceof Timetable)
+		{
+			Timetable other = (Timetable) o;
+			return (year == other.year && course.equals(other.course) && weekRange.equals(other.weekRange));
+		}
+		return super.equals(o);
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return course.hashCode() * weekRange.hashCode() * year;
+	}
 }
