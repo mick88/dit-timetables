@@ -224,6 +224,15 @@ public class TimetableActivity extends ActionBarActivity
 				.setPositiveButton(android.R.string.ok, null)
 				.show();
 		}
+		else if (extras != null && extras.containsKey(EXTRA_TIMETABLE))
+		{
+			Object extraTimetable = extras.getSerializable(EXTRA_TIMETABLE);
+			if (extraTimetable instanceof Timetable)
+			{
+				this.timetable = (Timetable) extraTimetable;
+				refresh();
+			}
+		}
 
 		if (address != null && address.getHost().equalsIgnoreCase("www.dit.ie"))
 		{
