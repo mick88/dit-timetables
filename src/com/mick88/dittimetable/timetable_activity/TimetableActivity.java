@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -361,6 +362,7 @@ public class TimetableActivity extends ActionBarActivity
 					Intent intent = new Intent(getApplicationContext(), TimetableActivity.class);
 					intent.putExtra(EXTRA_TIMETABLE, timetable);
 					finish();
+					// TODO: change transition animation
 					startActivity(intent);
 					return true;
 				}
