@@ -1,4 +1,4 @@
-package com.mick88.dittimetable.pdf_download;
+package com.mick88.dittimetable;
 
 import java.io.BufferedInputStream;
 import java.io.File;

@@ -55,7 +55,7 @@
         </receiver>
         -->
         <service
-            android:name="com.mick88.dittimetable.pdf_download.PdfDownloaderService"
+            android:name="com.mick88.dittimetable.PdfDownloaderService"
             android:enabled="true"
             android:exported="true" >
         </service>
