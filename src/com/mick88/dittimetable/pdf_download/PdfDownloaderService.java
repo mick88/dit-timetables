@@ -30,9 +30,9 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.util.Log;
 
-import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.downloader.Connection;
+import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable_activity.TimetableActivity;
 import com.mick88.dittimetable.utils.HttpUtils;

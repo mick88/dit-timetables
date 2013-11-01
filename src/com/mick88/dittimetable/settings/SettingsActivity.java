@@ -1,4 +1,4 @@
-package com.mick88.dittimetable.screens;
+package com.mick88.dittimetable.settings;
 
 import java.util.Locale;
 
@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.RobotoArrayAdapter;
 import com.mick88.dittimetable.TimetableApp;

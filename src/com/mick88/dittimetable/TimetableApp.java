@@ -3,6 +3,8 @@ package com.mick88.dittimetable;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.mick88.dittimetable.settings.AppSettings;
+
 import android.app.Application;
 import android.os.Build;
 

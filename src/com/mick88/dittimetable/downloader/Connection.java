@@ -21,7 +21,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.mick88.dittimetable.AppSettings;
+import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.utils.HttpUtils;
 
 public class Connection implements Serializable

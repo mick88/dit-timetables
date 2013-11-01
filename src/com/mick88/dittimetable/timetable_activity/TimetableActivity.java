@@ -35,7 +35,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
-import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.downloader.Exceptions;
@@ -43,7 +42,8 @@ import com.mick88.dittimetable.downloader.TimetableDownloader;
 import com.mick88.dittimetable.downloader.Exceptions.NoLocalCopyException;
 import com.mick88.dittimetable.downloader.TimetableDownloader.TimetableDownloadListener;
 import com.mick88.dittimetable.pdf_download.PdfDownloaderService;
-import com.mick88.dittimetable.screens.SettingsActivity;
+import com.mick88.dittimetable.settings.AppSettings;
+import com.mick88.dittimetable.settings.SettingsActivity;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable_activity.GroupSelectionDialog.GroupSelectionListener;
 import com.mick88.dittimetable.utils.FontApplicator;

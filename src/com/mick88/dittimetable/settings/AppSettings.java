@@ -1,4 +1,4 @@
-package com.mick88.dittimetable;
+package com.mick88.dittimetable.settings;
 
 import java.io.Serializable;
 import java.util.HashSet;

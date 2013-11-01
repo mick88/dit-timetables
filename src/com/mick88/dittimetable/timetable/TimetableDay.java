@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.mick88.dittimetable.AppSettings;
+import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.timetable_activity.event_list.MultiEvent;
 import com.mick88.dittimetable.timetable_activity.event_list.Space;
 import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;

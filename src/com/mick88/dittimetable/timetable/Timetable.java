@@ -19,10 +19,10 @@ import org.jsoup.select.Elements;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.downloader.Connection;
 import com.mick88.dittimetable.downloader.Exceptions;
 import com.mick88.dittimetable.downloader.TimetableDownloader;
+import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.utils.FileUtils;
 
 /**
