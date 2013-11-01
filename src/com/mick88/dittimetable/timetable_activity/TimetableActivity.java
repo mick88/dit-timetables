@@ -358,9 +358,9 @@ public class TimetableActivity extends ActionBarActivity
 					settings.setWeekRange(timetable.getWeekRange());
 					settings.saveSettings(getApplicationContext());
 					
-					Toast.makeText(getApplicationContext(), timetable.describe(), Toast.LENGTH_SHORT).show();
-					setTimetable(timetable);
-					refresh();
+					Intent intent = getIntent();
+					finish();
+					startActivity(intent);
 					return true;
 				}
 				return false;
