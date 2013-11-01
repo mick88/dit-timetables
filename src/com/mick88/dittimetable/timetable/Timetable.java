@@ -33,7 +33,7 @@ import com.mick88.dittimetable.utils.FileUtils;
  *
  */
 @TableName("Timetable")
-public class Timetable implements Serializable
+public class Timetable implements Serializable, Comparable<Timetable>
 {
 	
 	private static final long serialVersionUID = 1L;
@@ -404,5 +404,13 @@ public class Timetable implements Serializable
 	public int hashCode()
 	{
 		return course.hashCode() * weekRange.hashCode() * year;
+	}
+
+	@Override
+	public int compareTo(Timetable another)
+	{
+		if (lastUpdated != null && another.lastUpdated != null) 
+			return lastUpdated.compareTo(another.lastUpdated);
+		else return 0;
 	}
 }
