@@ -1,4 +1,4 @@
-package com.mick88.dittimetable.timetable;
+package com.mick88.dittimetable.downloader;
 
 public abstract class Exceptions
 {

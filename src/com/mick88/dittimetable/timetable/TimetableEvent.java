@@ -69,13 +69,25 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	final static String logTag = "TimetableEvent";
 	
 	/*Main event data*/
-	protected String name="", room="", lecturer = "", weekRange="", groupStr="";
-	protected int id=0,
-			 startHour=0,
-				startMin=0,
-				endMin=0,
-			endHour=0;
-	ClassType type=ClassType.Other;
+	private String name="";
+
+	protected String room="";
+
+	private String lecturer = "";
+
+	protected String weekRange="";
+
+	protected String groupStr="";
+	private int id=0;
+
+	private int startHour=0;
+
+	private int startMin=0;
+
+	private int endMin=0;
+
+	private int endHour=0;
+	private ClassType type=ClassType.Other;
 	Set<String> groups = new HashSet<String>();
 	
 	private final int day;
@@ -85,7 +97,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	 */
 	final Set<Integer> weeks;
 	
-	boolean complete =false;
+	private boolean complete =false;
 	
 	public void setWeekRange(String weekRange)
 	{
@@ -110,7 +122,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	
 	public ClassType getEventType()
 	{
-		return type;
+		return getType();
 	}
 
 	public String getName()
@@ -172,7 +184,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	
 	public CharSequence getStartTime()
 	{
-		return String.format(Locale.getDefault(),  "%d:%02d", startHour, startMin);
+		return String.format(Locale.getDefault(),  "%d:%02d", getStartHour(), getStartMin());
 	}
 	
 	/**
@@ -180,7 +192,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	 */
 	public int getDuration()
 	{
-		return endHour - startHour;
+		return getEndHour() - getStartHour();
 	}
 	
 	public boolean isToday()
@@ -195,12 +207,12 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	
 	public boolean isEventOn(int hour)
 	{
-		return (hour >= startHour && hour < endHour && isToday());
+		return (hour >= getStartHour() && hour < getEndHour() && isToday());
 	}
 	
 	public CharSequence getEndTime()
 	{
-		return String.format(Locale.getDefault(),  "%d:%02d", endHour, endMin);
+		return String.format(Locale.getDefault(),  "%d:%02d", getEndHour(), getEndMin());
 	}
 	
 	public void setRoom(String room)
@@ -261,7 +273,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		return groupStr;
 	}
 	
-	void setGroups(String groupString)
+	public void setGroups(String groupString)
 	{
 		String [] grps = groupString.split(",");
 		for (String s : grps)
@@ -277,7 +289,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	@Override
 	public String toString()
 	{
-		return String.format(Locale.ENGLISH, "%s: %s (%s)", getStartTime(), name, room);
+		return String.format(Locale.ENGLISH, "%s: %s (%s)", getStartTime(), getName(), room);
 	}
 	
 	final String exportItemSeparator = ";";
@@ -285,19 +297,19 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	{		
 		StringBuilder builder = 
 				new StringBuilder();
-		builder.append(id).append(exportItemSeparator);		
-		builder.append(name).append(exportItemSeparator);
+		builder.append(getId()).append(exportItemSeparator);		
+		builder.append(getName()).append(exportItemSeparator);
 		builder.append(room).append(exportItemSeparator);
-		builder.append(lecturer).append(exportItemSeparator);
+		builder.append(getLecturer()).append(exportItemSeparator);
 		
-		builder.append(startHour).append(exportItemSeparator);
-		builder.append(startMin).append(exportItemSeparator);
+		builder.append(getStartHour()).append(exportItemSeparator);
+		builder.append(getStartMin()).append(exportItemSeparator);
 		
-		builder.append(endHour).append(exportItemSeparator);
-		builder.append(endMin).append(exportItemSeparator);
+		builder.append(getEndHour()).append(exportItemSeparator);
+		builder.append(getEndMin()).append(exportItemSeparator);
 		
 		builder.append(weekRange).append(exportItemSeparator);
-		builder.append(type.name()).append(exportItemSeparator);
+		builder.append(getType().name()).append(exportItemSeparator);
 		builder.append(groupToString().replace(exportItemSeparator, "")).append(exportItemSeparator);		
 		
 		return builder.toString();
@@ -356,18 +368,18 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		{
 			String [] fields = string.split(exportItemSeparator, -1);
 			int field = 0;
-			id = Integer.valueOf(fields[field++]);
-			name = fields[field++];
+			setId(Integer.valueOf(fields[field++]));
+			setName(fields[field++]);
 			room = fields[field++];
-			lecturer = fields[field++];
+			setLecturer(fields[field++]);
 			
-			startHour = Integer.valueOf(fields[field++]);
-			startMin = Integer.valueOf(fields[field++]);
-			endHour = Integer.valueOf(fields[field++]);
-			endMin = Integer.valueOf(fields[field++]);
+			setStartHour(Integer.valueOf(fields[field++]));
+			setStartMin(Integer.valueOf(fields[field++]));
+			setEndHour(Integer.valueOf(fields[field++]));
+			setEndMin(Integer.valueOf(fields[field++]));
 			
 			weekRange = fields[field++];
-			type = ClassType.valueOf(fields[field++]);
+			setType(ClassType.valueOf(fields[field++]));
 			
 			if (fields.length >= field+1)
 			{
@@ -377,7 +389,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 					addGroup(s);
 				}
 			}
-			complete=true;
+			setComplete(true);
 			decodeWeeks();
 		}
 		catch (Exception e)
@@ -389,7 +401,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	
 	public boolean isValid()
 	{
-		return startHour >= MIN_START_TIME && endHour > startHour;
+		return getStartHour() >= MIN_START_TIME && getEndHour() > getStartHour();
 	}
 	
 	/**
@@ -406,8 +418,8 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	@Override
 	public int compareTo(TimetableEvent another)
 	{
-		if (another.startHour > this.startHour) return -1;
-		else if (another.startHour < this.startHour) return 1;
+		if (another.getStartHour() > this.getStartHour()) return -1;
+		else if (another.getStartHour() < this.getStartHour()) return 1;
 		
 		return groupStr.compareTo(another.groupStr);
 	}
@@ -421,7 +433,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	@Override
 	public int hashCode()
 	{
-		return id;
+		return getId();
 	}
 	
 	@Override
@@ -429,7 +441,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	{
 		if (o instanceof TimetableEvent)
 		{
-			return ((TimetableEvent) o).id == this.id;
+			return ((TimetableEvent) o).getId() == this.getId();
 		}
 		else return false;
 	}
@@ -500,5 +512,70 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 					.getColor(colourRes));
 		}
 		return view;		
+	}
+
+	public void setId(int id)
+	{
+		this.id = id;
+	}
+
+	public void setStartHour(int startHour)
+	{
+		this.startHour = startHour;
+	}
+
+	public int getStartMin()
+	{
+		return startMin;
+	}
+
+	public void setStartMin(int startMin)
+	{
+		this.startMin = startMin;
+	}
+
+	public void setEndHour(int endHour)
+	{
+		this.endHour = endHour;
+	}
+
+	public int getEndMin()
+	{
+		return endMin;
+	}
+
+	public void setEndMin(int endMin)
+	{
+		this.endMin = endMin;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	public ClassType getType()
+	{
+		return type;
+	}
+
+	public void setType(ClassType type)
+	{
+		this.type = type;
+	}
+
+	public boolean isComplete()
+	{
+		return complete;
+	}
+
+	public void setComplete(boolean complete)
+	{
+		this.complete = complete;
+	}
+
+	public void setLecturer(String lecturer)
+	{
+		this.lecturer = lecturer;
 	}
 }

@@ -20,7 +20,7 @@ import com.mick88.dittimetable.list.Space;
 public class TimetableDay implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	final int id;
+	private final int id;
 	protected List<TimetableEvent> events = new ArrayList<TimetableEvent>();
 	private final String EXPORT_DAY_SEPARATOR = "\n";
 	
@@ -55,7 +55,7 @@ public class TimetableDay implements Serializable
 	
 	public String getName()
 	{
-		return Timetable.DAY_NAMES[id];
+		return Timetable.DAY_NAMES[getId()];
 	}
 	
 	public CharSequence getShortName()
@@ -164,7 +164,7 @@ public class TimetableDay implements Serializable
 		String [] events = string.split(EXPORT_DAY_SEPARATOR);
 		for (String eventString : events)
 		{
-			TimetableEvent event = new TimetableEvent(eventString, id);
+			TimetableEvent event = new TimetableEvent(eventString, getId());
 			if (event.isValid() /*&& event.isGroup(timetable.hiddenGroups)*/)
 			{
 				n++;
@@ -176,7 +176,7 @@ public class TimetableDay implements Serializable
 	
 	public boolean isToday()
 	{
-		return Timetable.getTodayId(false) == this.id;
+		return Timetable.getTodayId(false) == this.getId();
 	}
 	
 	public List<TimetableEvent> getEvents(AppSettings settings)
@@ -251,7 +251,7 @@ public class TimetableDay implements Serializable
 	@Override
 	public int hashCode()
 	{
-		return id;
+		return getId();
 	}
 	
 	@Override
@@ -259,8 +259,13 @@ public class TimetableDay implements Serializable
 	{
 		if (o instanceof TimetableDay)
 		{
-			return ((TimetableDay) o).id == id;
+			return ((TimetableDay) o).getId() == getId();
 		}
 		else return super.equals(o);
+	}
+
+	public int getId()
+	{
+		return id;
 	}
 }

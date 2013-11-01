@@ -12,8 +12,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import com.mick88.dittimetable.web.Connection;
-import com.mick88.dittimetable.web.Cookie;
+import com.mick88.dittimetable.downloader.Connection;
+import com.mick88.dittimetable.downloader.Cookie;
 
 public class HttpUtils
 {

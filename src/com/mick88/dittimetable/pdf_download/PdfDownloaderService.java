@@ -32,10 +32,10 @@ import android.util.Log;
 
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.downloader.Connection;
 import com.mick88.dittimetable.screens.TimetableActivity;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.utils.HttpUtils;
-import com.mick88.dittimetable.web.Connection;
 
 public class PdfDownloaderService extends Service
 {

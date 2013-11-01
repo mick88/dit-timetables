@@ -1,4 +1,4 @@
-package com.mick88.dittimetable.web;
+package com.mick88.dittimetable.downloader;
 
 import java.io.IOException;
 import java.io.Serializable;

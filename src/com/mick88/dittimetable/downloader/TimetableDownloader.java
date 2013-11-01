@@ -1,4 +1,4 @@
-package com.mick88.dittimetable.timetable;
+package com.mick88.dittimetable.downloader;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -20,9 +20,20 @@ import android.util.Log;
 
 import com.flurry.android.FlurryAgent;
 import com.mick88.dittimetable.AppSettings;
-import com.mick88.dittimetable.timetable.Exceptions.ServerConnectionException;
+import com.mick88.dittimetable.downloader.Exceptions.EmptyTimetableException;
+import com.mick88.dittimetable.downloader.Exceptions.IncorrectCredentialsException;
+import com.mick88.dittimetable.downloader.Exceptions.InvalidDataException;
+import com.mick88.dittimetable.downloader.Exceptions.NoEventsException;
+import com.mick88.dittimetable.downloader.Exceptions.ServerConnectionException;
+import com.mick88.dittimetable.downloader.Exceptions.ServerLoadingException;
+import com.mick88.dittimetable.downloader.Exceptions.SessionExpiredException;
+import com.mick88.dittimetable.downloader.Exceptions.SettingsEmptyException;
+import com.mick88.dittimetable.downloader.Exceptions.TimetableException;
+import com.mick88.dittimetable.downloader.Exceptions.WrongCourseException;
+import com.mick88.dittimetable.timetable.Timetable;
+import com.mick88.dittimetable.timetable.TimetableDay;
+import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.timetable.TimetableEvent.ClassType;
-import com.mick88.dittimetable.web.Connection;
 
 public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeException>
 {
@@ -107,12 +118,12 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	 */
 	public String getQueryAddress(Timetable timetable)
 	{
-		if (timetable.weekRangeId == -1) return String.format(Locale.ENGLISH, 
+		if (timetable.getWeekRangeId() == -1) return String.format(Locale.ENGLISH, 
 				"?reqtype=timetable&action=getgrid&sKey=%s%%7C%s&sTitle=Computing&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&sWeeks=%s&sType=course&instCode=-2&instName=", 
-				getDataset(), timetable.course, timetable.year, timetable.weekRange);
+				getDataset(), timetable.getCourse(), timetable.getYear(), timetable.getWeekRange());
 		else return String.format(Locale.ENGLISH, 
 				"?reqtype=timetable&action=getgrid&sKey=%s%%7C%s&sTitle=Computing&sYear=%d&sEventType=&sModOccur=&sFromDate=&sToDate=&weekRange=%d&sType=course&instCode=-2&instName=", 
-				getDataset(), timetable.course, timetable.year, timetable.weekRangeId);
+				getDataset(), timetable.getCourse(), timetable.getYear(), timetable.getWeekRangeId());
 	}
 	
 	public static String getDataset()
@@ -183,7 +194,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		
 		timetable.exportTimetable(context);
 		Log.i(logTag, "Timetable successfully downloaded");
-		timetable.lastUpdated = new Date();
+		timetable.setLastUpdated(new Date());
 	}
 	
 	
@@ -193,12 +204,12 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	 */
 	public void downloadAdditionalInfo(TimetableEvent event) throws IOException
 	{
-		String uri = String.format(Locale.getDefault(), "?reqtype=eventdetails&eventId=%s%%7C%d", TimetableDownloader.getDataset(), event.id);
+		String uri = String.format(Locale.getDefault(), "?reqtype=eventdetails&eventId=%s%%7C%d", TimetableDownloader.getDataset(), event.getId());
 
 		String content = connection.getContent(uri);
 		if (parseAdditionalInfo(event, content))
 		{
-			event.complete = true;
+			event.setComplete(true);
 		}
 	}
 	
@@ -236,20 +247,20 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	
 	private TimetableEvent parseEvent(TimetableDay day, Elements gridColumns)
 	{
-		TimetableEvent event = new TimetableEvent(day.id);
-		event.id = Integer.parseInt(gridColumns.get(GRID_ID).text());
+		TimetableEvent event = new TimetableEvent(day.getId());
+		event.setId(Integer.parseInt(gridColumns.get(GRID_ID).text()));
 		
 		int [] time = parseHour(gridColumns.get(GRID_TIME_START).text());
-		event.startHour = time[0];
-		event.startMin = time[1];
+		event.setStartHour(time[0]);
+		event.setStartMin(time[1]);
 		
 		time = parseHour(gridColumns.get(GRID_TIME_FINISH).text());
-		event.endHour = time[0];
-		event.endMin = time[1];
+		event.setEndHour(time[0]);
+		event.setEndMin(time[1]);
 		
-		event.room = parseRooms(gridColumns.get(GRID_ROOM).text());
-		event.name = parseModuleName(gridColumns.get(GRID_MODULE_NAME).text());
-		event.type = parseType(gridColumns.get(GRID_EVENT_TYPE).text());
+		event.setRoom(parseRooms(gridColumns.get(GRID_ROOM).text()));
+		event.setName(parseModuleName(gridColumns.get(GRID_MODULE_NAME).text()));
+		event.setType(parseType(gridColumns.get(GRID_EVENT_TYPE).text()));
 		
 		return event;
 	}
@@ -260,7 +271,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	 */
 	protected String getEventFileName(TimetableEvent event)
 	{
-		return String.format(Locale.getDefault(), "%d.html", event.id);
+		return String.format(Locale.getDefault(), "%d.html", event.getId());
 	}
 	
 	protected void saveAdditionalInfo(TimetableEvent event, String content) throws IOException
@@ -341,7 +352,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 					}
 					else if (headerText.equals("Lecturer"))
 					{
-						event.lecturer = parseLecturerName(elements.get(++i).text());
+						event.setLecturer(parseLecturerName(elements.get(++i).text()));
 					} 
 				}
 			}
@@ -369,7 +380,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	{
 		// put days in a hashmap
 		Map<String, TimetableDay> days = new HashMap<String, TimetableDay>(7);
-		for (TimetableDay day : timetable.days)
+		for (TimetableDay day : timetable.getDays())
 			days.put(day.getShortName().toString(), day);
 		
 		int numParsedEvents = 0,
@@ -397,7 +408,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 			}
 		}
 		
-		for (TimetableDay day : timetable.days)
+		for (TimetableDay day : timetable.getDays())
 			day.sortEvents();	
 	}
 
