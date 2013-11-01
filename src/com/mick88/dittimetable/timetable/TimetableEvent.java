@@ -90,12 +90,12 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	private ClassType type=ClassType.Other;
 	Set<String> groups = new HashSet<String>();
 	
-	private final int day;
+	private int day;
 	
 	/**
 	 * Stores parsed list of weeks when event is on
 	 */
-	final Set<Integer> weeks;
+	Set<Integer> weeks;
 	
 	private boolean complete =false;
 	
@@ -225,10 +225,15 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		return week == 0 || weeks.isEmpty() || weeks.contains(week);
 	}
 	
+	private TimetableEvent()
+	{
+		weeks = new HashSet<Integer>();
+	}
+	
 	public TimetableEvent(int day)
 	{
-		this.day = day;
-		weeks = new HashSet<Integer>();
+		this();
+		this.day = day;		
 	}
 	
 	/**
