@@ -24,6 +24,7 @@ import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.app.ActionBar.TabListener;
 import android.support.v7.app.ActionBarActivity;
@@ -31,6 +32,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -321,7 +323,26 @@ public class TimetableActivity extends ActionBarActivity
 			}
 		}
 		setupViewPager();
-
+		setupActionBar();
+	}
+	
+	void setupActionBar()
+	{
+		final List<Timetable> timetables = new DatabaseHelper(getApplicationContext()).getSavedTimetables();
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		ArrayAdapter<Timetable> timetableAdapter = new ArrayAdapter<Timetable>(this, android.R.layout.simple_spinner_item, android.R.id.text1, timetables);
+		timetableAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		getSupportActionBar().setListNavigationCallbacks(timetableAdapter, new OnNavigationListener()
+		{			
+			@Override
+			public boolean onNavigationItemSelected(int arg0, long arg1)
+			{
+				Toast.makeText(getApplicationContext(), timetables.get(arg0).describe(), Toast.LENGTH_SHORT).show();
+				return false;
+			}
+		});
 	}
 	
 	@Override
