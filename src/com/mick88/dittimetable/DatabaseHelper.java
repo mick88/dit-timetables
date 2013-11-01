@@ -3,6 +3,7 @@ package com.mick88.dittimetable;
 import android.content.Context;
 
 import com.michaldabski.msqlite.MSQLiteOpenHelper;
+import com.mick88.dittimetable.timetable.Timetable;
 
 public class DatabaseHelper extends MSQLiteOpenHelper
 {
@@ -11,7 +12,7 @@ public class DatabaseHelper extends MSQLiteOpenHelper
 	
 	public DatabaseHelper(Context context, Class<?>[] trackedClasses) {
 		super(context, name, null, version, new Class<?>[]{
-				// TODO: Add tracked classes
+				Timetable.class,
 		});
 	}
 	
