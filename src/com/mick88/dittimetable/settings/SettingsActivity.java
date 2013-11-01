@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -36,10 +38,10 @@ public class SettingsActivity extends ActionBarActivity
 		semesterSelector;
 	CheckBox weekCheckBox;
 	EditText editWeeks,
-		editCourse,
 		editPassword,
 		editUsername;
 	AppSettings appSettings;
+	AutoCompleteTextView editCourse;
 	boolean allowCancel = true;
 	
 	final int SEM_1_ID=0,
@@ -65,12 +67,15 @@ public class SettingsActivity extends ActionBarActivity
 		yearSelector = (Spinner) findViewById(R.id.spinner_year_selector);
 		semesterSelector = (Spinner) findViewById(R.id.spinner_semester_selector);
 		editWeeks = (EditText) findViewById(R.id.edit_weeks);
-		editCourse = (EditText) findViewById(R.id.editCourseCode);
+		editCourse = (AutoCompleteTextView) findViewById(R.id.editCourseCode);
 		editCourse.setRawInputType(Configuration.KEYBOARD_QWERTY);
 		editUsername =  (EditText) findViewById(R.id.editUsername);
 		editPassword = (EditText) findViewById(R.id.editPassword);
 		weekCheckBox = (CheckBox) findViewById(R.id.checkBoxSetCurrentWeekOnly);
 		TextView tvInfo = (TextView) findViewById(R.id.textDatasetInfo);
+		
+		ArrayAdapter<String> courseAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, TimetableDownloader.getCourseCodes());
+		editCourse.setAdapter(courseAdapter);
 		
 		String [] years = getResources().getStringArray(R.array.year_values);
 		yearSelector.setAdapter(new RobotoArrayAdapter<String>(this, android.R.layout.simple_spinner_item, android.R.id.text1, years));
