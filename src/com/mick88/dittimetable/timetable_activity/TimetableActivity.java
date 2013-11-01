@@ -358,7 +358,8 @@ public class TimetableActivity extends ActionBarActivity
 					settings.setWeekRange(timetable.getWeekRange());
 					settings.saveSettings(getApplicationContext());
 					
-					Intent intent = getIntent();
+					Intent intent = new Intent(getApplicationContext(), TimetableActivity.class);
+					intent.putExtra(EXTRA_TIMETABLE, timetable);
 					finish();
 					startActivity(intent);
 					return true;
