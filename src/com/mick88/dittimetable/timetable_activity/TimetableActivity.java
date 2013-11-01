@@ -329,6 +329,7 @@ public class TimetableActivity extends ActionBarActivity
 	void setupActionBar()
 	{
 		final List<Timetable> timetables = new DatabaseHelper(getApplicationContext()).getSavedTimetables();
+		if (timetables.contains(timetable) == false) timetables.add(timetable);
 		Collections.sort(timetables);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		
@@ -340,10 +341,18 @@ public class TimetableActivity extends ActionBarActivity
 			@Override
 			public boolean onNavigationItemSelected(int arg0, long arg1)
 			{
-				Toast.makeText(getApplicationContext(), timetables.get(arg0).describe(), Toast.LENGTH_SHORT).show();
+				if (timetables.get(arg0).equals(timetable) == false)
+				{
+					Toast.makeText(getApplicationContext(), timetables.get(arg0).describe(), Toast.LENGTH_SHORT).show();
+					setTimetable(timetables.get(arg0));
+					refresh();
+					return true;
+				}
 				return false;
 			}
 		});
+
+		getSupportActionBar().setSelectedNavigationItem(timetables.indexOf(timetable));
 	}
 	
 	@Override
