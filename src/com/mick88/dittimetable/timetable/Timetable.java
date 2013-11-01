@@ -19,6 +19,7 @@ import org.jsoup.select.Elements;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.michaldabski.msqlite.Annotations.ColumnName;
 import com.michaldabski.msqlite.Annotations.PrimaryKey;
 import com.michaldabski.msqlite.Annotations.TableName;
 import com.mick88.dittimetable.downloader.Connection;
