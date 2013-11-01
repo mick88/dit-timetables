@@ -313,12 +313,11 @@ public class TimetableActivity extends ActionBarActivity
 				
 		if (timetable == null) // if intent isnt processed
 		{
-			openTimetable(getSettings());
-
 			if (application.getSettings().isCourseDataSpecified() == false)
 			{
 				showSettingsScreen(false);
 			}
+			else openTimetable(getSettings());
 		}
 		setupViewPager();
 
