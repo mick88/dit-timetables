@@ -35,4 +35,13 @@ public class DatabaseHelper extends MSQLiteOpenHelper
 		replace(timetable);
 		Log.d(TAG, "Timetable saved: "+timetable.describe());
 	}
+	
+	/**
+	 * returns all timetables saved in database
+	 * @return
+	 */
+	public List<Timetable> getSavedTimetables()
+	{
+		return selectAll(Timetable.class);
+	}
 }
