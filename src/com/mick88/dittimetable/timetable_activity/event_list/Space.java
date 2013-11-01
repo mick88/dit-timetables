@@ -1,4 +1,4 @@
-package com.mick88.dittimetable.list;
+package com.mick88.dittimetable.timetable_activity.event_list;
 
 import java.util.Calendar;
 
@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.mick88.dittimetable.R;
-import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.timetable.Timetable;
+import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 /**

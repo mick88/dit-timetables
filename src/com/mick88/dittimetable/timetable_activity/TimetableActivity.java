@@ -1,4 +1,4 @@
-package com.mick88.dittimetable.screens;
+package com.mick88.dittimetable.timetable_activity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,8 +35,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
-import com.mick88.dittimetable.GroupSelectionDialog;
-import com.mick88.dittimetable.GroupSelectionDialog.GroupSelectionListener;
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
@@ -45,8 +43,9 @@ import com.mick88.dittimetable.downloader.TimetableDownloader;
 import com.mick88.dittimetable.downloader.Exceptions.NoLocalCopyException;
 import com.mick88.dittimetable.downloader.TimetableDownloader.TimetableDownloadListener;
 import com.mick88.dittimetable.pdf_download.PdfDownloaderService;
-import com.mick88.dittimetable.swipable_tabs.TimetablePageAdapter;
+import com.mick88.dittimetable.screens.SettingsActivity;
 import com.mick88.dittimetable.timetable.Timetable;
+import com.mick88.dittimetable.timetable_activity.GroupSelectionDialog.GroupSelectionListener;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class TimetableActivity extends ActionBarActivity 

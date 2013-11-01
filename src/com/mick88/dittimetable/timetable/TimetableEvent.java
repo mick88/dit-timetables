@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.event_details.EventDetailsSwipableActivity;
-import com.mick88.dittimetable.list.EventAdapter.EventItem;
+import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 

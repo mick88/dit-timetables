@@ -24,6 +24,7 @@ import com.mick88.dittimetable.RobotoArrayAdapter;
 import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.downloader.TimetableDownloader;
 import com.mick88.dittimetable.timetable.Timetable;
+import com.mick88.dittimetable.timetable_activity.TimetableActivity;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class SettingsActivity extends ActionBarActivity

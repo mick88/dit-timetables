@@ -1,4 +1,4 @@
-package com.mick88.dittimetable.swipable_tabs;
+package com.mick88.dittimetable.timetable_activity;
 
 import java.util.List;
 
@@ -15,10 +15,10 @@ import android.widget.TextView;
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
-import com.mick88.dittimetable.list.EventAdapter;
-import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableDay;
+import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter;
+import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class DayFragment extends Fragment

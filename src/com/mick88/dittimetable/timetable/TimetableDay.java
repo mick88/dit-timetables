@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Set;
 
 import com.mick88.dittimetable.AppSettings;
-import com.mick88.dittimetable.list.EventAdapter.EventItem;
-import com.mick88.dittimetable.list.MultiEvent;
-import com.mick88.dittimetable.list.Space;
+import com.mick88.dittimetable.timetable_activity.event_list.MultiEvent;
+import com.mick88.dittimetable.timetable_activity.event_list.Space;
+import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 
 /**
  * ontains list of classes in a day

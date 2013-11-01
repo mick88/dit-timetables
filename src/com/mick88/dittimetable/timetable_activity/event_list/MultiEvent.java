@@ -1,4 +1,4 @@
-package com.mick88.dittimetable.list;
+package com.mick88.dittimetable.timetable_activity.event_list;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,10 +17,10 @@ import android.widget.RelativeLayout.LayoutParams;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.UnfoldActivity;
-import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.timetable.TimetableEvent.EventViewHolder;
+import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class MultiEvent implements EventItem

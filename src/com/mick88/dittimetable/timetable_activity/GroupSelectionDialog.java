@@ -1,7 +1,10 @@
-package com.mick88.dittimetable;
+package com.mick88.dittimetable.timetable_activity;
 
 import java.util.ArrayList;
 import java.util.Locale;
+
+import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.R.drawable;
 
 import android.app.Activity;
 import android.app.AlertDialog;

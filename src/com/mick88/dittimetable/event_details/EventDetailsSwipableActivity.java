@@ -11,9 +11,9 @@ import android.view.MenuItem;
 import com.mick88.dittimetable.AppSettings;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
-import com.mick88.dittimetable.list.EventAdapter.EventItem;
 import com.mick88.dittimetable.timetable.TimetableDay;
 import com.mick88.dittimetable.timetable.TimetableEvent;
+import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class EventDetailsSwipableActivity extends ActionBarActivity

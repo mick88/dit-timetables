@@ -1,4 +1,4 @@
-package com.mick88.dittimetable.swipable_tabs;
+package com.mick88.dittimetable.timetable_activity;
 
 import android.graphics.Typeface;
 import android.os.Bundle;

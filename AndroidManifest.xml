@@ -20,7 +20,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity android:name="com.mick88.dittimetable.screens.TimetableActivity" >
+        <activity android:name="com.mick88.dittimetable.timetable_activity.TimetableActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,13 +34,13 @@
         <activity
             android:name="com.mick88.dittimetable.UnfoldActivity"
             android:label="@string/title_activity_unfold"
-            android:parentActivityName="com.mick88.dittimetable.screens.TimetableActivity"
+            android:parentActivityName="com.mick88.dittimetable.timetable_activity.TimetableActivity"
             android:theme="@style/details_theme" >
         </activity>
         <activity
             android:name="com.mick88.dittimetable.event_details.EventDetailsSwipableActivity"
             android:label="@string/title_activity_event_details"
-            android:parentActivityName="com.mick88.dittimetable.screens.TimetableActivity" >
+            android:parentActivityName="com.mick88.dittimetable.timetable_activity.TimetableActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mick88.dittimetable.TimetableActivity" />
