@@ -329,6 +329,7 @@ public class TimetableActivity extends ActionBarActivity
 	void setupActionBar()
 	{
 		final List<Timetable> timetables = new DatabaseHelper(getApplicationContext()).getSavedTimetables();
+		Collections.sort(timetables);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
