@@ -343,8 +343,15 @@ public class TimetableActivity extends ActionBarActivity
 			{
 				if (timetables.get(arg0).equals(timetable) == false)
 				{
-					Toast.makeText(getApplicationContext(), timetables.get(arg0).describe(), Toast.LENGTH_SHORT).show();
-					setTimetable(timetables.get(arg0));
+					Timetable timetable = timetables.get(arg0);
+					AppSettings settings = getSettings();
+					settings.setCourse(timetable.getCourse());
+					settings.setYear(timetable.getYear());
+					settings.setWeekRange(timetable.getWeekRange());
+					settings.saveSettings(getApplicationContext());
+					
+					Toast.makeText(getApplicationContext(), timetable.describe(), Toast.LENGTH_SHORT).show();
+					setTimetable(timetable);
 					refresh();
 					return true;
 				}
