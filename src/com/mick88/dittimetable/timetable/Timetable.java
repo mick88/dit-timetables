@@ -209,6 +209,7 @@ public class Timetable implements Serializable
 	/**
 	 * Writes timetable to file
 	 */
+	@Deprecated
 	public void exportTimetable(Context context)
 	{
 		StringBuilder builder = new StringBuilder();
@@ -263,6 +264,7 @@ public class Timetable implements Serializable
 	/**
 	 * Loads timetable from file
 	 */
+	@Deprecated
 	public void importSavedTimetable(Context context)
 	{
 		if (importTimetable(context) == false) 

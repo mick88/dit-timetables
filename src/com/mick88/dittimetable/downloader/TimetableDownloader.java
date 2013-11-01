@@ -191,8 +191,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 			throw new Exceptions.WrongCourseException();
 		
 		parseGrid(string);
-		
-		timetable.exportTimetable(context);
+
 		Log.i(logTag, "Timetable successfully downloaded");
 		timetable.setLastUpdated(new Date());
 	}
