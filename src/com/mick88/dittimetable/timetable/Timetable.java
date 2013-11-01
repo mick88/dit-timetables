@@ -19,6 +19,8 @@ import org.jsoup.select.Elements;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.michaldabski.msqlite.Annotations.PrimaryKey;
+import com.michaldabski.msqlite.Annotations.TableName;
 import com.mick88.dittimetable.downloader.Connection;
 import com.mick88.dittimetable.downloader.Exceptions;
 import com.mick88.dittimetable.downloader.TimetableDownloader;
@@ -30,6 +32,7 @@ import com.mick88.dittimetable.utils.FileUtils;
  * @author Michal
  *
  */
+@TableName("Timetable")
 public class Timetable implements Serializable
 {
 	
@@ -107,8 +110,11 @@ public class Timetable implements Serializable
 	private Date lastUpdated = null;
 
 	private int weekRangeId = INVALID_WEEK_RANGE; // alternative to weeks
+	@PrimaryKey
 	private String weekRange = SEMESTER_1;
+	@PrimaryKey
 	protected String course = "DT211";
+	@PrimaryKey
 	private int year=2;	
 	private TimetableDay[] days = new TimetableDay[NUM_DAYS];
 	
