@@ -14,6 +14,7 @@ import java.util.TimerTask;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import android.support.v7.app.ActionBar.TabListener;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -342,8 +344,9 @@ public class TimetableActivity extends ActionBarActivity
 		Collections.sort(timetables);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		
+		Context context = new ContextThemeWrapper(this, R.style.Theme_AppCompat);
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		ArrayAdapter<Timetable> timetableAdapter = new ArrayAdapter<Timetable>(this, android.R.layout.simple_spinner_item, android.R.id.text1, timetables);
+		ArrayAdapter<Timetable> timetableAdapter = new ArrayAdapter<Timetable>(context, android.R.layout.simple_spinner_item, android.R.id.text1, timetables);
 		timetableAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		getSupportActionBar().setListNavigationCallbacks(timetableAdapter, new OnNavigationListener()
 		{			
