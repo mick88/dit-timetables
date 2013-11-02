@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.RobotoArrayAdapter;
 import com.mick88.dittimetable.timetable.Timetable;
 
@@ -29,7 +30,7 @@ public class TimetableDropdownAdapter extends RobotoArrayAdapter<Timetable>
 		View view = convertView;
 		if (view == null)
 		{
-			view = getLayoutInflater().inflate(android.R.layout.simple_list_item_2, parent, false);
+			view = getLayoutInflater().inflate(R.layout.list_item_dropdown_2line, parent, false);
 			applyRobotoFont(view);
 		}
 		setData(view, getItem(position));
@@ -42,7 +43,7 @@ public class TimetableDropdownAdapter extends RobotoArrayAdapter<Timetable>
 		View view = convertView;
 		if (view == null)
 		{
-			view = getLayoutInflater().inflate(android.R.layout.simple_list_item_2, parent, false);
+			view = getLayoutInflater().inflate(R.layout.list_item_dropdown_2line, parent, false);
 			applyRobotoFont(view);
 		}
 		setData(view, getItem(position));
