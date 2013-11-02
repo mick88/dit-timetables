@@ -14,6 +14,15 @@ import com.mick88.dittimetable.timetable.Timetable;
 
 public class TimetableDropdownAdapter extends RobotoArrayAdapter<Timetable>
 {
+	private static class ViewHolder
+	{
+		TextView tvCourse, tvWeeks;
+		public ViewHolder(View view)
+		{
+			tvCourse = (TextView) view.findViewById(android.R.id.text1);
+			tvWeeks = (TextView) view.findViewById(android.R.id.text2);
+		}
+	}
 	public TimetableDropdownAdapter(Context context, List<Timetable> objects)
 	{
 		super(context, 0, View.NO_ID, objects);
@@ -31,6 +40,7 @@ public class TimetableDropdownAdapter extends RobotoArrayAdapter<Timetable>
 		if (view == null)
 		{
 			view = getLayoutInflater().inflate(R.layout.list_item_dropdown_2line, parent, false);
+			view.setTag(new ViewHolder(view));
 			applyRobotoFont(view);
 		}
 		setData(view, getItem(position));
@@ -44,6 +54,7 @@ public class TimetableDropdownAdapter extends RobotoArrayAdapter<Timetable>
 		if (view == null)
 		{
 			view = getLayoutInflater().inflate(R.layout.list_item_dropdown_2line, parent, false);
+			view.setTag(new ViewHolder(view));
 			applyRobotoFont(view);
 		}
 		setData(view, getItem(position));
@@ -52,10 +63,9 @@ public class TimetableDropdownAdapter extends RobotoArrayAdapter<Timetable>
 	
 	void setData(View view, Timetable timetable)
 	{
-		TextView tvCourse = (TextView) view.findViewById(android.R.id.text1), 
-			tvWeeks = (TextView) view.findViewById(android.R.id.text2);
+		ViewHolder holder = (ViewHolder) view.getTag();
 		
-		tvCourse.setText(timetable.describe());
-		tvWeeks.setText(timetable.describeWeeks());
+		holder.tvCourse.setText(timetable.describe());
+		holder.tvWeeks.setText(timetable.describeWeeks());
 	}
 }
