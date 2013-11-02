@@ -26,7 +26,10 @@ public class RobotoArrayAdapter<T> extends ArrayAdapter<T>
 		init();
 	}
 	
-	
+	protected void applyRobotoFont(View view)
+	{
+		fontApplicator.applyFont(view);
+	}
 
 	public RobotoArrayAdapter(Context context, int resource,
 			int textViewResourceId, T[] objects) {
@@ -43,7 +46,7 @@ public class RobotoArrayAdapter<T> extends ArrayAdapter<T>
 		View result = super.getView(position, convertView, parent);
 		
 		if (convertView == null) 
-			fontApplicator.applyFont(result);
+			applyRobotoFont(result);
 		
 		return result;
 	}
@@ -54,7 +57,7 @@ public class RobotoArrayAdapter<T> extends ArrayAdapter<T>
 		View result =  super.getDropDownView(position, convertView, parent);
 		
 		if (convertView == null) 
-			fontApplicator.applyFont(result);
+			applyRobotoFont(result);
 		
 		return result;
 	}
