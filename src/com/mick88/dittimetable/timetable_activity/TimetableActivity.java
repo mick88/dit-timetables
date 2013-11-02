@@ -19,6 +19,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -337,41 +338,56 @@ public class TimetableActivity extends ActionBarActivity
 	
 	void setupActionBar()
 	{
-		final List<Timetable> timetables = new DatabaseHelper(getApplicationContext()).getSavedTimetables();
-		if (timetables.contains(timetable) == false) timetables.add(timetable);
-		Collections.sort(timetables);
-		getSupportActionBar().setDisplayShowTitleEnabled(false);
-		
-		Context context = new ContextThemeWrapper(this, R.style.Theme_AppCompat);
-		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		TimetableDropdownAdapter timetableAdapter = new TimetableDropdownAdapter(context, timetables);
-		timetableAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		getSupportActionBar().setListNavigationCallbacks(timetableAdapter, new OnNavigationListener()
-		{			
-			@Override
-			public boolean onNavigationItemSelected(int arg0, long arg1)
-			{
-				if (timetables.get(arg0).equals(timetable) == false)
-				{
-					Timetable timetable = timetables.get(arg0);
-					AppSettings settings = getSettings();
-					settings.setCourse(timetable.getCourse());
-					settings.setYear(timetable.getYear());
-					settings.setWeekRange(timetable.getWeekRange());
-					settings.saveSettings(getApplicationContext());
-					
-					Intent intent = new Intent(getApplicationContext(), TimetableActivity.class);
-					intent.putExtra(EXTRA_TIMETABLE, timetable);
-					finish();
-					// TODO: change transition animation
-					startActivity(intent);
-					return true;
-				}
-				return false;
-			}
-		});
+		new AsyncTask<Void, Void, List<Timetable>>()
+		{
 
-		getSupportActionBar().setSelectedNavigationItem(timetables.indexOf(timetable));
+			@Override
+			protected List<Timetable> doInBackground(Void... params)
+			{
+				List<Timetable> timetables = new DatabaseHelper(getApplicationContext()).getSavedTimetables();
+				if (timetables.contains(timetable) == false) timetables.add(timetable);
+				Collections.sort(timetables);
+				return timetables;
+			}
+			
+			@Override
+			protected void onPostExecute(final List<Timetable> timetables)
+			{
+				if (timetables.size() == 1) return;
+				getSupportActionBar().setDisplayShowTitleEnabled(false);
+				
+				Context context = new ContextThemeWrapper(TimetableActivity.this, R.style.Theme_AppCompat);
+				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+				TimetableDropdownAdapter timetableAdapter = new TimetableDropdownAdapter(context, timetables);
+				timetableAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				getSupportActionBar().setListNavigationCallbacks(timetableAdapter, new OnNavigationListener()
+				{			
+					@Override
+					public boolean onNavigationItemSelected(int arg0, long arg1)
+					{
+						if (timetables.get(arg0).equals(timetable) == false)
+						{
+							Timetable timetable = timetables.get(arg0);
+							AppSettings settings = getSettings();
+							settings.setCourse(timetable.getCourse());
+							settings.setYear(timetable.getYear());
+							settings.setWeekRange(timetable.getWeekRange());
+							settings.saveSettings(getApplicationContext());
+							
+							Intent intent = new Intent(getApplicationContext(), TimetableActivity.class);
+							intent.putExtra(EXTRA_TIMETABLE, timetable);
+							finish();
+							// TODO: change transition animation
+							startActivity(intent);
+							return true;
+						}
+						return false;
+					}
+				});
+
+				getSupportActionBar().setSelectedNavigationItem(timetables.indexOf(timetable));
+			}
+		}.execute();
 	}
 	
 	@Override
