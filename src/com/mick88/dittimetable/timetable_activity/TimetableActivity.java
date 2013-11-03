@@ -377,8 +377,8 @@ public class TimetableActivity extends ActionBarActivity
 							Intent intent = new Intent(getApplicationContext(), TimetableActivity.class);
 							intent.putExtra(EXTRA_TIMETABLE, timetable);
 							finish();
-							// TODO: change transition animation
 							startActivity(intent);
+							overridePendingTransition(0, 0);
 							return true;
 						}
 						return false;
