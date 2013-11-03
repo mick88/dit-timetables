@@ -18,6 +18,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical|left"
     android:background="@drawable/spinner_bg_selector"
+    android:paddingLeft="5dp"
     android:orientation="vertical" >
 
     <TextView
