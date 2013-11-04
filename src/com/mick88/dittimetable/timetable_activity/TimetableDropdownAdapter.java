@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.RobotoArrayAdapter;
-import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableStub;
 
 public class TimetableDropdownAdapter extends RobotoArrayAdapter<TimetableStub>

@@ -3,6 +3,7 @@ package com.mick88.dittimetable;
 import java.util.List;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.michaldabski.msqlite.MSQLiteOpenHelper;
@@ -43,6 +44,9 @@ public class DatabaseHelper extends MSQLiteOpenHelper
 	 */
 	public List<TimetableStub> getSavedTimetables()
 	{
-		return selectAll(TimetableStub.class);
+		SQLiteDatabase database = getReadableDatabase();
+		List<TimetableStub> timetableStubs = select(database, TimetableStub.class, new String [] {"course", "year", "weekRange"}, null, null, "course, year", null);
+		database.close();
+		return timetableStubs;
 	}
 }
