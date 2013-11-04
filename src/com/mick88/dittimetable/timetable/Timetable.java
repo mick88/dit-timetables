@@ -98,9 +98,9 @@ public class Timetable extends TimetableStub
 	/**
 	 * For saving timetable locally
 	 */
+	@Deprecated
 	private static final String DAY_SEPARATOR = ":day:";
-		
-	protected Date lastUpdated = null;
+	
 	private int weekRangeId = INVALID_WEEK_RANGE; // alternative to weeks
 	private TimetableDay[] days = new TimetableDay[NUM_DAYS];
 	
@@ -234,6 +234,7 @@ public class Timetable extends TimetableStub
 			throw new Exceptions.NoLocalCopyException();
 	}
 	
+	@Deprecated
 	private boolean importTimetable(Context context)
 	{
 		String content = FileUtils.readFile(context, "export"+getFilename());
@@ -289,6 +290,7 @@ public class Timetable extends TimetableStub
 		return describe().toString();
 	}
 	
+	@Deprecated
 	public void writeFile(Context context, String filename, String content) throws IOException
 	{
 		FileOutputStream file = context.openFileOutput(filename, Context.MODE_PRIVATE);			
@@ -306,16 +308,6 @@ public class Timetable extends TimetableStub
 	public void setWeekRangeId(int weekRangeId)
 	{
 		this.weekRangeId = weekRangeId;
-	}
-
-	public Date getLastUpdated()
-	{
-		return lastUpdated;
-	}
-
-	public void setLastUpdated(Date lastUpdated)
-	{
-		this.lastUpdated = lastUpdated;
 	}
 
 	public TimetableDay[] getDays()

@@ -20,6 +20,7 @@ import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventI
 public class TimetableDay implements Serializable
 {
 	private static final long serialVersionUID = 1L;
+	@Deprecated
 	private final String EXPORT_DAY_SEPARATOR = "\n";
 	private int id;
 	protected List<TimetableEvent> events = new ArrayList<TimetableEvent>();	
@@ -154,6 +155,7 @@ public class TimetableDay implements Serializable
 		else return builder.toString();
 	}
 	
+	@Deprecated
 	public CharSequence export()
 	{
 		StringBuilder builder = new StringBuilder();
@@ -164,6 +166,7 @@ public class TimetableDay implements Serializable
 		return builder;
 	}
 	
+	@Deprecated
 	public int importFromString(String string)
 	{
 		int n=0;
