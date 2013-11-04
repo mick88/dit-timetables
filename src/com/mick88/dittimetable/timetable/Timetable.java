@@ -2,7 +2,6 @@ package com.mick88.dittimetable.timetable;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -19,7 +18,6 @@ import org.jsoup.select.Elements;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.michaldabski.msqlite.Annotations.PrimaryKey;
 import com.michaldabski.msqlite.Annotations.TableName;
 import com.mick88.dittimetable.downloader.Connection;
 import com.mick88.dittimetable.downloader.Exceptions;
@@ -33,7 +31,7 @@ import com.mick88.dittimetable.utils.FileUtils;
  *
  */
 @TableName("Timetable")
-public class Timetable implements Serializable, Comparable<Timetable>
+public class Timetable extends TimetableStub
 {
 	
 	private static final long serialVersionUID = 1L;
@@ -107,19 +105,13 @@ public class Timetable implements Serializable, Comparable<Timetable>
 	 */
 	private static final String DAY_SEPARATOR = ":day:";
 		
-	private Date lastUpdated = null;
-
+	protected Date lastUpdated = null;
 	private int weekRangeId = INVALID_WEEK_RANGE; // alternative to weeks
-	@PrimaryKey
-	private String weekRange = SEMESTER_1;
-	@PrimaryKey
-	protected String course = "DT211";
-	@PrimaryKey
-	private int year=2;	
 	private TimetableDay[] days = new TimetableDay[NUM_DAYS];
 	
 	public Timetable()
 	{
+		super();
 		for (int i = 0; i < NUM_DAYS; i++)
 			this.getDays()[i] = new TimetableDay(i);
 	}
@@ -226,16 +218,6 @@ public class Timetable implements Serializable, Comparable<Timetable>
 		}
 	}
 	
-	public String getCourse()
-	{
-		return course;
-	}
-
-	public String getCourseYearCode()
-	{
-		return String.format(Locale.getDefault(), "%s/%d", course, getYear());
-	}
-	
 	public TimetableDay getDay(int id)
 	{
 		return getDays()[id];
@@ -319,11 +301,6 @@ public class Timetable implements Serializable, Comparable<Timetable>
 		return builder.toString();
 	}
 	
-	public boolean isCourseDataSpecified()
-	{
-		return TextUtils.isEmpty(course) == false && TextUtils.isEmpty(getWeekRange()) == false && getYear() > 0;
-	}
-	
 	@Override
 	public String toString()
 	{
@@ -349,26 +326,6 @@ public class Timetable implements Serializable, Comparable<Timetable>
 		this.weekRangeId = weekRangeId;
 	}
 
-	public int getYear()
-	{
-		return year;
-	}
-
-	public void setYear(int year)
-	{
-		this.year = year;
-	}
-
-	public String getWeekRange()
-	{
-		return weekRange;
-	}
-
-	public void setWeekRange(String weekRange)
-	{
-		this.weekRange = weekRange;
-	}
-
 	public Date getLastUpdated()
 	{
 		return lastUpdated;
@@ -387,30 +344,5 @@ public class Timetable implements Serializable, Comparable<Timetable>
 	public void setDays(TimetableDay[] days)
 	{
 		this.days = days;
-	}
-	
-	@Override
-	public boolean equals(Object o)
-	{
-		if (o instanceof Timetable)
-		{
-			Timetable other = (Timetable) o;
-			return (year == other.year && course.equals(other.course) && weekRange.equals(other.weekRange));
-		}
-		return super.equals(o);
-	}
-	
-	@Override
-	public int hashCode()
-	{
-		return course.hashCode() * weekRange.hashCode() * year;
-	}
-
-	@Override
-	public int compareTo(Timetable another)
-	{
-		if (lastUpdated != null && another.lastUpdated != null) 
-			return lastUpdated.compareTo(another.lastUpdated);
-		else return 0;
 	}
 }
