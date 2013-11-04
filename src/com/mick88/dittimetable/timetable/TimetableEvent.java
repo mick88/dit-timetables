@@ -239,6 +239,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	/**
 	 * Creates new object by importing data from string
 	 */
+	@Deprecated
 	public TimetableEvent(String importString, int day)
 	{
 		this(day);
@@ -363,6 +364,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	/**
 	 * imports saved event from file
 	 */
+	@Deprecated
 	public void importFromString(String string)
 	{
 		if (TextUtils.isEmpty(string)) 

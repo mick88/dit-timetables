@@ -105,6 +105,7 @@ public class Timetable implements Serializable
 	/**
 	 * For saving timetable locally
 	 */
+	@Deprecated
 	private static final String DAY_SEPARATOR = ":day:";
 		
 	private Date lastUpdated = null;
@@ -270,6 +271,7 @@ public class Timetable implements Serializable
 			throw new Exceptions.NoLocalCopyException();
 	}
 	
+	@Deprecated
 	private boolean importTimetable(Context context)
 	{
 		String content = FileUtils.readFile(context, "export"+getFilename());
@@ -330,6 +332,7 @@ public class Timetable implements Serializable
 		return describe().toString();
 	}
 	
+	@Deprecated
 	public void writeFile(Context context, String filename, String content) throws IOException
 	{
 		FileOutputStream file = context.openFileOutput(filename, Context.MODE_PRIVATE);			
