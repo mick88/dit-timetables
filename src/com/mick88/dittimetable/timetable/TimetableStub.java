@@ -100,9 +100,18 @@ public class TimetableStub implements Serializable, Comparable<TimetableStub>
 				return 1;
 			else if (year < another.year)
 				return -1;
-			// TODO: Compare weeks
+			else 
+				return compareWeeks(weekRange, another.weekRange);
 		}
 		return result;
+	}
+	
+	private static int compareWeeks(String weekRange1, String weekRange2)
+	{
+		Integer 
+			firstWeek1 = Integer.valueOf(weekRange1.split(",")[0].split("-")[0]),
+			firstWeek2 = Integer.valueOf(weekRange2.split(",")[0].split("-")[0]);
+		return firstWeek1.compareTo(firstWeek2);
 	}
 	
 	/**
