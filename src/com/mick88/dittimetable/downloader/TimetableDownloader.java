@@ -19,16 +19,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.flurry.android.FlurryAgent;
-import com.mick88.dittimetable.downloader.Exceptions.EmptyTimetableException;
-import com.mick88.dittimetable.downloader.Exceptions.IncorrectCredentialsException;
-import com.mick88.dittimetable.downloader.Exceptions.InvalidDataException;
-import com.mick88.dittimetable.downloader.Exceptions.NoEventsException;
 import com.mick88.dittimetable.downloader.Exceptions.ServerConnectionException;
-import com.mick88.dittimetable.downloader.Exceptions.ServerLoadingException;
-import com.mick88.dittimetable.downloader.Exceptions.SessionExpiredException;
-import com.mick88.dittimetable.downloader.Exceptions.SettingsEmptyException;
-import com.mick88.dittimetable.downloader.Exceptions.TimetableException;
-import com.mick88.dittimetable.downloader.Exceptions.WrongCourseException;
 import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableDay;
@@ -191,8 +182,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 			throw new Exceptions.WrongCourseException();
 		
 		parseGrid(string);
-		
-		timetable.exportTimetable(context);
+
 		Log.i(logTag, "Timetable successfully downloaded");
 		timetable.setLastUpdated(new Date());
 	}
