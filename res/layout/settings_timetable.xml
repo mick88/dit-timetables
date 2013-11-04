@@ -29,6 +29,7 @@
         android:layout_toLeftOf="@+id/spinner_year_selector"
         android:ems="10"
         android:hint="@string/course_code"
+        android:completionThreshold="1"
         android:inputType="textCapCharacters|textNoSuggestions|textVisiblePassword"
         android:singleLine="true" />
 

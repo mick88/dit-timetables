@@ -481,7 +481,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	
 	public static String [] getCourseCodes()
 	{
-		return new String [] {
+		String [] codes = new String [] {
 				"DT001",
 				"DT002",
 				"DT003",
@@ -759,5 +759,16 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 				"DT768",
 				"DT789",
 		};
+		
+		String [] result = new String[codes.length + codes.length];
+		
+		for (int i=0; i < result.length; i++)
+		{
+			if (i < codes.length)
+				result[i] = codes[i];
+			else result[i] = codes[i - codes.length].substring(2);
+		}
+		
+		return result;
 	}
 }
