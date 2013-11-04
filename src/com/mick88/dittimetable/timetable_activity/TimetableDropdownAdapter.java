@@ -11,8 +11,9 @@ import android.widget.TextView;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.RobotoArrayAdapter;
 import com.mick88.dittimetable.timetable.Timetable;
+import com.mick88.dittimetable.timetable.TimetableStub;
 
-public class TimetableDropdownAdapter extends RobotoArrayAdapter<Timetable>
+public class TimetableDropdownAdapter extends RobotoArrayAdapter<TimetableStub>
 {
 	private static class ViewHolder
 	{
@@ -23,7 +24,7 @@ public class TimetableDropdownAdapter extends RobotoArrayAdapter<Timetable>
 			tvWeeks = (TextView) view.findViewById(android.R.id.text2);
 		}
 	}
-	public TimetableDropdownAdapter(Context context, List<Timetable> objects)
+	public TimetableDropdownAdapter(Context context, List<TimetableStub> objects)
 	{
 		super(context, 0, View.NO_ID, objects);
 	}
@@ -61,7 +62,7 @@ public class TimetableDropdownAdapter extends RobotoArrayAdapter<Timetable>
 		return view;
 	}
 	
-	void setData(View view, Timetable timetable)
+	void setData(View view, TimetableStub timetable)
 	{
 		ViewHolder holder = (ViewHolder) view.getTag();
 		

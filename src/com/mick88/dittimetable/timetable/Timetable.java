@@ -51,11 +51,6 @@ public class Timetable extends TimetableStub
 	
 	public static final String [] 
 			DAY_NAMES = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-	
-	public static final String 
-			SEMESTER_1 = "4-20",
-			SEMESTER_2  = "23-30,33-37",
-			ALL_WEEKS  = "1-52";
 			
 	public static int getCurrentWeek()
 	{
@@ -149,19 +144,6 @@ public class Timetable extends TimetableStub
 		{
 			getDays()[i].clearEvents();
 		}
-	}
-	
-	public CharSequence describe()
-	{
-		return new StringBuilder(course).append('-').append(getYear());
-	}
-	
-	public CharSequence describeWeeks()
-	{
-		if (getWeekRange().equals(SEMESTER_1)) return "Semester 1";
-		else if (getWeekRange().equals(SEMESTER_2)) return "Semester 2";
-		else if (getWeekRange().equals(ALL_WEEKS)) return "Year "+String.valueOf(getYear());
-		return new StringBuilder("Weeks ").append(getWeekRange());
 	}
 	
 	/**

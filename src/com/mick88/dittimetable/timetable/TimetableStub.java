@@ -18,6 +18,12 @@ import com.michaldabski.msqlite.Annotations.TableName;
 public class TimetableStub implements Serializable, Comparable<TimetableStub>
 {
 	private static final long serialVersionUID = 1L;
+	
+	public static final String 
+		SEMESTER_1 = "4-20",
+		SEMESTER_2  = "23-30,33-37",
+		ALL_WEEKS  = "1-52";
+	
 	@PrimaryKey
 	private String weekRange = "";
 	@PrimaryKey
@@ -97,4 +103,16 @@ public class TimetableStub implements Serializable, Comparable<TimetableStub>
 		return result;
 	}
 	
+	public CharSequence describe()
+	{
+		return new StringBuilder(course).append('-').append(getYear());
+	}
+	
+	public CharSequence describeWeeks()
+	{
+		if (getWeekRange().equals(SEMESTER_1)) return "Semester 1";
+		else if (getWeekRange().equals(SEMESTER_2)) return "Semester 2";
+		else if (getWeekRange().equals(ALL_WEEKS)) return "Year "+String.valueOf(getYear());
+		return new StringBuilder("Weeks ").append(getWeekRange());
+	}
 }

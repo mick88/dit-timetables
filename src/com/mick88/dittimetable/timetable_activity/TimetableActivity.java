@@ -49,6 +49,7 @@ import com.mick88.dittimetable.downloader.TimetableDownloader.TimetableDownloadL
 import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.settings.SettingsActivity;
 import com.mick88.dittimetable.timetable.Timetable;
+import com.mick88.dittimetable.timetable.TimetableStub;
 import com.mick88.dittimetable.timetable_activity.GroupSelectionDialog.GroupSelectionListener;
 import com.mick88.dittimetable.utils.FontApplicator;
 
@@ -338,20 +339,20 @@ public class TimetableActivity extends ActionBarActivity
 	
 	void setupActionBar()
 	{
-		new AsyncTask<Void, Void, List<Timetable>>()
+		new AsyncTask<Void, Void, List<TimetableStub>>()
 		{
 
 			@Override
-			protected List<Timetable> doInBackground(Void... params)
+			protected List<TimetableStub> doInBackground(Void... params)
 			{
-				List<Timetable> timetables = new DatabaseHelper(getApplicationContext()).getSavedTimetables();
+				List<TimetableStub> timetables = new DatabaseHelper(getApplicationContext()).getSavedTimetables();
 				if (timetables.contains(timetable) == false) timetables.add(timetable);
 				Collections.sort(timetables);
 				return timetables;
 			}
 			
 			@Override
-			protected void onPostExecute(final List<Timetable> timetables)
+			protected void onPostExecute(final List<TimetableStub> timetables)
 			{
 				if (timetables.size() == 1) return;
 				getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -367,7 +368,7 @@ public class TimetableActivity extends ActionBarActivity
 					{
 						if (timetables.get(arg0).equals(timetable) == false)
 						{
-							Timetable timetable = timetables.get(arg0);
+							TimetableStub timetable = timetables.get(arg0);
 							AppSettings settings = getSettings();
 							settings.setCourse(timetable.getCourse());
 							settings.setYear(timetable.getYear());

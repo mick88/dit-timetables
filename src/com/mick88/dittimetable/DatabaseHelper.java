@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.michaldabski.msqlite.MSQLiteOpenHelper;
 import com.mick88.dittimetable.timetable.Timetable;
+import com.mick88.dittimetable.timetable.TimetableStub;
 
 public class DatabaseHelper extends MSQLiteOpenHelper
 {
@@ -40,8 +41,8 @@ public class DatabaseHelper extends MSQLiteOpenHelper
 	 * returns all timetables saved in database
 	 * @return
 	 */
-	public List<Timetable> getSavedTimetables()
+	public List<TimetableStub> getSavedTimetables()
 	{
-		return selectAll(Timetable.class);
+		return selectAll(TimetableStub.class);
 	}
 }
