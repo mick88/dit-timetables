@@ -7,7 +7,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:singleLine="true"
-        android:layout_marginRight="5dp"
+        android:layout_marginRight="15dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
 
     <TextView
