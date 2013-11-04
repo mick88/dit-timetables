@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -73,8 +74,8 @@ public class SettingsActivity extends ActionBarActivity
 		editPassword = (EditText) findViewById(R.id.editPassword);
 		weekCheckBox = (CheckBox) findViewById(R.id.checkBoxSetCurrentWeekOnly);
 		TextView tvInfo = (TextView) findViewById(R.id.textDatasetInfo);
-		
-		ArrayAdapter<String> courseAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, TimetableDownloader.getCourseCodes());
+
+		RobotoArrayAdapter<String> courseAdapter = new RobotoArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, android.R.id.text1, TimetableDownloader.getCourseCodes());
 		editCourse.setAdapter(courseAdapter);
 		
 		String [] years = getResources().getStringArray(R.array.year_values);
