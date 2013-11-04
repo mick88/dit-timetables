@@ -344,7 +344,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 				
 				if (timetables.isEmpty())
 				{
-					Toast.makeText(getApplicationContext(), R.string.no_items_deleted, Toast.LENGTH_SHORT);
+					Toast.makeText(getApplicationContext(), R.string.no_items_deleted, Toast.LENGTH_SHORT).show();
 					return;
 				}
 				

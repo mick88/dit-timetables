@@ -57,7 +57,7 @@
     <string name="_d_items_deleted">%d items deleted</string>
     <string name="there_are_not_saved_timetables">There are no saved timetables</string>
     <string name="delete_timetables_">Delete timetables:</string>
-    <string name="delete_">Delete...</string>
-    <string name="no_items_deleted">No items deleted</string>
+    <string name="delete_">Delete&#8230;</string>
+    <string name="no_items_deleted">No items selected</string>
 
 </resources>
