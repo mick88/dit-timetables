@@ -52,7 +52,12 @@
     <string name="saved_timetables">Saved Timetables</string>
     <string name="clear_all">Clear all</string>
     <string name="delete">Delete</string>
-    <string name="all_cached_timetables_will_be_deleted_if_you_wish_to_use_them_again_they_will_be_re_downloaded_continue_">All cached timetables will be deleted. If you wish to use them again, they will be re-downloaded. Continue?</string>
+    <string name="all_cached_timetables_will_be_deleted_if_you_wish_to_use_them_again_they_will_be_re_downloaded_continue_">All downloaded timetables will be deleted. If you\'d like to use them again, they will be re-downloaded. Continue?</string>
     <string name="all_viewed_timetables_are_saved_onto_your_device_">All viewed timetables are saved onto your device.</string>
+    <string name="_d_items_deleted">%d items deleted</string>
+    <string name="there_are_not_saved_timetables">There are no saved timetables</string>
+    <string name="delete_timetables_">Delete timetables:</string>
+    <string name="delete_">Delete...</string>
+    <string name="no_items_deleted">No items deleted</string>
 
 </resources>

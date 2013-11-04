@@ -49,4 +49,11 @@ public class DatabaseHelper extends MSQLiteOpenHelper
 		database.close();
 		return timetableStubs;
 	}
+	
+	public void deleteAllTimetables()
+	{
+		SQLiteDatabase database = getWritableDatabase();
+		deleteFrom(database, Timetable.class, null, null);
+		database.close();
+	}
 }

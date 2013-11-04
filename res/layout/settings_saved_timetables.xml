@@ -35,7 +35,7 @@
         android:layout_alignBaseline="@+id/btnClearTimetables"
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/centerStrut"
-        android:text="@string/delete" />
+        android:text="@string/delete_" />
 
     <TextView
         android:id="@+id/textView1"
