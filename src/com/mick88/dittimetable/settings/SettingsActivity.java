@@ -319,7 +319,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		
 		CharSequence [] titles = new CharSequence[timetables.size()];
 		for (int i=0; i < timetables.size(); i++)
-			titles[i] = timetables.get(i).describe() + " " + timetables.get(i).describeWeeks();
+			titles[i] = String.format(Locale.ENGLISH, "%s (%s)", timetables.get(i).describe(), timetables.get(i).describeWeeks());
 		final boolean [] checked = new boolean[timetables.size()];
 		
 		new AlertDialog.Builder(this).setMultiChoiceItems(titles, checked, new OnMultiChoiceClickListener()
