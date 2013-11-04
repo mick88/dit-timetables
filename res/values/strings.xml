@@ -49,5 +49,8 @@
     <string name="share_pdf_url">Share link to timetable</string>
     <string name="timetable_pdf_downloaded">Timetable PDF downloaded</string>
     <string name="retry">Retry</string>
+    <string name="saved_timetables">Saved Timetables</string>
+    <string name="clear_all">Clear all</string>
+    <string name="delete">Delete</string>
 
 </resources>
