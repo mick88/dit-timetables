@@ -107,8 +107,6 @@ public class Timetable implements Serializable
 	 */
 	@Deprecated
 	private static final String DAY_SEPARATOR = ":day:";
-		
-	private Date lastUpdated = null;
 
 	private int weekRangeId = INVALID_WEEK_RANGE; // alternative to weeks
 	@PrimaryKey
@@ -370,16 +368,6 @@ public class Timetable implements Serializable
 	public void setWeekRange(String weekRange)
 	{
 		this.weekRange = weekRange;
-	}
-
-	public Date getLastUpdated()
-	{
-		return lastUpdated;
-	}
-
-	public void setLastUpdated(Date lastUpdated)
-	{
-		this.lastUpdated = lastUpdated;
 	}
 
 	public TimetableDay[] getDays()

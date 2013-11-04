@@ -184,7 +184,6 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		parseGrid(string);
 
 		Log.i(logTag, "Timetable successfully downloaded");
-		timetable.setLastUpdated(new Date());
 	}
 	
 	
