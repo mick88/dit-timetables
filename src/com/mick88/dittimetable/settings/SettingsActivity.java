@@ -366,6 +366,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 			case R.id.btnClearTimetables:
 				new AlertDialog.Builder(this)
 				.setMessage(R.string.all_cached_timetables_will_be_deleted_if_you_wish_to_use_them_again_they_will_be_re_downloaded_continue_)
+				.setTitle(R.string.clear_cache)
 				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
 				{
 					

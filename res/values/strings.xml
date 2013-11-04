@@ -59,5 +59,6 @@
     <string name="delete_timetables_">Delete timetables:</string>
     <string name="delete_">Delete&#8230;</string>
     <string name="no_items_deleted">No items selected</string>
+    <string name="clear_cache">Clear cache</string>
 
 </resources>
