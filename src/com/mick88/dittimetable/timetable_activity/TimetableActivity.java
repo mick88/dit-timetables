@@ -35,12 +35,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
+import com.mick88.dittimetable.DatabaseHelper;
 import com.mick88.dittimetable.PdfDownloaderService;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.downloader.Exceptions;
 import com.mick88.dittimetable.downloader.TimetableDownloader;
-import com.mick88.dittimetable.downloader.Exceptions.NoLocalCopyException;
 import com.mick88.dittimetable.downloader.TimetableDownloader.TimetableDownloadListener;
 import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.settings.SettingsActivity;
@@ -128,6 +128,7 @@ public class TimetableActivity extends ActionBarActivity
 		if (exception == null)
 		{
 			refresh();
+			new DatabaseHelper(getApplicationContext()).saveTimetable(timetable);
 		}
 		else if (exception instanceof Exceptions.SettingsEmptyException)
 		{
@@ -163,18 +164,6 @@ public class TimetableActivity extends ActionBarActivity
     	
     	actionBar.setTitle(timetable.describe());
     	actionBar.setSubtitle(timetable.describeWeeks());
-    }
-    
-    void loadTimetable()
-    {
-    	try
-    	{
-    		timetable.importSavedTimetable(getApplicationContext());
-    	}
-    	catch (NoLocalCopyException e)
-    	{
-    		downloadTimetable();
-    	}
     }
     
     @Override
@@ -324,12 +313,11 @@ public class TimetableActivity extends ActionBarActivity
 				
 		if (timetable == null) // if intent isnt processed
 		{
-			setTimetable(new Timetable(application.getSettings()));
-
 			if (application.getSettings().isCourseDataSpecified() == false)
 			{
 				showSettingsScreen(false);
 			}
+			else openTimetable(getSettings());
 		}
 		setupViewPager();
 
@@ -440,8 +428,28 @@ public class TimetableActivity extends ActionBarActivity
 		if (timetable.isCourseDataSpecified()) 
 		{
 			setTitle();
-			loadTimetable();
 		}
+	}
+	
+	void openTimetable(AppSettings appSettings)
+	{
+		DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
+		Timetable timetable = databaseHelper.getTimetable(appSettings.getCourse(), appSettings.getYear(), appSettings.getWeekRange());
+		if (timetable == null) 
+		{
+			timetable = new Timetable(appSettings);
+			try
+			{
+				timetable.importSavedTimetable(getApplicationContext());
+				databaseHelper.saveTimetable(timetable);
+			}
+			catch (Exceptions.NoLocalCopyException e)
+			{
+				this.timetable = timetable;
+				downloadTimetable();
+			}
+		}
+		setTimetable(timetable);
 	}
 	
 	@Override

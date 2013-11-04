@@ -19,6 +19,8 @@ import org.jsoup.select.Elements;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.michaldabski.msqlite.Annotations.PrimaryKey;
+import com.michaldabski.msqlite.Annotations.TableName;
 import com.mick88.dittimetable.downloader.Connection;
 import com.mick88.dittimetable.downloader.Exceptions;
 import com.mick88.dittimetable.downloader.TimetableDownloader;
@@ -30,6 +32,7 @@ import com.mick88.dittimetable.utils.FileUtils;
  * @author Michal
  *
  */
+@TableName("Timetable")
 public class Timetable implements Serializable
 {
 	
@@ -102,13 +105,15 @@ public class Timetable implements Serializable
 	/**
 	 * For saving timetable locally
 	 */
+	@Deprecated
 	private static final String DAY_SEPARATOR = ":day:";
-		
-	private Date lastUpdated = null;
 
 	private int weekRangeId = INVALID_WEEK_RANGE; // alternative to weeks
+	@PrimaryKey
 	private String weekRange = SEMESTER_1;
+	@PrimaryKey
 	protected String course = "DT211";
+	@PrimaryKey
 	private int year=2;	
 	private TimetableDay[] days = new TimetableDay[NUM_DAYS];
 	
@@ -202,6 +207,7 @@ public class Timetable implements Serializable
 	/**
 	 * Writes timetable to file
 	 */
+	@Deprecated
 	public void exportTimetable(Context context)
 	{
 		StringBuilder builder = new StringBuilder();
@@ -256,12 +262,14 @@ public class Timetable implements Serializable
 	/**
 	 * Loads timetable from file
 	 */
+	@Deprecated
 	public void importSavedTimetable(Context context)
 	{
 		if (importTimetable(context) == false) 
 			throw new Exceptions.NoLocalCopyException();
 	}
 	
+	@Deprecated
 	private boolean importTimetable(Context context)
 	{
 		String content = FileUtils.readFile(context, "export"+getFilename());
@@ -322,6 +330,7 @@ public class Timetable implements Serializable
 		return describe().toString();
 	}
 	
+	@Deprecated
 	public void writeFile(Context context, String filename, String content) throws IOException
 	{
 		FileOutputStream file = context.openFileOutput(filename, Context.MODE_PRIVATE);			
@@ -359,16 +368,6 @@ public class Timetable implements Serializable
 	public void setWeekRange(String weekRange)
 	{
 		this.weekRange = weekRange;
-	}
-
-	public Date getLastUpdated()
-	{
-		return lastUpdated;
-	}
-
-	public void setLastUpdated(Date lastUpdated)
-	{
-		this.lastUpdated = lastUpdated;
 	}
 
 	public TimetableDay[] getDays()

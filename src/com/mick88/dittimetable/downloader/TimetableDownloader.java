@@ -182,10 +182,8 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 			throw new Exceptions.WrongCourseException();
 		
 		parseGrid(string);
-		
-		timetable.exportTimetable(context);
+
 		Log.i(logTag, "Timetable successfully downloaded");
-		timetable.setLastUpdated(new Date());
 	}
 	
 	
@@ -374,7 +372,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		for (TimetableDay day : timetable.getDays())
 			days.put(day.getShortName().toString(), day);
 		
-		int numParsedEvents = 0,
+		int
 				totalEvents=0;
 		timetable.clearEvents();
 				
@@ -394,8 +392,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 			TimetableDay tDay = days.get(day);
 			if (tDay != null)
 			{
-				if (parseGridRow(tDay, columns))
-					numParsedEvents++;
+				parseGridRow(tDay, columns);
 			}
 		}
 		

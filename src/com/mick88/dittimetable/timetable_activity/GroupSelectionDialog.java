@@ -3,9 +3,6 @@ package com.mick88.dittimetable.timetable_activity;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import com.mick88.dittimetable.R;
-import com.mick88.dittimetable.R.drawable;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -14,6 +11,8 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+
+import com.mick88.dittimetable.R;
 
 public class GroupSelectionDialog extends DialogFragment implements OnMultiChoiceClickListener, OnClickListener
 {
