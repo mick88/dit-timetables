@@ -3,10 +3,12 @@ package com.mick88.dittimetable.timetable;
 import java.io.Serializable;
 import java.util.Locale;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.michaldabski.msqlite.Annotations.PrimaryKey;
 import com.michaldabski.msqlite.Annotations.TableName;
+import com.mick88.dittimetable.settings.AppSettings;
 
 /**
  * Base class for Timetable
@@ -101,6 +103,19 @@ public class TimetableStub implements Serializable, Comparable<TimetableStub>
 			// TODO: Compare weeks
 		}
 		return result;
+	}
+	
+	/**
+	 * Change settings to display this timetable as default
+	 * @param context
+	 * @param settings
+	 */
+	public void setAsDefault(Context context, AppSettings settings)
+	{
+		settings.setCourse(course);
+		settings.setYear(year);
+		settings.setWeekRange(weekRange);
+		settings.saveSettings(context);
 	}
 	
 	public CharSequence describe()

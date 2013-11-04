@@ -369,11 +369,7 @@ public class TimetableActivity extends ActionBarActivity
 						if (timetables.get(arg0).equals(timetable) == false)
 						{
 							TimetableStub timetable = timetables.get(arg0);
-							AppSettings settings = getSettings();
-							settings.setCourse(timetable.getCourse());
-							settings.setYear(timetable.getYear());
-							settings.setWeekRange(timetable.getWeekRange());
-							settings.saveSettings(getApplicationContext());
+							timetable.setAsDefault(getApplicationContext(), getSettings());
 							
 							Intent intent = new Intent(getApplicationContext(), TimetableActivity.class);
 							intent.putExtra(EXTRA_TIMETABLE, timetable);
