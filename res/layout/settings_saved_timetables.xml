@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/tvSavedTimetables"
         android:layout_alignRight="@+id/centerStrut"
-        android:layout_below="@+id/tvSavedTimetables"
+        android:layout_below="@+id/textView1"
         android:text="@string/clear_all" />
 
     <Button
@@ -36,5 +36,13 @@
         android:layout_alignParentRight="true"
         android:layout_toRightOf="@+id/centerStrut"
         android:text="@string/delete" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btnClearTimetables"
+        android:layout_below="@+id/tvSavedTimetables"
+        android:text="@string/all_viewed_timetables_are_saved_onto_your_device_" />
 
 </RelativeLayout>
