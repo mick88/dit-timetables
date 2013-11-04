@@ -345,9 +345,12 @@ public class TimetableActivity extends ActionBarActivity
 			@Override
 			protected List<TimetableStub> doInBackground(Void... params)
 			{
+				long t = System.currentTimeMillis();
 				List<TimetableStub> timetables = new DatabaseHelper(getApplicationContext()).getSavedTimetables();
 				if (timetables.contains(timetable) == false) timetables.add(timetable);
 				Collections.sort(timetables);
+				t = System.currentTimeMillis() - t;
+				Log.d("Timetable activity", "Timetables loaded in "+String.valueOf(t));
 				return timetables;
 			}
 			
