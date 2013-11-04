@@ -1,5 +1,6 @@
 package com.mick88.dittimetable.settings;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -308,6 +309,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 	{
 		final DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
 		final List<TimetableStub> timetables = databaseHelper.getSavedTimetables();
+		Collections.sort(timetables);
 		
 		if (timetables.isEmpty())
 		{
