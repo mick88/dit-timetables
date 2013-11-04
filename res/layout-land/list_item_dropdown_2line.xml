@@ -18,8 +18,9 @@
     android:layout_height="@dimen/abc_action_bar_default_height"
     android:layout_gravity="center_vertical|left"
     android:background="@drawable/spinner_bg_selector"
-    android:paddingLeft="5dp"
-    android:orientation="vertical" >
+    android:orientation="horizontal"
+    android:gravity="center_horizontal|left"
+    android:paddingLeft="5dp" >
 
     <include
         android:layout_width="wrap_content"
