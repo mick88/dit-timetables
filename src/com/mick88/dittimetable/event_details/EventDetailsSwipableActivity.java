@@ -29,7 +29,7 @@ public class EventDetailsSwipableActivity extends ActionBarActivity
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_timetable);
+		setContentView(R.layout.fragment_timetable);
 		
 		new FontApplicator(getAssets(), TimetableApp.FONT_NAME).applyFont(getWindow().getDecorView());
 		

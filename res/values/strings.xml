@@ -49,5 +49,6 @@
     <string name="share_pdf_url">Share link to timetable</string>
     <string name="timetable_pdf_downloaded">Timetable PDF downloaded</string>
     <string name="retry">Retry</string>
+    <string name="loading_">Loading...</string>
 
 </resources>

@@ -31,6 +31,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -278,8 +280,10 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.activity_timetable);
+		setContentView(R.layout.fragment_timetable);
 
+		showMessage(true, getString(R.string.loading_), null, null);
+		
 		FontApplicator fontApplicator = new FontApplicator(getAssets(), TimetableApp.FONT_NAME);
 		fontApplicator.applyFont(getWindow().getDecorView());
 		application = (TimetableApp) getApplication();
@@ -408,10 +412,43 @@ public class TimetableActivity extends ActionBarActivity
 		{
 			setTitle();
 			timetablePageAdapter.setTimetable(timetable);
+			showTimetable();
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+		}
+	}
+	
+	void showTimetable()
+	{
+		findViewById(R.id.pager).setVisibility(View.VISIBLE);
+		findViewById(R.id.layoutMessage).setVisibility(View.GONE);
+	}
+	
+	void showMessage(boolean showProgress, CharSequence message, android.view.View.OnClickListener buttonListener, CharSequence buttonText)
+	{
+		ProgressBar progressBar = (ProgressBar) findViewById(android.R.id.progress);
+		progressBar.setVisibility(showProgress?View.VISIBLE:View.GONE);
+		
+		TextView 
+			tvMessage = (TextView) findViewById(R.id.tvMessage),
+			btnMessageAction = (TextView) findViewById(R.id.btnMessageAction);
+		
+		if (message == null)
+			tvMessage.setVisibility(View.GONE);
+		else 
+		{
+			tvMessage.setVisibility(View.VISIBLE);
+			tvMessage.setText(message);
+		}
+		
+		if (buttonListener == null)
+			btnMessageAction.setVisibility(View.GONE);
+		else
+		{
+			btnMessageAction.setText(buttonText);
+			btnMessageAction.setOnClickListener(buttonListener);
 		}
 	}
 	
