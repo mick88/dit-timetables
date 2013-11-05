@@ -450,6 +450,9 @@ public class TimetableActivity extends ActionBarActivity
 			btnMessageAction.setText(buttonText);
 			btnMessageAction.setOnClickListener(buttonListener);
 		}
+		
+		findViewById(R.id.layoutMessage).setVisibility(View.VISIBLE);
+		findViewById(R.id.pager).setVisibility(View.GONE);
 	}
 	
 	AppSettings getSettings()
