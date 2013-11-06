@@ -114,6 +114,7 @@ public class TimetableActivity extends ActionBarActivity
     	showDownloadProgress();
     	timetableDownloader = new TimetableDownloader(getApplicationContext(), timetable, application.getSettings()).setTimetableDownloadListener(this);
     	timetableDownloader.execute();
+    	supportInvalidateOptionsMenu();
     }
     
     void showDownloadProgress()
@@ -139,6 +140,7 @@ public class TimetableActivity extends ActionBarActivity
 			RuntimeException exception)
 	{
 		timetableDownloader = null;
+		supportInvalidateOptionsMenu();
 		showTimetable();		
 		if (exception == null)
 		{
@@ -152,6 +154,29 @@ public class TimetableActivity extends ActionBarActivity
 		else if (exception instanceof Exceptions.EmptyTimetableException)
 		{
 			showEmptyTimetableMessage();
+		}
+		else if (exception instanceof Exceptions.DownloadCancelledException)
+		{
+			DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
+			timetable = databaseHelper.getTimetable(getSettings().getCourse(), getSettings().getYear(), getSettings().getWeekRange());
+			
+			if (timetable == null)
+			{
+				this.timetable = new Timetable(getSettings());
+				
+				showMessage(false, getString(R.string.download_cancelled), new View.OnClickListener()
+				{
+					
+					@Override
+					public void onClick(View v)
+					{
+						downloadTimetable();					
+					}
+				}, getString(R.string.retry));
+//				setStatusMessage(R.string.no_local_copy);
+			}
+			else setTimetable(timetable);
+			
 		}
 		else
 		{
@@ -614,6 +639,11 @@ public class TimetableActivity extends ActionBarActivity
 			downloadPdfInService();
 			return true;
 			
+		case R.id.menu_refresh_cancel:
+			if (timetableDownloader != null)
+				timetableDownloader.cancel(true);
+			return true;
+			
 		case R.id.menu_refresh_timetable:
 			try
 			{
@@ -724,6 +754,11 @@ public class TimetableActivity extends ActionBarActivity
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		getMenuInflater().inflate(R.menu.activity_timetable, menu);
+		if (timetableDownloader != null)
+		{
+			menu.findItem(R.id.menu_refresh_cancel).setVisible(true);
+			menu.findItem(R.id.menu_refresh_timetable).setVisible(false);
+		}
 		return true;
 	}
 	

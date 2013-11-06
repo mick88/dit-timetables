@@ -8,6 +8,13 @@
         android:title="@string/refresh"
         appCompat:showAsAction="always"/>
     <item
+        android:id="@+id/menu_refresh_cancel"
+        android:orderInCategory="100"
+        android:icon="@drawable/cancel"
+        android:title="@android:string/cancel"
+        android:visible="false"
+        appCompat:showAsAction="always"/>
+    <item
         android:id="@+id/menu_download_pdf"
         android:icon="@drawable/download"
         android:orderInCategory="101"
