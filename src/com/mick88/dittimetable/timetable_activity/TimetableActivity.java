@@ -86,7 +86,6 @@ public class TimetableActivity extends ActionBarActivity
 	String html;
 	TextView textView;
 	Timetable timetable = null;
-	ProgressDialog progressDialog=null;
 	int currentWeek = Timetable.getCurrentWeek();
 	
 	TimetablePageAdapter timetablePageAdapter=null;
@@ -118,14 +117,14 @@ public class TimetableActivity extends ActionBarActivity
     
     void showDownloadProgress()
     {
-    	showProgressPopup("Downloading timetable...");
+    	showProgressPopup(getString(R.string.downloading_timetable_));
     }
     
 	@Override
 	public void onTimetableDownloaded(Timetable timetable,
 			RuntimeException exception)
 	{
-		dismissProgresPopup();
+		showTimetable();
 		timetableDownloader = null;
 		if (exception == null)
 		{
@@ -430,6 +429,7 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		ProgressBar progressBar = (ProgressBar) findViewById(android.R.id.progress);
 		progressBar.setVisibility(showProgress?View.VISIBLE:View.GONE);
+		progressBar.setIndeterminate(true);
 		
 		TextView 
 			tvMessage = (TextView) findViewById(R.id.tvMessage),
@@ -698,17 +698,7 @@ public class TimetableActivity extends ActionBarActivity
 	
 	void showProgressPopup(CharSequence message)
 	{
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setIndeterminate(true);
-		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		progressDialog.setMax(1);
-		progressDialog.setProgress(0);
-		progressDialog.setTitle(R.string.app_name);
-		progressDialog.setMessage(message); 
-		progressDialog.setIcon(R.drawable.ic_launcher);
-		progressDialog.setCancelable(false);
-		
-		progressDialog.show();
+		showMessage(true, message, null, null);
 	}
 	
 	void showPopupMessage(CharSequence message)
@@ -719,22 +709,6 @@ public class TimetableActivity extends ActionBarActivity
 				.setNeutralButton("OK", null)
 				.setIcon(R.drawable.ic_launcher)
 				.show();
-	}
-	
-	void dismissProgresPopup()
-	{
-		try
-		{
-			if (progressDialog != null)
-			{
-				progressDialog.dismiss();
-				progressDialog = null;
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -774,18 +748,9 @@ public class TimetableActivity extends ActionBarActivity
 
 	public void onProgress(final int position, final int max)
 	{
-		Log.d(logTag, "Progress update "+String.valueOf(position)+"/"+String.valueOf(max));
-		if (progressDialog == null) showDownloadProgress();
-		if (max >= position)
-		{
-			if (progressDialog != null)
-			{
-				progressDialog.setIndeterminate(false);
-				progressDialog.setMax(max);
-				progressDialog.setProgress(position);
-			}
-			
-		}
-		
+		ProgressBar progressBar = (ProgressBar) findViewById(android.R.id.progress);
+		progressBar.setIndeterminate(false);
+		progressBar.setMax(max);
+		progressBar.setProgress(position);
 	}
 }
