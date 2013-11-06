@@ -594,7 +594,14 @@ public class TimetableActivity extends ActionBarActivity
 			return true;
 			
 		case R.id.menu_refresh_timetable:
-			onBtnRefreshPressed();	
+			try
+			{
+				onBtnRefreshPressed();
+			}
+			catch (Exception e)
+			{
+				Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+			}
 			return true;
 			
 		case R.id.menu_settings:
