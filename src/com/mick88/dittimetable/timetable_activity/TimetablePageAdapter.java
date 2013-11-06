@@ -17,7 +17,7 @@ import com.mick88.dittimetable.timetable.Timetable;
  */
 public class TimetablePageAdapter extends FragmentPagerAdapter
 {	
-	public TimetablePageAdapter(FragmentManager fm, Timetable timetable)
+	public TimetablePageAdapter(FragmentManager fm)
 	{
 		super(fm);
 	}

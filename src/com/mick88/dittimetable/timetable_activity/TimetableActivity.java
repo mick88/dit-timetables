@@ -203,7 +203,7 @@ public class TimetableActivity extends ActionBarActivity
     
     void setupViewPager()
     {
-    	TimetablePageAdapter timetablePageAdapter = new TimetablePageAdapter(getSupportFragmentManager(), timetable);
+    	TimetablePageAdapter timetablePageAdapter = new TimetablePageAdapter(getSupportFragmentManager());
     	viewPager  = (ViewPager) findViewById(R.id.pager);
     	viewPager.setAdapter(timetablePageAdapter);
     	showToday(false);
