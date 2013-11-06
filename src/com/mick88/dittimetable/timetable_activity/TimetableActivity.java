@@ -90,7 +90,6 @@ public class TimetableActivity extends ActionBarActivity
 	// fragments to be refreshed
 	Set<DayFragment> fragments = new HashSet<DayFragment>(5);
 	
-	TimetablePageAdapter timetablePageAdapter=null;
 	ViewPager viewPager=null;
 	
 	/**
@@ -207,7 +206,7 @@ public class TimetableActivity extends ActionBarActivity
     
     void setupViewPager()
     {
-    	timetablePageAdapter = new TimetablePageAdapter(getSupportFragmentManager(), timetable);
+    	TimetablePageAdapter timetablePageAdapter = new TimetablePageAdapter(getSupportFragmentManager(), timetable);
     	viewPager  = (ViewPager) findViewById(R.id.pager);
     	viewPager.setAdapter(timetablePageAdapter);
     	showToday(false);
@@ -437,7 +436,6 @@ public class TimetableActivity extends ActionBarActivity
 		try
 		{
 			setTitle();
-			timetablePageAdapter.setTimetable(timetable);
 			for (DayFragment dayFragment : fragments)
 				dayFragment.refresh();
 			showTimetable();
