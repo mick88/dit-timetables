@@ -110,6 +110,8 @@ public class TimetableActivity extends ActionBarActivity
        
     void downloadTimetable()
     {
+    	if (timetableDownloader != null)
+    		throw new RuntimeException("downloader already running");
     	showDownloadProgress();
     	timetableDownloader = new TimetableDownloader(getApplicationContext(), timetable, application.getSettings()).setTimetableDownloadListener(this);
     	timetableDownloader.execute();
