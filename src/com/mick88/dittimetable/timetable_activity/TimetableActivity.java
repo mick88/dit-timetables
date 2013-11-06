@@ -138,19 +138,15 @@ public class TimetableActivity extends ActionBarActivity
 		}
 		else
 		{
-			new AlertDialog.Builder(TimetableActivity.this)
-				.setMessage(exception.getMessage())
-				.setPositiveButton(R.string.retry, new OnClickListener()
+			showMessage(false, exception.getMessage(), new View.OnClickListener()
+			{
+				
+				@Override
+				public void onClick(View v)
 				{
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
-						downloadTimetable();						
-					}
-				})
-				.setNegativeButton(android.R.string.cancel, null)
-				.show();
+					downloadTimetable();					
+				}
+			}, getString(R.string.retry));
 		}
 	}
 	
