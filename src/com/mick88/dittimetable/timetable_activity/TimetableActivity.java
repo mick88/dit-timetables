@@ -21,11 +21,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.Tab;
-import android.support.v7.app.ActionBar.TabListener;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -51,7 +48,7 @@ import com.mick88.dittimetable.timetable_activity.GroupSelectionDialog.GroupSele
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class TimetableActivity extends ActionBarActivity 
-									implements GroupSelectionListener, TabListener, TimetableDownloadListener
+									implements GroupSelectionListener, TimetableDownloadListener
 {
 	private static class RetainedConfiguration
 	{
@@ -743,29 +740,10 @@ public class TimetableActivity extends ActionBarActivity
 		application.getSettings().saveSettings(this);
 		refresh();
 	}
-
-	@Override
-	public void onTabSelected(Tab tab, FragmentTransaction ft)
-	{
-		if (viewPager != null) viewPager.setCurrentItem(tab.getPosition(), true);
-		
-	}
-
-	@Override
-	public void onTabUnselected(Tab tab, FragmentTransaction ft)
-	{
-		
-	}
 	
 	public Timetable getTimetable()
 	{
 		return timetable;
-	}
-
-	@Override
-	public void onTabReselected(Tab tab, FragmentTransaction ft)
-	{
-		
 	}
 	
 	void setStatusMessage(int stringResourceId)
