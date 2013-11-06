@@ -323,18 +323,6 @@ public class TimetableActivity extends ActionBarActivity
 			}
 			
 		}
-		if (savedInstanceState != null)
-		{
-			if (timetable == null)
-			{
-				Object extraTimetable = savedInstanceState.getSerializable(EXTRA_TIMETABLE);
-				if (extraTimetable instanceof Timetable)
-				{
-					this.timetable = (Timetable) extraTimetable;
-					refresh();
-				}
-			}
-		}
 		else processIntent();
 				
 		if (timetable == null) // if intent isnt processed
@@ -347,13 +335,6 @@ public class TimetableActivity extends ActionBarActivity
 		}
 		setupViewPager();
 
-	}
-	
-	@Override
-	protected void onSaveInstanceState(Bundle outState)
-	{
-		super.onSaveInstanceState(outState);
-		outState.putSerializable(EXTRA_TIMETABLE, this.timetable);
 	}
 	
 	/*
