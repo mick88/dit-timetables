@@ -126,8 +126,8 @@ public class TimetableActivity extends ActionBarActivity
 	public void onTimetableDownloaded(Timetable timetable,
 			RuntimeException exception)
 	{
-		showTimetable();
 		timetableDownloader = null;
+		showTimetable();		
 		if (exception == null)
 		{
 			refresh();
