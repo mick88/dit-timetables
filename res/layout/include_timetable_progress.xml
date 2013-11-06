@@ -17,7 +17,7 @@
         android:id="@+id/tvMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/centerStrut"
+        android:layout_above="@+id/tvDownloadStatus"
         android:layout_centerHorizontal="true"
         android:text="Message"
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -41,5 +41,13 @@
         android:layout_below="@android:id/progress"
         android:layout_centerHorizontal="true"
         android:text="Action" />
+
+    <TextView
+        android:id="@+id/tvDownloadStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@android:id/progress"
+        android:layout_centerHorizontal="true"
+        android:text="Status" />
 
 </RelativeLayout>

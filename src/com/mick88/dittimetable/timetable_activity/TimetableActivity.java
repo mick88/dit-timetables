@@ -453,7 +453,7 @@ public class TimetableActivity extends ActionBarActivity
 		ProgressBar progressBar = (ProgressBar) findViewById(android.R.id.progress);
 		progressBar.setVisibility(showProgress?View.VISIBLE:View.GONE);
 		progressBar.setIndeterminate(true);
-		
+		setStatusMessage(0);
 		TextView 
 			tvMessage = (TextView) findViewById(R.id.tvMessage),
 			btnMessageAction = (TextView) findViewById(R.id.btnMessageAction);
@@ -776,6 +776,16 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		
 	}
+	
+	void setStatusMessage(int stringResourceId)
+	{
+		TextView tvStatus = (TextView) findViewById(R.id.tvDownloadStatus);
+		tvStatus.setVisibility(stringResourceId == 0 ? View.GONE : View.VISIBLE);
+		if (stringResourceId != 0)
+		{
+			tvStatus.setText(stringResourceId);
+		}
+	}
 
 	public void onProgress(final int position, final int max)
 	{
@@ -783,5 +793,11 @@ public class TimetableActivity extends ActionBarActivity
 		progressBar.setIndeterminate(false);
 		progressBar.setMax(max);
 		progressBar.setProgress(position);
+	}
+
+	@Override
+	public void onStatusChange(int statusMessageRes)
+	{
+		setStatusMessage(statusMessageRes);
 	}
 }

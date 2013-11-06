@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -19,6 +18,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.flurry.android.FlurryAgent;
+import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.downloader.Exceptions.ServerConnectionException;
 import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.timetable.Timetable;
@@ -32,13 +32,15 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	{
 		void onTimetableDownloaded(Timetable timetable, RuntimeException exception);
 		void onDownloadProgress(int progress, int max);
+		void onStatusChange(int statusMessageRes);
 	}
 	
 	private static class DownloadStateSaver implements TimetableDownloadListener
 	{
 		RuntimeException exception;
 		Timetable timetable;
-		int progress, maxProgress;
+		int progress, maxProgress,
+			statusMessageRes;
 		
 		@Override
 		public void onTimetableDownloaded(Timetable timetable,
@@ -62,6 +64,13 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 				listener.onTimetableDownloaded(timetable, exception);
 			else if (maxProgress > 0)
 				listener.onDownloadProgress(progress, maxProgress);
+			listener.onStatusChange(statusMessageRes);
+		}
+
+		@Override
+		public void onStatusChange(int statusMessageRes)
+		{
+			this.statusMessageRes = statusMessageRes;			
 		}
 	}
 	
@@ -140,6 +149,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	 */
 	public void download()
 	{
+		publishProgress(R.string.download_started_);
 		if (connection.areCredentialsPresent() == false)
 			throw new Exceptions.SettingsEmptyException();
 
@@ -148,6 +158,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		String string;
 		try
 		{
+			publishProgress(R.string.fetching_timetable_);
 			string = connection.getContent(query);
 		} 
 		catch (ServerConnectionException e)
@@ -181,6 +192,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		if (string.contains("There are no course records matching the criteria."))
 			throw new Exceptions.WrongCourseException();
 		
+		publishProgress(R.string.downloading_event_details);
 		parseGrid(string);
 
 		Log.i(logTag, "Timetable successfully downloaded");
@@ -425,7 +437,9 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	protected void onProgressUpdate(Integer... values)
 	{
 		super.onProgressUpdate(values);
-		if (values.length > 1)
+		if (values.length == 1)
+			timetableDownloadListener.onStatusChange(values[0]);
+		else if (values.length > 1)
 			timetableDownloadListener.onDownloadProgress(values[0], values[1]);
 	}
 	
