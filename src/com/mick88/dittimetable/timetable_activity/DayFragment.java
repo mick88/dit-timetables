@@ -52,6 +52,20 @@ public class DayFragment extends Fragment
 	{
 		super.onAttach(activity);		
 		fontApplicator = new FontApplicator(activity.getApplicationContext().getAssets(), "Roboto-Light.ttf");
+		if (activity instanceof TimetableActivity)
+		{
+			((TimetableActivity) activity).addFragment(this);
+		}
+	}
+	
+	@Override
+	public void onDetach()
+	{
+		if (getActivity() instanceof TimetableActivity)
+		{
+			((TimetableActivity) getActivity()).removeFragment(this);
+		}
+		super.onDetach();
 	}
 	
 	@Override

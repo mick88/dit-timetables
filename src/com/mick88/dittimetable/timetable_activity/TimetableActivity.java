@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -86,6 +87,8 @@ public class TimetableActivity extends ActionBarActivity
 	TextView textView;
 	Timetable timetable = null;
 	int currentWeek = Timetable.getCurrentWeek();
+	// fragments to be refreshed
+	Set<DayFragment> fragments = new HashSet<DayFragment>(5);
 	
 	TimetablePageAdapter timetablePageAdapter=null;
 	ViewPager viewPager=null;
@@ -102,6 +105,16 @@ public class TimetableActivity extends ActionBarActivity
 	void toast(CharSequence message)
 	{
 		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+	}
+	
+	public void addFragment(DayFragment fragment)
+	{
+		fragments.add(fragment);
+	}
+	
+	public void removeFragment(DayFragment fragment)
+	{
+		fragments.remove(fragment);
 	}
 	
 	private Timer timedUpdateTimer = null;
@@ -425,6 +438,8 @@ public class TimetableActivity extends ActionBarActivity
 		{
 			setTitle();
 			timetablePageAdapter.setTimetable(timetable);
+			for (DayFragment dayFragment : fragments)
+				dayFragment.refresh();
 			showTimetable();
 		}
 		catch (Exception e)
