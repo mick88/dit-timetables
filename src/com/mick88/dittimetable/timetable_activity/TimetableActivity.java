@@ -83,10 +83,7 @@ public class TimetableActivity extends ActionBarActivity
 	public static final String EXTRA_TIMETABLE = "timetable";
 	
 	final String logTag = "Timetable";
-	String html;
-	TextView textView;
 	Timetable timetable = null;
-	int currentWeek = Timetable.getCurrentWeek();
 	// fragments to be refreshed
 	Set<DayFragment> fragments = new HashSet<DayFragment>(5);
 	
