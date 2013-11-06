@@ -450,6 +450,7 @@ public class TimetableActivity extends ActionBarActivity
 			btnMessageAction.setVisibility(View.GONE);
 		else
 		{
+			btnMessageAction.setVisibility(View.VISIBLE);
 			btnMessageAction.setText(buttonText);
 			btnMessageAction.setOnClickListener(buttonListener);
 		}
