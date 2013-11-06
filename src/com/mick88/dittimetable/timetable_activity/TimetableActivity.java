@@ -121,6 +121,19 @@ public class TimetableActivity extends ActionBarActivity
     	showProgressPopup(getString(R.string.downloading_timetable_));
     }
     
+    void showEmptyTimetableMessage()
+    {
+    	showMessage(false, getString(R.string.selected_timetable_is_empty), new View.OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				showSettingsScreen(true);					
+			}
+		}, getString(R.string.settings));
+    }
+    
 	@Override
 	public void onTimetableDownloaded(Timetable timetable,
 			RuntimeException exception)
@@ -135,6 +148,10 @@ public class TimetableActivity extends ActionBarActivity
 		else if (exception instanceof Exceptions.SettingsEmptyException)
 		{
 			showSettingsScreen(false);
+		}
+		else if (exception instanceof Exceptions.EmptyTimetableException)
+		{
+			showEmptyTimetableMessage();
 		}
 		else
 		{
@@ -422,15 +439,7 @@ public class TimetableActivity extends ActionBarActivity
 			throw new RuntimeException("Cannot show timetable while downloading");
 		if (timetable.isEmpty())
 		{
-			showMessage(false, getString(R.string.selected_timetable_is_empty), new View.OnClickListener()
-			{
-				
-				@Override
-				public void onClick(View v)
-				{
-					showSettingsScreen(true);					
-				}
-			}, getString(R.string.settings));
+			showEmptyTimetableMessage();
 		}
 		else
 		{
