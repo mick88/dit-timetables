@@ -289,11 +289,11 @@ public class TimetableActivity extends ActionBarActivity
 		{
 			RetainedConfiguration configuration = (RetainedConfiguration) retainedInstance;
 			this.timetable = configuration.getTimetable();
-			TimetableDownloader downloader = configuration.getDownloader();
-			if (downloader != null)
+			this.timetableDownloader = configuration.getDownloader();
+			if (timetableDownloader != null)
 			{
 				showDownloadProgress();
-				downloader.setTimetableDownloadListener(this);
+				timetableDownloader.setTimetableDownloadListener(this);
 			}
 			
 		}
