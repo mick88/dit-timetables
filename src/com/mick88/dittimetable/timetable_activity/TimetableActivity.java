@@ -423,6 +423,8 @@ public class TimetableActivity extends ActionBarActivity
 	
 	void showTimetable()
 	{
+		if (timetableDownloader != null)
+			throw new RuntimeException("Cannot show timetable while downloading");
 		findViewById(R.id.pager).setVisibility(View.VISIBLE);
 		findViewById(R.id.layoutMessage).setVisibility(View.GONE);
 	}
