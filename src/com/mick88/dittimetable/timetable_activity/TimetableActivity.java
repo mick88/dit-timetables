@@ -420,8 +420,23 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		if (timetableDownloader != null)
 			throw new RuntimeException("Cannot show timetable while downloading");
-		findViewById(R.id.pager).setVisibility(View.VISIBLE);
-		findViewById(R.id.layoutMessage).setVisibility(View.GONE);
+		if (timetable.isEmpty())
+		{
+			showMessage(false, getString(R.string.selected_timetable_is_empty), new View.OnClickListener()
+			{
+				
+				@Override
+				public void onClick(View v)
+				{
+					showSettingsScreen(true);					
+				}
+			}, getString(R.string.settings));
+		}
+		else
+		{
+			findViewById(R.id.pager).setVisibility(View.VISIBLE);
+			findViewById(R.id.layoutMessage).setVisibility(View.GONE);
+		}
 	}
 	
 	void showMessage(boolean showProgress, CharSequence message, android.view.View.OnClickListener buttonListener, CharSequence buttonText)

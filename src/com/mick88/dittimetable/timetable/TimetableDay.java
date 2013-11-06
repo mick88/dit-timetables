@@ -277,4 +277,9 @@ public class TimetableDay implements Serializable
 	{
 		return id;
 	}
+
+	public boolean isEmpty()
+	{
+		return events.isEmpty();
+	}
 }
