@@ -316,6 +316,7 @@ public class TimetableActivity extends ActionBarActivity
 			if (timetableDownloader != null)
 			{
 				showDownloadProgress();
+				setStatusMessage(timetableDownloader.getStatusMessage());
 				timetableDownloader.setTimetableDownloadListener(this);
 			}
 			
@@ -765,8 +766,9 @@ public class TimetableActivity extends ActionBarActivity
 	}
 
 	@Override
-	public void onStatusChange(int statusMessageRes)
+	public void onStatusChange(TimetableDownloader downloader)
 	{
-		setStatusMessage(statusMessageRes);
+		setStatusMessage(downloader.getStatusMessage());
+		
 	}
 }
