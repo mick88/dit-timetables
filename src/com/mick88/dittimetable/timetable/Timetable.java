@@ -380,4 +380,11 @@ public class Timetable implements Serializable
 		this.days = days;
 	}
 	
+	public boolean isEmpty()
+	{
+		for (TimetableDay day : days)
+			if (day.isEmpty() == false)
+				return false;
+		return true;
+	}
 }

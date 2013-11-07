@@ -171,7 +171,7 @@ public class PdfDownloaderService extends Service
 			.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
 		Builder builder = new Builder(getApplicationContext())
-			.setSmallIcon(R.drawable.ic_notification_download)
+			.setSmallIcon(R.drawable.ic_notification_download_error)
 			.setContentTitle(getString(R.string.dit_timetables))
 			.setTicker(getString(R.string.pdf_download_error_))
 			.setContentIntent(PendingIntent.getActivity(getApplicationContext(), INTENT_ID_ERRORMSG, intent, PendingIntent.FLAG_UPDATE_CURRENT))
@@ -199,7 +199,7 @@ public class PdfDownloaderService extends Service
 		intent.setData(Uri.fromFile(pdfFile));
 		
 		Builder builder = new Builder(getApplicationContext())
-			.setSmallIcon(R.drawable.ic_notification_download)
+			.setSmallIcon(R.drawable.ic_notification_download_complete)
 			.setTicker(getString(R.string.timetable_pdf_downloaded))
 			.setContentIntent(PendingIntent.getActivity(getApplicationContext(), INTENT_ID_VIEW_PDF, intent, 0))
 			.setContentTitle(getString(R.string.dit_timetables))
