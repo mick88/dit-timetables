@@ -414,14 +414,15 @@ public class TimetableActivity extends ActionBarActivity
 					{
 						if (timetables.get(arg0).equals(timetable) == false)
 						{
+							if (timetableDownloader != null)
+							{
+								timetableDownloader.cancel(true);
+							}
 							TimetableStub timetable = timetables.get(arg0);
 							timetable.setAsDefault(getApplicationContext(), getSettings());
 							
-							Intent intent = new Intent(getApplicationContext(), TimetableActivity.class);
-							intent.putExtra(EXTRA_TIMETABLE, timetable);
-							finish();
-							startActivity(intent);
-							overridePendingTransition(0, 0);
+							setTimetable(new DatabaseHelper(getApplicationContext()).loadTimetable(timetable));
+							refresh();
 							return true;
 						}
 						return false;

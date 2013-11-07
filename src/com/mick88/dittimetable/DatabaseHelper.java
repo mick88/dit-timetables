@@ -32,6 +32,11 @@ public class DatabaseHelper extends MSQLiteOpenHelper
 		return timetables.get(0);
 	}
 	
+	public Timetable loadTimetable(TimetableStub timetableStub)
+	{
+		return getTimetable(timetableStub.getCourse(), timetableStub.getYear(), timetableStub.getWeekRange());
+	}
+	
 	public void saveTimetable(Timetable timetable)
 	{
 		replace(timetable);
