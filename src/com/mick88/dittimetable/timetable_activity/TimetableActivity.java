@@ -60,8 +60,6 @@ public class TimetableActivity extends ActionBarActivity
 			super();
 			this.timetable = timetable;
 			this.downloader = downloader;
-			if (downloader != null)
-				downloader.setTimetableDownloadListener(null);
 		}
 		
 		public TimetableDownloader getDownloader()
@@ -139,6 +137,16 @@ public class TimetableActivity extends ActionBarActivity
 				showSettingsScreen(true);					
 			}
 		}, getString(R.string.settings));
+    }
+    
+    @Override
+    protected void onDestroy()
+    {
+    	if (timetableDownloader != null)
+    	{
+    		timetableDownloader.setTimetableDownloadListener(null);
+    	}
+    	super.onDestroy();
     }
     
 	@Override
