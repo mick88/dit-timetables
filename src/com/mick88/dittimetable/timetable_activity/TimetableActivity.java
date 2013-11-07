@@ -316,6 +316,8 @@ public class TimetableActivity extends ActionBarActivity
 			if (timetableDownloader != null)
 			{
 				showDownloadProgress();
+				if (timetableDownloader.getProgressMax() != 0)
+					onDownloadProgress(timetableDownloader.getProgressCurrent(), timetableDownloader.getProgressMax());
 				setStatusMessage(timetableDownloader.getStatusMessage());
 				timetableDownloader.setTimetableDownloadListener(this);
 			}
