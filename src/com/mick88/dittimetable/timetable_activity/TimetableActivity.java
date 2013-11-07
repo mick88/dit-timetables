@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -12,7 +13,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -23,18 +23,17 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
-import android.support.v7.app.ActionBar.Tab;
-import android.support.v7.app.ActionBar.TabListener;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +53,7 @@ import com.mick88.dittimetable.timetable_activity.GroupSelectionDialog.GroupSele
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class TimetableActivity extends ActionBarActivity 
-									implements GroupSelectionListener, TabListener, TimetableDownloadListener
+									implements GroupSelectionListener, TimetableDownloadListener
 {
 	private static class RetainedConfiguration
 	{
@@ -86,13 +85,10 @@ public class TimetableActivity extends ActionBarActivity
 	public static final String EXTRA_TIMETABLE = "timetable";
 	
 	final String logTag = "Timetable";
-	String html;
-	TextView textView;
 	Timetable timetable = null;
-	ProgressDialog progressDialog=null;
-	int currentWeek = Timetable.getCurrentWeek();
+	// fragments to be refreshed
+	Set<DayFragment> fragments = new HashSet<DayFragment>(5);
 	
-	TimetablePageAdapter timetablePageAdapter=null;
 	ViewPager viewPager=null;
 	
 	/**
@@ -109,27 +105,54 @@ public class TimetableActivity extends ActionBarActivity
 		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
 	}
 	
+	public void addFragment(DayFragment fragment)
+	{
+		fragments.add(fragment);
+	}
+	
+	public void removeFragment(DayFragment fragment)
+	{
+		fragments.remove(fragment);
+	}
+	
 	private Timer timedUpdateTimer = null;
 	private TimetableDownloader timetableDownloader;
        
     void downloadTimetable()
     {
+    	if (timetableDownloader != null)
+    		throw new RuntimeException("downloader already running");
     	showDownloadProgress();
     	timetableDownloader = new TimetableDownloader(getApplicationContext(), timetable, application.getSettings()).setTimetableDownloadListener(this);
     	timetableDownloader.execute();
+    	supportInvalidateOptionsMenu();
     }
     
     void showDownloadProgress()
     {
-    	showProgressPopup("Downloading timetable...");
+    	showProgressPopup(getString(R.string.downloading_timetable_));
+    }
+    
+    void showEmptyTimetableMessage()
+    {
+    	showMessage(false, getString(R.string.selected_timetable_is_empty), new View.OnClickListener()
+		{
+			
+			@Override
+			public void onClick(View v)
+			{
+				showSettingsScreen(true);					
+			}
+		}, getString(R.string.settings));
     }
     
 	@Override
 	public void onTimetableDownloaded(Timetable timetable,
 			RuntimeException exception)
 	{
-		dismissProgresPopup();
 		timetableDownloader = null;
+		supportInvalidateOptionsMenu();
+		showTimetable();		
 		if (exception == null)
 		{
 			refresh();
@@ -139,21 +162,48 @@ public class TimetableActivity extends ActionBarActivity
 		{
 			showSettingsScreen(false);
 		}
-		else
+		else if (exception instanceof Exceptions.EmptyTimetableException)
 		{
-			new AlertDialog.Builder(TimetableActivity.this)
-				.setMessage(exception.getMessage())
-				.setPositiveButton(R.string.retry, new OnClickListener()
+			showEmptyTimetableMessage();
+		}
+		else if (exception instanceof Exceptions.DownloadCancelledException)
+		{
+			DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
+			timetable = databaseHelper.getTimetable(getSettings().getCourse(), getSettings().getYear(), getSettings().getWeekRange());
+			
+			if (timetable == null)
+			{
+				this.timetable = new Timetable(getSettings());
+				
+				showMessage(false, getString(R.string.download_cancelled), new View.OnClickListener()
 				{
 					
 					@Override
-					public void onClick(DialogInterface dialog, int which)
+					public void onClick(View v)
 					{
-						downloadTimetable();						
+						downloadTimetable();					
 					}
-				})
-				.setNegativeButton(android.R.string.cancel, null)
-				.show();
+				}, getString(R.string.retry));
+//				setStatusMessage(R.string.no_local_copy);
+			}
+			else 
+			{
+				setTimetable(timetable);
+				refresh();
+			}
+			
+		}
+		else
+		{
+			showMessage(false, exception.getMessage(), new View.OnClickListener()
+			{
+				
+				@Override
+				public void onClick(View v)
+				{
+					downloadTimetable();					
+				}
+			}, getString(R.string.retry));
 		}
 	}
 	
@@ -184,7 +234,7 @@ public class TimetableActivity extends ActionBarActivity
     
     void setupViewPager()
     {
-    	timetablePageAdapter = new TimetablePageAdapter(getSupportFragmentManager(), timetable);
+    	TimetablePageAdapter timetablePageAdapter = new TimetablePageAdapter(getSupportFragmentManager());
     	viewPager  = (ViewPager) findViewById(R.id.pager);
     	viewPager.setAdapter(timetablePageAdapter);
     	showToday(false);
@@ -292,8 +342,10 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.activity_timetable);
+		setContentView(R.layout.fragment_timetable);
 
+		showMessage(true, getString(R.string.loading_), null, null);
+		
 		FontApplicator fontApplicator = new FontApplicator(getAssets(), TimetableApp.FONT_NAME);
 		fontApplicator.applyFont(getWindow().getDecorView());
 		application = (TimetableApp) getApplication();
@@ -303,25 +355,16 @@ public class TimetableActivity extends ActionBarActivity
 		{
 			RetainedConfiguration configuration = (RetainedConfiguration) retainedInstance;
 			this.timetable = configuration.getTimetable();
-			TimetableDownloader downloader = configuration.getDownloader();
-			if (downloader != null)
+			this.timetableDownloader = configuration.getDownloader();
+			if (timetableDownloader != null)
 			{
 				showDownloadProgress();
-				downloader.setTimetableDownloadListener(this);
+				if (timetableDownloader.getProgressMax() != 0)
+					onDownloadProgress(timetableDownloader.getProgressCurrent(), timetableDownloader.getProgressMax());
+				setStatusMessage(timetableDownloader.getStatusMessage());
+				timetableDownloader.setTimetableDownloadListener(this);
 			}
 			
-		}
-		if (savedInstanceState != null)
-		{
-			if (timetable == null)
-			{
-				Object extraTimetable = savedInstanceState.getSerializable(EXTRA_TIMETABLE);
-				if (extraTimetable instanceof Timetable)
-				{
-					this.timetable = (Timetable) extraTimetable;
-					refresh();
-				}
-			}
 		}
 		else processIntent();
 				
@@ -388,13 +431,6 @@ public class TimetableActivity extends ActionBarActivity
 				getSupportActionBar().setSelectedNavigationItem(timetables.indexOf(timetable));
 			}
 		}.execute();
-	}
-	
-	@Override
-	protected void onSaveInstanceState(Bundle outState)
-	{
-		super.onSaveInstanceState(outState);
-		outState.putSerializable(EXTRA_TIMETABLE, this.timetable);
 	}
 	
 	/*
@@ -474,12 +510,60 @@ public class TimetableActivity extends ActionBarActivity
 		try
 		{
 			setTitle();
-			timetablePageAdapter.setTimetable(timetable);
+			for (DayFragment dayFragment : fragments)
+				dayFragment.refresh();
+			showTimetable();
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	void showTimetable()
+	{
+		if (timetableDownloader != null)
+			throw new RuntimeException("Cannot show timetable while downloading");
+		if (timetable.isEmpty())
+		{
+			showEmptyTimetableMessage();
+		}
+		else
+		{
+			findViewById(R.id.pager).setVisibility(View.VISIBLE);
+			findViewById(R.id.layoutMessage).setVisibility(View.GONE);
+		}
+	}
+	
+	void showMessage(boolean showProgress, CharSequence message, android.view.View.OnClickListener buttonListener, CharSequence buttonText)
+	{
+		ProgressBar progressBar = (ProgressBar) findViewById(android.R.id.progress);
+		progressBar.setVisibility(showProgress?View.VISIBLE:View.GONE);
+		progressBar.setIndeterminate(true);
+		setStatusMessage(0);
+		TextView 
+			tvMessage = (TextView) findViewById(R.id.tvMessage),
+			btnMessageAction = (TextView) findViewById(R.id.btnMessageAction);
+		
+		if (message == null)
+			tvMessage.setVisibility(View.GONE);
+		else 
+		{
+			tvMessage.setVisibility(View.VISIBLE);
+			tvMessage.setText(message);
+		}
+		
+		if (buttonListener == null)
+			btnMessageAction.setVisibility(View.GONE);
+		else
+		{
+			btnMessageAction.setVisibility(View.VISIBLE);
+			btnMessageAction.setText(buttonText);
+			btnMessageAction.setOnClickListener(buttonListener);
+		}
+		
+		findViewById(R.id.layoutMessage).setVisibility(View.VISIBLE);
+		findViewById(R.id.pager).setVisibility(View.GONE);
 	}
 	
 	AppSettings getSettings()
@@ -617,8 +701,20 @@ public class TimetableActivity extends ActionBarActivity
 			downloadPdfInService();
 			return true;
 			
+		case R.id.menu_refresh_cancel:
+			if (timetableDownloader != null)
+				timetableDownloader.cancel(true);
+			return true;
+			
 		case R.id.menu_refresh_timetable:
-			onBtnRefreshPressed();	
+			try
+			{
+				onBtnRefreshPressed();
+			}
+			catch (Exception e)
+			{
+				Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+			}
 			return true;
 			
 		case R.id.menu_settings:
@@ -720,22 +816,17 @@ public class TimetableActivity extends ActionBarActivity
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		getMenuInflater().inflate(R.menu.activity_timetable, menu);
+		if (timetableDownloader != null)
+		{
+			menu.findItem(R.id.menu_refresh_cancel).setVisible(true);
+			menu.findItem(R.id.menu_refresh_timetable).setVisible(false);
+		}
 		return true;
 	}
 	
 	void showProgressPopup(CharSequence message)
 	{
-		progressDialog = new ProgressDialog(this);
-		progressDialog.setIndeterminate(true);
-		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		progressDialog.setMax(1);
-		progressDialog.setProgress(0);
-		progressDialog.setTitle(R.string.app_name);
-		progressDialog.setMessage(message); 
-		progressDialog.setIcon(R.drawable.ic_launcher);
-		progressDialog.setCancelable(false);
-		
-		progressDialog.show();
+		showMessage(true, message, null, null);
 	}
 	
 	void showPopupMessage(CharSequence message)
@@ -746,22 +837,6 @@ public class TimetableActivity extends ActionBarActivity
 				.setNeutralButton("OK", null)
 				.setIcon(R.drawable.ic_launcher)
 				.show();
-	}
-	
-	void dismissProgresPopup()
-	{
-		try
-		{
-			if (progressDialog != null)
-			{
-				progressDialog.dismiss();
-				progressDialog = null;
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -774,45 +849,34 @@ public class TimetableActivity extends ActionBarActivity
 		application.getSettings().saveSettings(this);
 		refresh();
 	}
-
-	@Override
-	public void onTabSelected(Tab tab, FragmentTransaction ft)
-	{
-		if (viewPager != null) viewPager.setCurrentItem(tab.getPosition(), true);
-		
-	}
-
-	@Override
-	public void onTabUnselected(Tab tab, FragmentTransaction ft)
-	{
-		
-	}
 	
 	public Timetable getTimetable()
 	{
 		return timetable;
 	}
-
-	@Override
-	public void onTabReselected(Tab tab, FragmentTransaction ft)
+	
+	void setStatusMessage(int stringResourceId)
 	{
-		
+		TextView tvStatus = (TextView) findViewById(R.id.tvDownloadStatus);
+		tvStatus.setVisibility(stringResourceId == 0 ? View.GONE : View.VISIBLE);
+		if (stringResourceId != 0)
+		{
+			tvStatus.setText(stringResourceId);
+		}
 	}
 
 	public void onProgress(final int position, final int max)
 	{
-		Log.d(logTag, "Progress update "+String.valueOf(position)+"/"+String.valueOf(max));
-		if (progressDialog == null) showDownloadProgress();
-		if (max >= position)
-		{
-			if (progressDialog != null)
-			{
-				progressDialog.setIndeterminate(false);
-				progressDialog.setMax(max);
-				progressDialog.setProgress(position);
-			}
-			
-		}
+		ProgressBar progressBar = (ProgressBar) findViewById(android.R.id.progress);
+		progressBar.setIndeterminate(false);
+		progressBar.setMax(max);
+		progressBar.setProgress(position);
+	}
+
+	@Override
+	public void onStatusChange(TimetableDownloader downloader)
+	{
+		setStatusMessage(downloader.getStatusMessage());
 		
 	}
 }

@@ -16,20 +16,10 @@ import com.mick88.dittimetable.timetable.Timetable;
  *
  */
 public class TimetablePageAdapter extends FragmentPagerAdapter
-{
-	Timetable timetable;
-	
-	public TimetablePageAdapter(FragmentManager fm, Timetable timetable)
+{	
+	public TimetablePageAdapter(FragmentManager fm)
 	{
 		super(fm);
-		setTimetable(timetable);
-	}
-	
-	public TimetablePageAdapter setTimetable(Timetable timetable)
-	{
-		this.timetable = timetable;
-		notifyDataSetChanged();
-		return this;
 	}
 
 	@Override
@@ -37,16 +27,9 @@ public class TimetablePageAdapter extends FragmentPagerAdapter
 	{
 		DayFragment fragment = new DayFragment();
 		Bundle args = new Bundle();
-		args.putSerializable(DayFragment.EXTRA_DAY, timetable.getDay(arg0));
-		args.putSerializable(DayFragment.EXTRA_TIMETABLE, timetable);
+		args.putSerializable(DayFragment.EXTRA_DAY_ID, arg0);
 		fragment.setArguments(args);
 		return fragment;
-	}
-	
-	@Override
-	public int getItemPosition(Object object)
-	{
-		return POSITION_NONE;
 	}
 	
 	@Override

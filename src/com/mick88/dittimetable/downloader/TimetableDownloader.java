@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -19,6 +18,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.flurry.android.FlurryAgent;
+import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.downloader.Exceptions.ServerConnectionException;
 import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.timetable.Timetable;
@@ -32,13 +32,13 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	{
 		void onTimetableDownloaded(Timetable timetable, RuntimeException exception);
 		void onDownloadProgress(int progress, int max);
+		void onStatusChange(TimetableDownloader downloader);
 	}
 	
 	private static class DownloadStateSaver implements TimetableDownloadListener
 	{
 		RuntimeException exception;
 		Timetable timetable;
-		int progress, maxProgress;
 		
 		@Override
 		public void onTimetableDownloaded(Timetable timetable,
@@ -51,8 +51,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		@Override
 		public void onDownloadProgress(int progress, int max)
 		{
-			this.progress = progress;
-			this.maxProgress = max;			
+			
 		}
 		
 		// update another listener with saved data
@@ -60,8 +59,13 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		{
 			if (timetable != null)
 				listener.onTimetableDownloaded(timetable, exception);
-			else if (maxProgress > 0)
-				listener.onDownloadProgress(progress, maxProgress);
+		}
+
+		@Override
+		public void onStatusChange(TimetableDownloader downloader)
+		{
+			// TODO Auto-generated method stub
+			
 		}
 	}
 	
@@ -71,6 +75,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	final Timetable timetable;
 	final Context context;
 	TimetableDownloadListener timetableDownloadListener = new DownloadStateSaver();
+	private int statusMessageRes = 0;
 	
 	public TimetableDownloader(Context context,	Timetable timetable, AppSettings settings)
 	{
@@ -133,6 +138,12 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		return builder.toString();
 	}
 	
+	private void checkCancelled()
+	{
+		if (isCancelled())
+			throw new Exceptions.DownloadCancelledException();
+	}
+	
 	/**
 	 * Downloads timetable content from web timetables - graphic view
 	 * @param context
@@ -140,14 +151,17 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	 */
 	public void download()
 	{
+		publishProgress(R.string.download_started_);
 		if (connection.areCredentialsPresent() == false)
 			throw new Exceptions.SettingsEmptyException();
 
 		String query = getQueryAddress(timetable);
 		
 		String string;
+		checkCancelled();
 		try
 		{
+			publishProgress(R.string.fetching_timetable_);
 			string = connection.getContent(query);
 		} 
 		catch (ServerConnectionException e)
@@ -181,6 +195,8 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		if (string.contains("There are no course records matching the criteria."))
 			throw new Exceptions.WrongCourseException();
 		
+		checkCancelled();
+		publishProgress(R.string.downloading_event_details);
 		parseGrid(string);
 
 		Log.i(logTag, "Timetable successfully downloaded");
@@ -233,6 +249,8 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		GRID_MODULE_CODE = 7,
 		GRID_MODULE_NAME = 8,
 		GRID_EVENT_TYPE = 9;
+	private int progressCurrent = 0;
+	private int progressMax = 0;
 	
 	private TimetableEvent parseEvent(TimetableDay day, Elements gridColumns)
 	{
@@ -252,6 +270,16 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		event.setType(parseType(gridColumns.get(GRID_EVENT_TYPE).text()));
 		
 		return event;
+	}
+	
+	public int getProgressCurrent()
+	{
+		return progressCurrent;
+	}
+	
+	public int getProgressMax()
+	{
+		return progressMax;
 	}
 	
 	/**
@@ -372,21 +400,20 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		for (TimetableDay day : timetable.getDays())
 			days.put(day.getShortName().toString(), day);
 		
-		int
-				totalEvents=0;
 		timetable.clearEvents();
 				
 		Document document = Jsoup.parse(html);
 		Elements gridRows = document.select("table.gridTable tr");
 		if (gridRows == null || gridRows.isEmpty())
 			throw new Exceptions.InvalidDataException();
-		totalEvents = gridRows.size();
+		progressMax = gridRows.size();
 
-		int currentRow=0;
+		progressCurrent = 0;
 		for (Element row : gridRows)
 		{
+			checkCancelled();
 			Elements columns = row.select("td.gridData");
-			this.publishProgress(++currentRow, totalEvents);
+			this.publishProgress(++progressCurrent, progressMax);
 			if (columns.isEmpty()) continue;
 			String day = columns.get(GRID_DAY).text();
 			TimetableDay tDay = days.get(day);
@@ -415,6 +442,12 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	}
 	
 	@Override
+	protected void onCancelled(RuntimeException result)
+	{
+		timetableDownloadListener.onTimetableDownloaded(timetable, new Exceptions.DownloadCancelledException());
+	}
+	
+	@Override
 	protected void onPostExecute(RuntimeException result)
 	{
 		super.onPostExecute(result);
@@ -425,7 +458,12 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	protected void onProgressUpdate(Integer... values)
 	{
 		super.onProgressUpdate(values);
-		if (values.length > 1)
+		if (values.length == 1)
+		{
+			this.statusMessageRes = values[0];
+			timetableDownloadListener.onStatusChange(this);
+		}
+		else if (values.length > 1)
 			timetableDownloadListener.onDownloadProgress(values[0], values[1]);
 	}
 	
@@ -464,6 +502,11 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		for (int i=0; i < parts.length; i++)
 			result[i] = Integer.parseInt(parts[i]);
 		return result;
+	}
+	
+	public int getStatusMessage()
+	{
+		return statusMessageRes;
 	}
 	
 	private static ClassType parseType(String s)
