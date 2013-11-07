@@ -33,12 +33,6 @@ public class TimetablePageAdapter extends FragmentPagerAdapter
 	}
 	
 	@Override
-	public int getItemPosition(Object object)
-	{
-		return POSITION_NONE;
-	}
-	
-	@Override
 	public CharSequence getPageTitle(int position)
 	{
 		
