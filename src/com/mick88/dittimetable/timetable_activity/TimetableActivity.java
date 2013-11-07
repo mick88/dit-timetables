@@ -636,7 +636,10 @@ public class TimetableActivity extends ActionBarActivity
 			
 		case R.id.menu_refresh_cancel:
 			if (timetableDownloader != null)
+			{
+				setStatusMessage(R.string.cancelling_);
 				timetableDownloader.cancel(true);
+			}
 			return true;
 			
 		case R.id.menu_refresh_timetable:
