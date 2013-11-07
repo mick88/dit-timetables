@@ -10,6 +10,11 @@ public abstract class Exceptions
 		{
 			super(message);
 		}
+		
+		public TimetableException()
+		{
+			super();
+		}
 	}
 	
 	
@@ -94,4 +99,13 @@ public abstract class Exceptions
 			super("Cannot find course with this code.");
 		}
 	}
+	
+	public static class DownloadCancelledException extends TimetableException
+	{
+		public DownloadCancelledException()
+		{
+			super("Operation cancelled by user.");
+		}
+	}
+	
 }

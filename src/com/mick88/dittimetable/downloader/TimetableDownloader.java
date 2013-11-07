@@ -138,6 +138,12 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		return builder.toString();
 	}
 	
+	private void checkCancelled()
+	{
+		if (isCancelled())
+			throw new Exceptions.DownloadCancelledException();
+	}
+	
 	/**
 	 * Downloads timetable content from web timetables - graphic view
 	 * @param context
@@ -152,6 +158,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		String query = getQueryAddress(timetable);
 		
 		String string;
+		checkCancelled();
 		try
 		{
 			publishProgress(R.string.fetching_timetable_);
@@ -188,6 +195,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		if (string.contains("There are no course records matching the criteria."))
 			throw new Exceptions.WrongCourseException();
 		
+		checkCancelled();
 		publishProgress(R.string.downloading_event_details);
 		parseGrid(string);
 
@@ -403,6 +411,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		progressCurrent = 0;
 		for (Element row : gridRows)
 		{
+			checkCancelled();
 			Elements columns = row.select("td.gridData");
 			this.publishProgress(++progressCurrent, progressMax);
 			if (columns.isEmpty()) continue;
@@ -430,6 +439,12 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		{
 			return exception;
 		}
+	}
+	
+	@Override
+	protected void onCancelled(RuntimeException result)
+	{
+		timetableDownloadListener.onTimetableDownloaded(timetable, new Exceptions.DownloadCancelledException());
 	}
 	
 	@Override

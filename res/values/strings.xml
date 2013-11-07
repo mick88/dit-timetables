@@ -54,5 +54,7 @@
     <string name="download_started_">Download started</string>
     <string name="fetching_timetable_">Fetching timetable</string>
     <string name="downloading_event_details">Downloading event details</string>
+    <string name="download_cancelled">Download cancelled</string>
+    <string name="no_local_copy">No local copy</string>
 
 </resources>
