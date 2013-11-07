@@ -181,7 +181,11 @@ public class TimetableActivity extends ActionBarActivity
 				}, getString(R.string.retry));
 //				setStatusMessage(R.string.no_local_copy);
 			}
-			else setTimetable(timetable);
+			else 
+			{
+				setTimetable(timetable);
+				refresh();
+			}
 			
 		}
 		else
