@@ -24,34 +24,50 @@ import com.mick88.dittimetable.utils.FontApplicator;
 public class DayFragment extends Fragment
 {
 	public static final String
-		EXTRA_DAY = "day",
-		EXTRA_TIMETABLE = "timetable";
+		EXTRA_DAY_ID = "day_id";
 	
-	TimetableDay timetableDay = null;
-	Timetable timetable = null;
+	int dayId;
+	TimetableActivity activity;
 	AppSettings appSettings = null;
 	
 	TextView tvText;
 	private ListView listView;
 	FontApplicator fontApplicator = null;
 	
+	private Timetable getTimetable()
+	{
+		return activity.getTimetable();
+	}
 	
+	private TimetableDay getTimetableDay()
+	{
+		return getTimetable().getDay(dayId);
+	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
-		super.onCreate(savedInstanceState);	
+		super.onCreate(savedInstanceState);
+		this.dayId = getArguments().getInt(EXTRA_DAY_ID);
 		TimetableApp application = (TimetableApp) getActivity().getApplication();
 		appSettings = application.getSettings();
-		timetableDay = (TimetableDay) getArguments().getSerializable(EXTRA_DAY);
-		timetable = (Timetable) getArguments().getSerializable(EXTRA_TIMETABLE);
 	}
 	
 	@Override
 	public void onAttach(Activity activity)
 	{
-		super.onAttach(activity);		
+		super.onAttach(activity);
 		fontApplicator = new FontApplicator(activity.getApplicationContext().getAssets(), "Roboto-Light.ttf");
+		this.activity = (TimetableActivity) activity;
+		this.activity.addFragment(this);
+	}
+	
+	@Override
+	public void onDetach()
+	{
+		this.activity.removeFragment(this);
+		this.activity = null;
+		super.onDetach();
 	}
 	
 	@Override
@@ -63,14 +79,14 @@ public class DayFragment extends Fragment
 	
 	public String getDayName()
 	{
-		return timetableDay.getName();
+		return getTimetableDay().getName();
 	}
 	
 	public void refresh()
 	{
 		if (listView != null)
 		{
-			List<EventItem> items = timetableDay.getTimetableEntries(appSettings);
+			List<EventItem> items = getTimetableDay().getTimetableEntries(appSettings);
 			if (items.isEmpty())
 			{
 				listView.setVisibility(View.GONE);
@@ -79,7 +95,7 @@ public class DayFragment extends Fragment
 			}
 			else
 			{
-				listView.setAdapter(new EventAdapter(getActivity(), items, timetableDay, timetable));
+				listView.setAdapter(new EventAdapter(getActivity(), items, getTimetableDay(), getTimetable()));
 				listView.setVisibility(View.VISIBLE);
 				tvText.setVisibility(View.GONE);
 			}

@@ -215,43 +215,39 @@ public class TimetableDay implements Serializable
 		
 		List<TimetableEvent> sameHourEvents = new ArrayList<TimetableEvent>();
 		
-		synchronized (events)
+		for (TimetableEvent event : events) 
+			if (event.isVisibleForGroupExcluding(settings.getHiddenGroups()) && event.isInWeek(showWeek))
 		{
-			for (TimetableEvent event : events) 
-				if (event.isVisibleForGroupExcluding(settings.getHiddenGroups()) && event.isInWeek(showWeek))
+			if (lastEvent != null)
 			{
-				if (lastEvent != null)
+				// add space if there was a time off between the events
+				if (lastEndHour < event.getStartHour())
 				{
-					// add space if there was a time off between the events
-					if (lastEndHour < event.getStartHour())
-					{
-						entries.add(new Space(event.getStartHour() - lastEndHour, lastEndHour));
-					}
+					entries.add(new Space(event.getStartHour() - lastEndHour, lastEndHour));
 				}
-				
-				int numEvents = getNumEventsAt(event.getStartHour(), settings.getHiddenGroups(), showWeek);
-				boolean singleEvent = (numEvents == 1);
-				
-				if (singleEvent)
-				{
-					entries.add(event);
-				}
-				else
-				{
-					if (sameHourEvents.isEmpty()) entries.add(new MultiEvent(sameHourEvents));
-					else if (sameHourEvents.get(0).getStartHour() != event.getStartHour())
-					{
-						sameHourEvents = new ArrayList<TimetableEvent>();
-						entries.add(new MultiEvent(sameHourEvents));
-					}
-						
-					sameHourEvents.add(event);
-				}
-				
-				lastEvent = event;
-				lastEndHour = event.getEndHour();
 			}
-
+			
+			int numEvents = getNumEventsAt(event.getStartHour(), settings.getHiddenGroups(), showWeek);
+			boolean singleEvent = (numEvents == 1);
+			
+			if (singleEvent)
+			{
+				entries.add(event);
+			}
+			else
+			{
+				if (sameHourEvents.isEmpty()) entries.add(new MultiEvent(sameHourEvents));
+				else if (sameHourEvents.get(0).getStartHour() != event.getStartHour())
+				{
+					sameHourEvents = new ArrayList<TimetableEvent>();
+					entries.add(new MultiEvent(sameHourEvents));
+				}
+					
+				sameHourEvents.add(event);
+			}
+			
+			lastEvent = event;
+			lastEndHour = event.getEndHour();
 		}
 
 		return entries;

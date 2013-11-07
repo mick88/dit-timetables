@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -20,11 +21,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBar.Tab;
-import android.support.v7.app.ActionBar.TabListener;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -50,7 +48,7 @@ import com.mick88.dittimetable.timetable_activity.GroupSelectionDialog.GroupSele
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class TimetableActivity extends ActionBarActivity 
-									implements GroupSelectionListener, TabListener, TimetableDownloadListener
+									implements GroupSelectionListener, TimetableDownloadListener
 {
 	private static class RetainedConfiguration
 	{
@@ -82,12 +80,10 @@ public class TimetableActivity extends ActionBarActivity
 	public static final String EXTRA_TIMETABLE = "timetable";
 	
 	final String logTag = "Timetable";
-	String html;
-	TextView textView;
 	Timetable timetable = null;
-	int currentWeek = Timetable.getCurrentWeek();
+	// fragments to be refreshed
+	Set<DayFragment> fragments = new HashSet<DayFragment>(5);
 	
-	TimetablePageAdapter timetablePageAdapter=null;
 	ViewPager viewPager=null;
 	
 	/**
@@ -102,6 +98,16 @@ public class TimetableActivity extends ActionBarActivity
 	void toast(CharSequence message)
 	{
 		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+	}
+	
+	public void addFragment(DayFragment fragment)
+	{
+		fragments.add(fragment);
+	}
+	
+	public void removeFragment(DayFragment fragment)
+	{
+		fragments.remove(fragment);
 	}
 	
 	private Timer timedUpdateTimer = null;
@@ -219,7 +225,7 @@ public class TimetableActivity extends ActionBarActivity
     
     void setupViewPager()
     {
-    	timetablePageAdapter = new TimetablePageAdapter(getSupportFragmentManager(), timetable);
+    	TimetablePageAdapter timetablePageAdapter = new TimetablePageAdapter(getSupportFragmentManager());
     	viewPager  = (ViewPager) findViewById(R.id.pager);
     	viewPager.setAdapter(timetablePageAdapter);
     	showToday(false);
@@ -335,21 +341,12 @@ public class TimetableActivity extends ActionBarActivity
 			if (timetableDownloader != null)
 			{
 				showDownloadProgress();
+				if (timetableDownloader.getProgressMax() != 0)
+					onDownloadProgress(timetableDownloader.getProgressCurrent(), timetableDownloader.getProgressMax());
+				setStatusMessage(timetableDownloader.getStatusMessage());
 				timetableDownloader.setTimetableDownloadListener(this);
 			}
 			
-		}
-		if (savedInstanceState != null)
-		{
-			if (timetable == null)
-			{
-				Object extraTimetable = savedInstanceState.getSerializable(EXTRA_TIMETABLE);
-				if (extraTimetable instanceof Timetable)
-				{
-					this.timetable = (Timetable) extraTimetable;
-					refresh();
-				}
-			}
 		}
 		else processIntent();
 				
@@ -363,13 +360,6 @@ public class TimetableActivity extends ActionBarActivity
 		}
 		setupViewPager();
 
-	}
-	
-	@Override
-	protected void onSaveInstanceState(Bundle outState)
-	{
-		super.onSaveInstanceState(outState);
-		outState.putSerializable(EXTRA_TIMETABLE, this.timetable);
 	}
 	
 	/*
@@ -449,7 +439,8 @@ public class TimetableActivity extends ActionBarActivity
 		try
 		{
 			setTitle();
-			timetablePageAdapter.setTimetable(timetable);
+			for (DayFragment dayFragment : fragments)
+				dayFragment.refresh();
 			showTimetable();
 		}
 		catch (Exception e)
@@ -787,29 +778,10 @@ public class TimetableActivity extends ActionBarActivity
 		application.getSettings().saveSettings(this);
 		refresh();
 	}
-
-	@Override
-	public void onTabSelected(Tab tab, FragmentTransaction ft)
-	{
-		if (viewPager != null) viewPager.setCurrentItem(tab.getPosition(), true);
-		
-	}
-
-	@Override
-	public void onTabUnselected(Tab tab, FragmentTransaction ft)
-	{
-		
-	}
 	
 	public Timetable getTimetable()
 	{
 		return timetable;
-	}
-
-	@Override
-	public void onTabReselected(Tab tab, FragmentTransaction ft)
-	{
-		
 	}
 	
 	void setStatusMessage(int stringResourceId)
@@ -831,8 +803,9 @@ public class TimetableActivity extends ActionBarActivity
 	}
 
 	@Override
-	public void onStatusChange(int statusMessageRes)
+	public void onStatusChange(TimetableDownloader downloader)
 	{
-		setStatusMessage(statusMessageRes);
+		setStatusMessage(downloader.getStatusMessage());
+		
 	}
 }
