@@ -442,9 +442,10 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	}
 	
 	@Override
-	protected void onCancelled(RuntimeException result)
+	protected void onCancelled()
 	{
 		timetableDownloadListener.onTimetableDownloaded(timetable, new Exceptions.DownloadCancelledException());
+		super.onCancelled();
 	}
 	
 	@Override

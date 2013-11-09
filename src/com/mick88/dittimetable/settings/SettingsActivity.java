@@ -6,9 +6,8 @@ import java.util.Locale;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
-import android.content.res.Configuration;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -78,7 +77,6 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		semesterSelector = (Spinner) findViewById(R.id.spinner_semester_selector);
 		editWeeks = (EditText) findViewById(R.id.edit_weeks);
 		editCourse = (AutoCompleteTextView) findViewById(R.id.editCourseCode);
-		editCourse.setRawInputType(Configuration.KEYBOARD_QWERTY);
 		editUsername =  (EditText) findViewById(R.id.editUsername);
 		editPassword = (EditText) findViewById(R.id.editPassword);
 		weekCheckBox = (CheckBox) findViewById(R.id.checkBoxSetCurrentWeekOnly);
@@ -151,15 +149,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 	}
 	
 	boolean saveSettings()
-	{
-		String [] settings = new String[] {
-				editCourse.getText().toString(), 
-				String.valueOf(yearSelector.getSelectedItemId()+1),
-				editWeeks.getText().toString(),
-				editUsername.getText().toString().trim(),
-				editPassword.getText().toString().trim()
-				};
-		
+	{		
 		appSettings.setUsername(editUsername.getText().toString().trim());
 		appSettings.setPassword(editPassword.getText().toString().trim());
 		

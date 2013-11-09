@@ -177,7 +177,7 @@ public class TimetableActivity extends ActionBarActivity
 		else if (exception instanceof Exceptions.DownloadCancelledException)
 		{
 			DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
-			timetable = databaseHelper.getTimetable(getSettings().getCourse(), getSettings().getYear(), getSettings().getWeekRange());
+			timetable = databaseHelper.loadTimetable(getSettings());
 			
 			if (timetable == null)
 			{
@@ -459,8 +459,15 @@ public class TimetableActivity extends ActionBarActivity
 			@Override
 			protected void onPostExecute(Timetable result) 
 			{
-				setTimetable(result);
-				refresh();
+				if (result == null)
+				{
+					openTimetable(getSettings());
+				}
+				else
+				{
+					setTimetable(result);
+					refresh();
+				}
 			}			
 		}.execute(timetable);	
 	}
@@ -617,7 +624,7 @@ public class TimetableActivity extends ActionBarActivity
 	void openTimetable(AppSettings appSettings)
 	{
 		DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
-		Timetable timetable = databaseHelper.getTimetable(appSettings.getCourse(), appSettings.getYear(), appSettings.getWeekRange());
+		Timetable timetable = databaseHelper.loadTimetable(appSettings);
 		if (timetable == null) 
 		{
 			timetable = new Timetable(appSettings);
