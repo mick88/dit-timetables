@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/card"
+    android:padding="@dimen/tile_padding" >
+
+    <TextView
+        android:id="@+id/tvSavedTimetables"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:text="@string/saved_timetables"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <View
+        android:id="@+id/centerStrut"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true" />
+
+    <Button
+        android:id="@+id/btnClearTimetables"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvSavedTimetables"
+        android:layout_alignRight="@+id/centerStrut"
+        android:layout_below="@+id/textView1"
+        android:text="@string/clear_all" />
+
+    <Button
+        android:id="@+id/btnDeleteSelectedTimetables"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/btnClearTimetables"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/centerStrut"
+        android:text="@string/delete_" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btnClearTimetables"
+        android:layout_below="@+id/tvSavedTimetables"
+        android:text="@string/all_viewed_timetables_are_saved_onto_your_device_" />
+
+</RelativeLayout>
