@@ -422,24 +422,28 @@ public class TimetableActivity extends ActionBarActivity
 					{
 						if (timetables.get(arg0).equals(timetable) == false)
 						{
-							if (timetableDownloader != null)
-							{
-								timetableDownloader.cancel(true);
-							}
-							TimetableStub timetable = timetables.get(arg0);
-							timetable.setAsDefault(getApplicationContext(), getSettings());
-							
-							setTimetable(new DatabaseHelper(getApplicationContext()).loadTimetable(timetable));
-							refresh();
+							onTimetableDropdownSelected(timetables.get(arg0));
 							return true;
 						}
-						return false;
+						else return false;
 					}
 				});
 
 				getSupportActionBar().setSelectedNavigationItem(timetables.indexOf(timetable));
 			}
 		}.execute();
+	}
+	
+	void onTimetableDropdownSelected(TimetableStub timetable)
+	{
+		if (timetableDownloader != null)
+		{
+			timetableDownloader.cancel(true);
+		}
+		timetable.setAsDefault(getApplicationContext(), getSettings());
+		
+		setTimetable(new DatabaseHelper(getApplicationContext()).loadTimetable(timetable));
+		refresh();
 	}
 	
 	/*
