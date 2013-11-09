@@ -439,11 +439,30 @@ public class TimetableActivity extends ActionBarActivity
 		if (timetableDownloader != null)
 		{
 			timetableDownloader.cancel(true);
-		}
-		timetable.setAsDefault(getApplicationContext(), getSettings());
+		}		
 		
-		setTimetable(new DatabaseHelper(getApplicationContext()).loadTimetable(timetable));
-		refresh();
+		new AsyncTask<TimetableStub, Void, Timetable>()
+		{
+			@Override
+			protected void onPreExecute()
+			{
+				showProgressPopup(getString(R.string.loading_));
+				super.onPreExecute();
+			}
+			@Override
+			protected Timetable doInBackground(TimetableStub... params)
+			{
+				params[0].setAsDefault(getApplicationContext(), getSettings());
+				return new DatabaseHelper(getApplicationContext()).loadTimetable(params[0]);
+			}
+			
+			@Override
+			protected void onPostExecute(Timetable result) 
+			{
+				setTimetable(result);
+				refresh();
+			}			
+		}.execute(timetable);	
 	}
 	
 	/*
