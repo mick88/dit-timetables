@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.michaldabski.msqlite.MSQLiteOpenHelper;
+import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableStub;
 
@@ -30,6 +31,11 @@ public class DatabaseHelper extends MSQLiteOpenHelper
 		if (timetables.isEmpty()) return null;
 		Log.d(TAG, "Timetable loaded: "+timetables.get(0).describe());
 		return timetables.get(0);
+	}
+	
+	public Timetable loadTimetable(AppSettings appSettings)
+	{
+		return getTimetable(appSettings.getCourse(), appSettings.getYear(), appSettings.getWeekRange());
 	}
 	
 	public Timetable loadTimetable(TimetableStub timetableStub)
