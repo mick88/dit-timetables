@@ -13,19 +13,23 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.OnNavigationListener;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,6 +48,7 @@ import com.mick88.dittimetable.downloader.TimetableDownloader.TimetableDownloadL
 import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.settings.SettingsActivity;
 import com.mick88.dittimetable.timetable.Timetable;
+import com.mick88.dittimetable.timetable.TimetableStub;
 import com.mick88.dittimetable.timetable_activity.GroupSelectionDialog.GroupSelectionListener;
 import com.mick88.dittimetable.utils.FontApplicator;
 
@@ -60,8 +65,6 @@ public class TimetableActivity extends ActionBarActivity
 			super();
 			this.timetable = timetable;
 			this.downloader = downloader;
-			if (downloader != null)
-				downloader.setTimetableDownloadListener(null);
 		}
 		
 		public TimetableDownloader getDownloader()
@@ -139,6 +142,16 @@ public class TimetableActivity extends ActionBarActivity
 				showSettingsScreen(true);					
 			}
 		}, getString(R.string.settings));
+    }
+    
+    @Override
+    protected void onDestroy()
+    {
+    	if (timetableDownloader != null)
+    	{
+    		timetableDownloader.setTimetableDownloadListener(null);
+    	}
+    	super.onDestroy();
     }
     
 	@Override
@@ -272,6 +285,15 @@ public class TimetableActivity extends ActionBarActivity
 				.setPositiveButton(android.R.string.ok, null)
 				.show();
 		}
+		else if (extras != null && extras.containsKey(EXTRA_TIMETABLE))
+		{
+			Object extraTimetable = extras.getSerializable(EXTRA_TIMETABLE);
+			if (extraTimetable instanceof Timetable)
+			{
+				this.timetable = (Timetable) extraTimetable;
+				refresh();
+			}
+		}
 
 		if (address != null && address.getHost().equalsIgnoreCase("www.dit.ie"))
 		{
@@ -363,7 +385,84 @@ public class TimetableActivity extends ActionBarActivity
 			else openTimetable(getSettings());
 		}
 		setupViewPager();
+		setupActionBar();
+	}
+	
+	void setupActionBar()
+	{
+		new AsyncTask<Void, Void, List<TimetableStub>>()
+		{
 
+			@Override
+			protected List<TimetableStub> doInBackground(Void... params)
+			{
+				long t = System.currentTimeMillis();
+				List<TimetableStub> timetables = new DatabaseHelper(getApplicationContext()).getSavedTimetables();
+				if (timetables.contains(timetable) == false) timetables.add(timetable);
+				Collections.sort(timetables);
+				t = System.currentTimeMillis() - t;
+				Log.d("Timetable activity", "Timetables loaded in "+String.valueOf(t));
+				return timetables;
+			}
+			
+			@Override
+			protected void onPostExecute(final List<TimetableStub> timetables)
+			{
+				if (timetables.size() == 1) return;
+				getSupportActionBar().setDisplayShowTitleEnabled(false);
+				
+				Context context = new ContextThemeWrapper(TimetableActivity.this, R.style.Theme_AppCompat);
+				getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+				TimetableDropdownAdapter timetableAdapter = new TimetableDropdownAdapter(context, timetables);
+				timetableAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				getSupportActionBar().setListNavigationCallbacks(timetableAdapter, new OnNavigationListener()
+				{			
+					@Override
+					public boolean onNavigationItemSelected(int arg0, long arg1)
+					{
+						if (timetables.get(arg0).equals(timetable) == false)
+						{
+							onTimetableDropdownSelected(timetables.get(arg0));
+							return true;
+						}
+						else return false;
+					}
+				});
+
+				getSupportActionBar().setSelectedNavigationItem(timetables.indexOf(timetable));
+			}
+		}.execute();
+	}
+	
+	void onTimetableDropdownSelected(TimetableStub timetable)
+	{
+		if (timetableDownloader != null)
+		{
+			timetableDownloader.cancel(true);
+		}		
+		
+		new AsyncTask<TimetableStub, Void, Timetable>()
+		{
+			@Override
+			protected void onPreExecute()
+			{
+				showProgressPopup(getString(R.string.loading_));
+				super.onPreExecute();
+			}
+			@Override
+			protected Timetable doInBackground(TimetableStub... params)
+			{
+				params[0].setAsDefault(getApplicationContext(), getSettings());
+				return new DatabaseHelper(getApplicationContext()).loadTimetable(params[0]);
+			}
+			
+			@Override
+			protected void onPostExecute(Timetable result) 
+			{
+				setTimetable(result);
+				refresh();
+			}			
+		}.execute(timetable);	
 	}
 	
 	/*
@@ -636,7 +735,10 @@ public class TimetableActivity extends ActionBarActivity
 			
 		case R.id.menu_refresh_cancel:
 			if (timetableDownloader != null)
+			{
+				setStatusMessage(R.string.cancelling_);
 				timetableDownloader.cancel(true);
+			}
 			return true;
 			
 		case R.id.menu_refresh_timetable:

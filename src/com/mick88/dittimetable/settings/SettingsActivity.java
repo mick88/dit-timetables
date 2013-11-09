@@ -1,8 +1,13 @@
 package com.mick88.dittimetable.settings;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +17,7 @@ import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -20,16 +26,19 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.mick88.dittimetable.DatabaseHelper;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.RobotoArrayAdapter;
 import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.downloader.TimetableDownloader;
 import com.mick88.dittimetable.timetable.Timetable;
+import com.mick88.dittimetable.timetable.TimetableStub;
 import com.mick88.dittimetable.timetable_activity.TimetableActivity;
 import com.mick88.dittimetable.utils.FontApplicator;
 
-public class SettingsActivity extends ActionBarActivity
+public class SettingsActivity extends ActionBarActivity implements OnClickListener
 {	
 
 	public static final String EXTRA_ALLOW_CANCEL = "allow_cancel";
@@ -77,6 +86,9 @@ public class SettingsActivity extends ActionBarActivity
 
 		RobotoArrayAdapter<String> courseAdapter = new RobotoArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, android.R.id.text1, TimetableDownloader.getCourseCodes());
 		editCourse.setAdapter(courseAdapter);
+		
+		findViewById(R.id.btnClearTimetables).setOnClickListener(this);
+		findViewById(R.id.btnDeleteSelectedTimetables).setOnClickListener(this);
 		
 		String [] years = getResources().getStringArray(R.array.year_values);
 		yearSelector.setAdapter(new RobotoArrayAdapter<String>(this, android.R.layout.simple_spinner_item, android.R.id.text1, years));
@@ -294,5 +306,91 @@ public class SettingsActivity extends ActionBarActivity
 	public void onBackPressed()
 	{
 		saveAndQuit();
+	}
+
+	/**
+	 * Show dialog allowing to pick and delete timetables
+	 */
+	void showTimetableDeleteDialog()
+	{
+		final DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
+		final List<TimetableStub> timetables = databaseHelper.getSavedTimetables();
+		Collections.sort(timetables);
+		
+		if (timetables.isEmpty())
+		{
+			new AlertDialog.Builder(this).setMessage(R.string.there_are_not_saved_timetables)
+				.setPositiveButton(android.R.string.ok, null)
+				.show();
+			return;
+		}
+		
+		CharSequence [] titles = new CharSequence[timetables.size()];
+		for (int i=0; i < timetables.size(); i++)
+			titles[i] = String.format(Locale.ENGLISH, "%s (%s)", timetables.get(i).describe(), timetables.get(i).describeWeeks());
+		final boolean [] checked = new boolean[timetables.size()];
+		
+		new AlertDialog.Builder(this).setMultiChoiceItems(titles, checked, new OnMultiChoiceClickListener()
+		{
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which, boolean isChecked)
+			{
+				checked[which] = isChecked;				
+			}
+		})
+		.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener()
+		{
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which)
+			{
+				// strip list of unchecked items
+				for (int i=checked.length-1; i >= 0; i--)
+					if (checked[i] == false) 
+						timetables.remove(i);
+				
+				if (timetables.isEmpty())
+				{
+					Toast.makeText(getApplicationContext(), R.string.no_items_deleted, Toast.LENGTH_SHORT).show();
+					return;
+				}
+				
+				// delete
+				int n = databaseHelper.delete(TimetableStub.class, timetables);
+				Toast.makeText(getApplicationContext(), getString(R.string._d_items_deleted, n), Toast.LENGTH_SHORT).show();
+			}
+		})
+		.setNegativeButton(android.R.string.cancel, null)
+		.setTitle(R.string.delete_timetables_)
+		.show();
+	}
+	
+	@Override
+	public void onClick(View v)
+	{
+		switch (v.getId())
+		{
+			case R.id.btnClearTimetables:
+				new AlertDialog.Builder(this)
+				.setMessage(R.string.all_cached_timetables_will_be_deleted_if_you_wish_to_use_them_again_they_will_be_re_downloaded_continue_)
+				.setTitle(R.string.clear_cache)
+				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+				{
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which)
+					{
+						new DatabaseHelper(getApplicationContext()).deleteAllTimetables();
+						Toast.makeText(getApplicationContext(), "Timetable cache cleared", Toast.LENGTH_SHORT).show();
+					}
+				})
+				.setNegativeButton(android.R.string.cancel, null)
+				.show();
+				break;
+			case R.id.btnDeleteSelectedTimetables:
+				showTimetableDeleteDialog();
+				break;
+		}		
 	}
 }

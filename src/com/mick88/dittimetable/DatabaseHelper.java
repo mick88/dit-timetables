@@ -3,10 +3,12 @@ package com.mick88.dittimetable;
 import java.util.List;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.michaldabski.msqlite.MSQLiteOpenHelper;
 import com.mick88.dittimetable.timetable.Timetable;
+import com.mick88.dittimetable.timetable.TimetableStub;
 
 public class DatabaseHelper extends MSQLiteOpenHelper
 {
@@ -30,6 +32,11 @@ public class DatabaseHelper extends MSQLiteOpenHelper
 		return timetables.get(0);
 	}
 	
+	public Timetable loadTimetable(TimetableStub timetableStub)
+	{
+		return getTimetable(timetableStub.getCourse(), timetableStub.getYear(), timetableStub.getWeekRange());
+	}
+	
 	public void saveTimetable(Timetable timetable)
 	{
 		replace(timetable);
@@ -40,8 +47,18 @@ public class DatabaseHelper extends MSQLiteOpenHelper
 	 * returns all timetables saved in database
 	 * @return
 	 */
-	public List<Timetable> getSavedTimetables()
+	public List<TimetableStub> getSavedTimetables()
 	{
-		return selectAll(Timetable.class);
+		SQLiteDatabase database = getReadableDatabase();
+		List<TimetableStub> timetableStubs = select(database, TimetableStub.class, new String [] {"course", "year", "weekRange"}, null, null, "course, year", null);
+		database.close();
+		return timetableStubs;
+	}
+	
+	public void deleteAllTimetables()
+	{
+		SQLiteDatabase database = getWritableDatabase();
+		deleteFrom(database, Timetable.class, null, null);
+		database.close();
 	}
 }
