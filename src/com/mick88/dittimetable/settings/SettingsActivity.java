@@ -75,7 +75,6 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		semesterSelector = (Spinner) findViewById(R.id.spinner_semester_selector);
 		editWeeks = (EditText) findViewById(R.id.edit_weeks);
 		editCourse = (EditText) findViewById(R.id.editCourseCode);
-		editCourse.setRawInputType(Configuration.KEYBOARD_QWERTY);
 		editUsername =  (EditText) findViewById(R.id.editUsername);
 		editPassword = (EditText) findViewById(R.id.editPassword);
 		weekCheckBox = (CheckBox) findViewById(R.id.checkBoxSetCurrentWeekOnly);
