@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 import com.michaldabski.msqlite.MSQLiteOpenHelper;
@@ -25,12 +26,25 @@ public class DatabaseHelper extends MSQLiteOpenHelper
 	
 	public Timetable getTimetable(String course, int year, String weeks)
 	{
-		List<Timetable> timetables = select(Timetable.class, "course=? AND year=? and weekRange=?", 
-				new String[]{course, String.valueOf(year), weeks}, 
-				null, "1");
-		if (timetables.isEmpty()) return null;
-		Log.d(TAG, "Timetable loaded: "+timetables.get(0).describe());
-		return timetables.get(0);
+		try
+		{
+			List<Timetable> timetables = select(Timetable.class, "course=? AND year=? and weekRange=?", 
+					new String[]{course, String.valueOf(year), weeks}, 
+					null, "1");
+			if (timetables.isEmpty()) return null;
+			Log.d(TAG, "Timetable loaded: "+timetables.get(0).describe());
+			return timetables.get(0);
+		}
+		catch (SQLiteException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+		catch (RuntimeException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	public Timetable loadTimetable(AppSettings appSettings)

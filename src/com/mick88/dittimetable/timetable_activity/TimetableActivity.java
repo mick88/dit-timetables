@@ -459,8 +459,15 @@ public class TimetableActivity extends ActionBarActivity
 			@Override
 			protected void onPostExecute(Timetable result) 
 			{
-				setTimetable(result);
-				refresh();
+				if (result == null)
+				{
+					openTimetable(getSettings());
+				}
+				else
+				{
+					setTimetable(result);
+					refresh();
+				}
 			}			
 		}.execute(timetable);	
 	}
