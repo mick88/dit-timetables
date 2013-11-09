@@ -91,6 +91,9 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	Set<String> groups = new HashSet<String>();
 	
 	private int day;
+	// denotes that event was added by user instead of downloaded
+	// true is the default value, all downloaders should set it to false
+	boolean custom = true;
 	
 	/**
 	 * Stores parsed list of weeks when event is on
@@ -584,5 +587,15 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	public void setLecturer(String lecturer)
 	{
 		this.lecturer = lecturer;
+	}
+	
+	public void setCustom(boolean custom)
+	{
+		this.custom = custom;
+	}
+	
+	public boolean isCustom()
+	{
+		return custom;
 	}
 }

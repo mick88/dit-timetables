@@ -221,6 +221,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	public boolean parseGridRow(TimetableDay day, Elements gridCols)
 	{
 		TimetableEvent event = parseEvent(day, gridCols);
+		event.setCustom(false);
 		if (event.isValid())
 		{			
 			day.addEvent(event);
