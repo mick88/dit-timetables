@@ -144,11 +144,6 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 			throw new Exceptions.DownloadCancelledException();
 	}
 	
-	/**
-	 * Downloads timetable content from web timetables - graphic view
-	 * @param context
-	 * @return true if successful
-	 */
 	public void download()
 	{
 		publishProgress(R.string.download_started_);
