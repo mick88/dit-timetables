@@ -69,5 +69,6 @@
     <string name="download_cancelled">Download cancelled</string>
     <string name="no_local_copy">No local copy</string>
     <string name="cancelling_">Cancelling&#8230;</string>
+    <string name="logging_in_">Logging in...</string>
 
 </resources>

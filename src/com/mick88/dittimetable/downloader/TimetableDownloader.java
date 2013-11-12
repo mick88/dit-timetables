@@ -156,6 +156,8 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		checkCancelled();
 		try
 		{
+			publishProgress(R.string.logging_in_);
+			connection.logIn();
 			publishProgress(R.string.fetching_timetable_);
 			string = connection.getContent(query);
 		} 
