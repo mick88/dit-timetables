@@ -12,14 +12,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
-import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -82,7 +80,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		weekCheckBox = (CheckBox) findViewById(R.id.checkBoxSetCurrentWeekOnly);
 		TextView tvInfo = (TextView) findViewById(R.id.textDatasetInfo);
 
-		RobotoArrayAdapter<String> courseAdapter = new RobotoArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, android.R.id.text1, TimetableDownloader.getCourseCodes());
+		RobotoArrayAdapter<String> courseAdapter = new RobotoArrayAdapter<String>(this, R.layout.dropdown_autocomplete, android.R.id.text1, TimetableDownloader.getCourseCodes());
 		editCourse.setAdapter(courseAdapter);
 		
 		findViewById(R.id.btnClearTimetables).setOnClickListener(this);

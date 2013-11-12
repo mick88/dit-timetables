@@ -30,6 +30,7 @@
         android:ems="10"
         android:hint="@string/course_code"
         android:completionThreshold="1"
+        android:textAppearance="?android:attr/textAppearance"
         android:inputType="textCapCharacters|textNoSuggestions|textVisiblePassword"
         android:singleLine="true" />
 
