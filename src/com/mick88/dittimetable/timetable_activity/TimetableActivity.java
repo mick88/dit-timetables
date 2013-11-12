@@ -216,9 +216,23 @@ public class TimetableActivity extends ActionBarActivity
 	}
 	
 	@Override
-	public void onDownloadProgress(int progress, int max)
+	public void onDownloadProgress(TimetableDownloader timetableDownloader, int progress, int max)
 	{
-		onProgress(progress, max);
+		ProgressBar progressBar = (ProgressBar) findViewById(android.R.id.progress);
+		progressBar.setIndeterminate(false);
+		progressBar.setMax(max);
+		progressBar.setProgress(progress);
+		
+		if (max > 0)
+		{
+			if (timetableDownloader.getStatusMessage() == R.string.downloading_event_details)
+			{
+				// Show X of X progress message
+				setStatusMessage(getString(R.string.downloading_event_details_progress)
+						.replace("{current}", String.valueOf(progress))
+						.replace("{total}", String.valueOf(max)));
+			}
+		}
 	}
     
     public void setTitle()
@@ -368,7 +382,7 @@ public class TimetableActivity extends ActionBarActivity
 			{
 				showDownloadProgress();
 				if (timetableDownloader.getProgressMax() != 0)
-					onDownloadProgress(timetableDownloader.getProgressCurrent(), timetableDownloader.getProgressMax());
+					onDownloadProgress(timetableDownloader, timetableDownloader.getProgressCurrent(), timetableDownloader.getProgressMax());
 				setStatusMessage(timetableDownloader.getStatusMessage());
 				timetableDownloader.setTimetableDownloadListener(this);
 			}
@@ -906,13 +920,15 @@ public class TimetableActivity extends ActionBarActivity
 			tvStatus.setText(stringResourceId);
 		}
 	}
-
-	public void onProgress(final int position, final int max)
+	
+	void setStatusMessage(String message)
 	{
-		ProgressBar progressBar = (ProgressBar) findViewById(android.R.id.progress);
-		progressBar.setIndeterminate(false);
-		progressBar.setMax(max);
-		progressBar.setProgress(position);
+		TextView tvStatus = (TextView) findViewById(R.id.tvDownloadStatus);
+		tvStatus.setVisibility(TextUtils.isEmpty(message) ? View.GONE : View.VISIBLE);
+		if (TextUtils.isEmpty(message) == false)
+		{
+			tvStatus.setText(message);
+		}
 	}
 
 	@Override

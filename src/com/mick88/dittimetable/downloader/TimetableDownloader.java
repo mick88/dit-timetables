@@ -31,7 +31,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 	public static interface TimetableDownloadListener
 	{
 		void onTimetableDownloaded(Timetable timetable, RuntimeException exception);
-		void onDownloadProgress(int progress, int max);
+		void onDownloadProgress(TimetableDownloader timetableDownloader, int progress, int max);
 		void onStatusChange(TimetableDownloader downloader);
 	}
 	
@@ -49,7 +49,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		}
 
 		@Override
-		public void onDownloadProgress(int progress, int max)
+		public void onDownloadProgress(TimetableDownloader timetableDownloader, int progress, int max)
 		{
 			
 		}
@@ -466,7 +466,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 			timetableDownloadListener.onStatusChange(this);
 		}
 		else if (values.length > 1)
-			timetableDownloadListener.onDownloadProgress(values[0], values[1]);
+			timetableDownloadListener.onDownloadProgress(this, values[0], values[1]);
 	}
 	
 	private static String parseModuleName(String s)
