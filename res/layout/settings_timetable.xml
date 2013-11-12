@@ -20,7 +20,7 @@
         android:layout_height="0dp"
         android:layout_centerHorizontal="true" />
 
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/editCourseCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,6 +29,8 @@
         android:layout_toLeftOf="@+id/spinner_year_selector"
         android:ems="10"
         android:hint="@string/course_code"
+        android:completionThreshold="1"
+        android:textAppearance="?android:attr/textAppearance"
         android:inputType="textCapCharacters|textNoSuggestions|textVisiblePassword"
         android:singleLine="true" />
 
