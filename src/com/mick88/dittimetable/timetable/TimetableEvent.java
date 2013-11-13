@@ -66,42 +66,23 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 		MAX_START_TIME = 22;
 	
 	private static final String GROUP_SEPARATOR = ", ";
-	final static String logTag = "TimetableEvent";
+	private static final String logTag = "TimetableEvent";
 	
 	/*Main event data*/
-	private String name="";
-
-	protected String room="";
-
-	private String lecturer = "";
-
-	protected String weekRange="";
-
-	protected String groupStr="";
-	private int id=0;
-
-	private int startHour=0;
-
-	private int startMin=0;
-
-	private int endMin=0;
-
-	private int endHour=0;
-	private ClassType type=ClassType.Other;
-	Set<String> groups = new HashSet<String>();
+	protected String 
+		name, room, lecturer, weekRange, groupStr="";
+	private int 
+		id=0, day,
+		startHour=0, startMin=0, endMin=0, endHour=0;
 	
-	private int day;
-	// denotes that event was added by user instead of downloaded
-	// true is the default value, all downloaders should set it to false
-	boolean custom = true;
+	protected ClassType type=ClassType.Other;
+	protected Set<String> groups = new HashSet<String>();
+	protected Set<Integer> weeks;
 	
-	/**
-	 * Stores parsed list of weeks when event is on
-	 */
-	Set<Integer> weeks;
-	
-	private boolean complete =false;
-	
+	private boolean 
+		custom = true, // event added by user manually
+		complete =false;
+
 	public void setWeekRange(String weekRange)
 	{
 		this.weekRange = weekRange;
