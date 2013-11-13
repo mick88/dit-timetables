@@ -80,8 +80,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	protected Set<Integer> weeks;
 	
 	private boolean 
-		custom = true, // event added by user manually
-		complete =false;
+		custom = true; // event added by user manually
 
 	public void setWeekRange(String weekRange)
 	{
@@ -380,7 +379,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 					addGroup(s);
 				}
 			}
-			setComplete(true);
 			decodeWeeks();
 		}
 		catch (Exception e)
@@ -553,16 +551,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	public void setType(ClassType type)
 	{
 		this.type = type;
-	}
-
-	public boolean isComplete()
-	{
-		return complete;
-	}
-
-	public void setComplete(boolean complete)
-	{
-		this.complete = complete;
 	}
 
 	public void setLecturer(String lecturer)

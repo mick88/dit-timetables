@@ -209,10 +209,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		String uri = String.format(Locale.getDefault(), "?reqtype=eventdetails&eventId=%s%%7C%d", TimetableDownloader.getDataset(), event.getId());
 
 		String content = connection.getContent(uri);
-		if (parseAdditionalInfo(event, content))
-		{
-			event.setComplete(true);
-		}
+		parseAdditionalInfo(event, content);
 	}
 	
 	public boolean parseGridRow(TimetableDay day, Elements gridCols)
