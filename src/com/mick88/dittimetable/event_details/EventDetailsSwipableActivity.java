@@ -60,7 +60,7 @@ public class EventDetailsSwipableActivity extends ActionBarActivity
 			if (item instanceof TimetableEvent)
 				events.add((TimetableEvent) item);
 		}
-//		events.addAll((Collection<? extends TimetableEvent>) timetableDay.getTimetableEntries(appSettings));
+
 		viewPager.setAdapter(new EventPageAdapter(getSupportFragmentManager(), events));
 		int page = events.indexOf(selectedEvent);
 		viewPager.setCurrentItem(page, false);
