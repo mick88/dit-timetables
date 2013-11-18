@@ -357,6 +357,10 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 					if (headerText.equals("Class Subgroup"))
 					{
 						event.setGroups(elements.get(++i).text());
+					}
+					else if (headerText.equals("Site Subgroup") && elements.contains("Class Subgroup") == false) 
+					{
+						event.setGroups(elements.get(++i).text());
 					} 
 					else if (headerText.equals("Week numbers"))
 					{
