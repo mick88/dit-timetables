@@ -589,7 +589,6 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		if (timetableDownloader != null)
 			throw new RuntimeException("Cannot show timetable while downloading");
-		timetableShown=true;
 		if (timetable.isEmpty())
 		{
 			showEmptyTimetableMessage();
@@ -599,6 +598,7 @@ public class TimetableActivity extends ActionBarActivity
 			findViewById(R.id.pager).setVisibility(View.VISIBLE);
 			findViewById(R.id.layoutMessage).setVisibility(View.GONE);
 		}
+		timetableShown=true;
 	}
 	
 	void showMessage(boolean showProgress, CharSequence message, android.view.View.OnClickListener buttonListener, CharSequence buttonText)
