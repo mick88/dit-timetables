@@ -407,7 +407,7 @@ public class TimetableActivity extends ActionBarActivity
 	public void onBackPressed()
 	{
 		if (this.timetableDownloader != null)
-			timetableDownloader.cancel(true);
+			cancelDownload();
 		else if (timetableShown == false)
 			showTimetable();
 		else
@@ -464,7 +464,7 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		if (timetableDownloader != null)
 		{
-			timetableDownloader.cancel(true);
+			cancelDownload();
 		}		
 		
 		new AsyncTask<TimetableStub, Void, Timetable>()
@@ -748,6 +748,15 @@ public class TimetableActivity extends ActionBarActivity
 		return new RetainedConfiguration(timetableDownloader, this.timetable);
 	}
 	
+	void cancelDownload()
+	{
+		if (timetableDownloader != null)
+		{
+			setStatusMessage(R.string.cancelling_);
+			timetableDownloader.cancel(true);
+		}
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
@@ -769,11 +778,7 @@ public class TimetableActivity extends ActionBarActivity
 			return true;
 			
 		case R.id.menu_refresh_cancel:
-			if (timetableDownloader != null)
-			{
-				setStatusMessage(R.string.cancelling_);
-				timetableDownloader.cancel(true);
-			}
+			cancelDownload();
 			return true;
 			
 		case R.id.menu_refresh_timetable:
