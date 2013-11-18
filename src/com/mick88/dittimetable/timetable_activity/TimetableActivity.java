@@ -86,6 +86,7 @@ public class TimetableActivity extends ActionBarActivity
 	Timetable timetable = null;
 	// fragments to be refreshed
 	Set<DayFragment> fragments = new HashSet<DayFragment>(5);
+	private boolean timetableShown=false;
 	
 	ViewPager viewPager=null;
 	
@@ -402,6 +403,17 @@ public class TimetableActivity extends ActionBarActivity
 		setupActionBar();
 	}
 	
+	@Override
+	public void onBackPressed()
+	{
+		if (this.timetableDownloader != null)
+			timetableDownloader.cancel(true);
+		else if (timetableShown == false)
+			showTimetable();
+		else
+			super.onBackPressed();
+	}
+	
 	void setupActionBar()
 	{
 		new AsyncTask<Void, Void, List<TimetableStub>>()
@@ -577,6 +589,7 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		if (timetableDownloader != null)
 			throw new RuntimeException("Cannot show timetable while downloading");
+		timetableShown=true;
 		if (timetable.isEmpty())
 		{
 			showEmptyTimetableMessage();
@@ -590,6 +603,7 @@ public class TimetableActivity extends ActionBarActivity
 	
 	void showMessage(boolean showProgress, CharSequence message, android.view.View.OnClickListener buttonListener, CharSequence buttonText)
 	{
+		timetableShown = false;
 		ProgressBar progressBar = (ProgressBar) findViewById(android.R.id.progress);
 		progressBar.setVisibility(showProgress?View.VISIBLE:View.GONE);
 		progressBar.setIndeterminate(true);
