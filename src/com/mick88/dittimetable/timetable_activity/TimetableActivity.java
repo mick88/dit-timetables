@@ -38,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
+import com.mick88.dittimetable.AboutActivity;
 import com.mick88.dittimetable.DatabaseHelper;
 import com.mick88.dittimetable.PdfDownloaderService;
 import com.mick88.dittimetable.R;
@@ -840,42 +841,8 @@ public class TimetableActivity extends ActionBarActivity
 			return true;*/
 			
 		case R.id.menu_about:
-			AlertDialog dialog = new AlertDialog.Builder(this)
-				.setIcon(R.drawable.ic_launcher)
-				.setTitle("About Timetables")
-				.setMessage(R.string.about_text)
-				.setPositiveButton(android.R.string.ok, null)
-				.setNeutralButton("Feedback", new OnClickListener()
-				{
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
-						Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:contact@michaldabski.com"));
-						intent.putExtra(Intent.EXTRA_SUBJECT, "DIT Timetable feedback");
-						intent.putExtra(Intent.EXTRA_TEXT, String.format(Locale.ENGLISH, "Device: %s %s.\nAndroid %s, API %d.\nDataset: %s\n\n", 
-								Build.BRAND, Build.MODEL,
-								Build.VERSION.RELEASE, Build.VERSION.SDK_INT,
-								timetable.describe()));
-						startActivity(intent);						
-					}
-				})
-				.setNegativeButton("Share", new OnClickListener()
-				{
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
-						Intent intent = new Intent(Intent.ACTION_SEND);
-						intent.setType("text/plain");
-						intent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.mick88.dittimetable");
-						intent.putExtra(Intent.EXTRA_SUBJECT, "Check out this app!");
-						startActivity(Intent.createChooser(intent, "Share app"));
-						
-					}
-				})
-				.create();
-			dialog.show();
+			CharSequence timetableDescription = timetable.describe();
+			startActivity(new Intent(getApplicationContext(), AboutActivity.class).putExtra(AboutActivity.EXTRA_TIMETABLE_INFO, timetableDescription));
 			FlurryAgent.onEvent("About Screen");
 			return true;
 		}

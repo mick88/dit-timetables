@@ -38,6 +38,14 @@
             android:theme="@style/details_theme" >
         </activity>
         <activity
+            android:name="com.mick88.dittimetable.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName="com.mick88.dittimetable.timetable_activity.TimetableActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mick88.dittimetable.timetable_activity.TimetableActivity" />
+        </activity>
+        <activity
             android:name="com.mick88.dittimetable.event_details.EventDetailsSwipableActivity"
             android:label="@string/title_activity_event_details"
             android:parentActivityName="com.mick88.dittimetable.timetable_activity.TimetableActivity" >
