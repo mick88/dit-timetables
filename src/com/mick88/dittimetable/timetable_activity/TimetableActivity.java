@@ -161,9 +161,10 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		timetableDownloader = null;
 		supportInvalidateOptionsMenu();
-		showTimetable();		
+
 		if (exception == null)
 		{
+			showTimetable();
 			refresh();
 			new DatabaseHelper(getApplicationContext()).saveTimetable(timetable);
 		}
