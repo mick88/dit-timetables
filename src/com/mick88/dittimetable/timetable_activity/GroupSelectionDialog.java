@@ -75,6 +75,13 @@ public class GroupSelectionDialog extends DialogFragment implements OnMultiChoic
 		
 		return builder.create();
 	}
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
+	}
 
 	@Override
 	public void onClick(DialogInterface dialog, int which, boolean isChecked)
