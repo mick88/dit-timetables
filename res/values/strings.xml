@@ -80,5 +80,7 @@
     <string name="google_plus">Google+</string>
     <string name="twitter">Twitter</string>
     <string name="app_logo">App logo</string>
+    <string name="dit_timetable_feedback">DIT Timetable feedback</string>
+    <string name="other_apps">Other Apps</string>
 
 </resources>
