@@ -25,7 +25,6 @@
 
     <string name="login_credentials_text">Login credentials:</string>
     <string name="week_edit_hint">Weeks</string>
-    <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>
     <string name="login_cretentials">Timetables login:</string>
@@ -70,5 +69,18 @@
     <string name="no_local_copy">No local copy</string>
     <string name="cancelling_">Cancelling&#8230;</string>
     <string name="logging_in_">Logging in...</string>
+    <string name="title_activity_about">DIT Timetables</string>
+    <string name="about_timetables">About Timetables</string>
+    <string name="feedback">Send Feedback</string>
+    <string name="share_app">Share this app</string>
+    <string name="share_attach_text">Check out this app!</string>
+    <string name="feedback_preset_string">Device: %1$s %2$s.Android %3$s, API %4$d.Dataset: %5$s</string>
+    <string name="visit_website">Visit website</string>
+    <string name="no_e_mail_client_detected">No E-mail client detected</string>
+    <string name="google_plus">Google+</string>
+    <string name="twitter">Twitter</string>
+    <string name="app_logo">App logo</string>
+    <string name="dit_timetable_feedback">DIT Timetable feedback</string>
+    <string name="other_apps">Other Apps</string>
 
 </resources>
