@@ -91,7 +91,7 @@ public class DayFragment extends Fragment
 			{
 				listView.setVisibility(View.GONE);
 				tvText.setVisibility(View.VISIBLE);
-				tvText.setText("No events");				
+				tvText.setText(R.string.no_events);				
 			}
 			else
 			{

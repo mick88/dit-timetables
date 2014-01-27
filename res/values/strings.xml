@@ -82,5 +82,6 @@
     <string name="app_logo">App logo</string>
     <string name="dit_timetable_feedback">DIT Timetable feedback</string>
     <string name="other_apps">Other Apps</string>
+    <string name="no_events">No events</string>
 
 </resources>
