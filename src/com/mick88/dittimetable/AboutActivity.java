@@ -1,5 +1,7 @@
 package com.mick88.dittimetable;
 
+import com.mick88.dittimetable.utils.FontApplicator;
+
 import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -38,6 +40,9 @@ public class AboutActivity extends ActionBarActivity implements OnClickListener
 				R.id.btnGooglePlus,
 				})
 			findViewById(btnResource).setOnClickListener(this);
+		
+		FontApplicator fontApplicator = new FontApplicator(getAssets(), TimetableApp.FONT_NAME);
+		fontApplicator.applyFont(getWindow().getDecorView());
 	}
 	
 	/**
