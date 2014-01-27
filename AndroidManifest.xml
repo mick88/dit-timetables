@@ -38,7 +38,7 @@
             android:theme="@style/details_theme" >
         </activity>
         <activity
-            android:name="com.mick88.dittimetable.AboutActivity"
+            android:name="com.mick88.dittimetable.about.AboutActivity"
             android:label="@string/title_activity_about"
             android:parentActivityName="com.mick88.dittimetable.timetable_activity.TimetableActivity" >
             <meta-data

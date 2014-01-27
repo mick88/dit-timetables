@@ -38,11 +38,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
-import com.mick88.dittimetable.AboutActivity;
 import com.mick88.dittimetable.DatabaseHelper;
 import com.mick88.dittimetable.PdfDownloaderService;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
+import com.mick88.dittimetable.about.AboutActivity;
 import com.mick88.dittimetable.downloader.Exceptions;
 import com.mick88.dittimetable.downloader.TimetableDownloader;
 import com.mick88.dittimetable.downloader.TimetableDownloader.TimetableDownloadListener;

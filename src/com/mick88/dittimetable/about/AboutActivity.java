@@ -1,5 +1,10 @@
-package com.mick88.dittimetable;
+package com.mick88.dittimetable.about;
 
+import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.TimetableApp;
+import com.mick88.dittimetable.R.id;
+import com.mick88.dittimetable.R.layout;
+import com.mick88.dittimetable.R.string;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 import android.annotation.TargetApi;
