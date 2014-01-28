@@ -19,17 +19,17 @@ import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.UnfoldActivity;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableEvent;
-import com.mick88.dittimetable.timetable.TimetableEvent.EventViewHolder;
 import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
+import com.mick88.dittimetable.timetable_activity.event_list.SingleEvent.EventViewHolder;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class MultiEvent implements EventItem
 {
-	private final List<TimetableEvent> events;
+	private final List<SingleEvent> events;
 	@Deprecated
 	private final static int MARGIN_INCREMENT = 25;
 	
-	public MultiEvent(List<TimetableEvent> events)
+	public MultiEvent(List<SingleEvent> events)
 	{
 		this.events = events;
 	}
@@ -73,6 +73,9 @@ public class MultiEvent implements EventItem
 						viewGroup.getChildAt(i).getGlobalVisibleRect(rect);
 						positions.add(rect.top);
 					}
+					List<TimetableEvent> events = new ArrayList<TimetableEvent>(MultiEvent.this.events.size());
+					for (SingleEvent event : MultiEvent.this.events)
+						events.add(event.getEvent());
 					context.startActivity(new Intent(context, UnfoldActivity.class)
 						.putExtra(UnfoldActivity.EXTRA_EVENTS, (Serializable)events)
 						.putExtra(UnfoldActivity.EXTRA_POSITIONS, positions)

@@ -10,6 +10,7 @@ import java.util.Set;
 
 import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.timetable_activity.event_list.MultiEvent;
+import com.mick88.dittimetable.timetable_activity.event_list.SingleEvent;
 import com.mick88.dittimetable.timetable_activity.event_list.Space;
 import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 
@@ -213,7 +214,7 @@ public class TimetableDay implements Serializable
 		int currentWeek = Timetable.getCurrentWeek(),
 			showWeek = settings.getOnlyCurrentWeek()?currentWeek : 0;
 		
-		List<TimetableEvent> sameHourEvents = new ArrayList<TimetableEvent>();
+		List<SingleEvent> sameHourEvents = new ArrayList<SingleEvent>();
 		
 		for (TimetableEvent event : events) 
 			if (event.isVisibleForGroupExcluding(settings.getHiddenGroups()) && event.isInWeek(showWeek))
@@ -232,18 +233,18 @@ public class TimetableDay implements Serializable
 			
 			if (singleEvent)
 			{
-				entries.add(event);
+				entries.add(SingleEvent.instantiateForEvent(event));
 			}
 			else
 			{
 				if (sameHourEvents.isEmpty()) entries.add(new MultiEvent(sameHourEvents));
-				else if (sameHourEvents.get(0).getStartHour() != event.getStartHour())
+				else if (sameHourEvents.get(0).getEvent().getStartHour() != event.getStartHour())
 				{
-					sameHourEvents = new ArrayList<TimetableEvent>();
+					sameHourEvents = new ArrayList<SingleEvent>();
 					entries.add(new MultiEvent(sameHourEvents));
 				}
 					
-				sameHourEvents.add(event);
+				sameHourEvents.add(SingleEvent.instantiateForEvent(event));
 			}
 			
 			lastEvent = event;

@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import com.mick88.dittimetable.event_details.EventDetailsSwipableActivity;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableEvent;
+import com.mick88.dittimetable.timetable_activity.event_list.SingleEvent;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class UnfoldActivity extends Activity implements OnClickListener
@@ -56,7 +57,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 				int i=0;
 				for (final TimetableEvent event : events)
 				{
-					View view = event.getView(getLayoutInflater(), null, container, fontApplicator, false, timetable);
+					View view = SingleEvent.instantiateForEvent(event).getView(getLayoutInflater(), null, container, fontApplicator, false, timetable);
 					view.setOnClickListener(new OnClickListener()
 					{
 						

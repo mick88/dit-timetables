@@ -55,10 +55,10 @@ public class EventDetailsSwipableActivity extends ActionBarActivity
 		
 		ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
 		List<TimetableEvent> events = new ArrayList<TimetableEvent>();
-		for (EventItem item : timetableDay.getEvents(appSettings))
+		for (TimetableEvent item : timetableDay.getEvents(appSettings))
 		{
-			if (item instanceof TimetableEvent)
-				events.add((TimetableEvent) item);
+			events.add((TimetableEvent) item);
+				
 		}
 
 		viewPager.setAdapter(new EventPageAdapter(getSupportFragmentManager(), events));

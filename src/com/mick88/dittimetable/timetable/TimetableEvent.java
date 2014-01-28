@@ -25,40 +25,9 @@ import com.mick88.dittimetable.utils.FontApplicator;
 /**
  * Holds information about a single event (lecture)
  * */
-public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Serializable
+public class TimetableEvent implements Comparable<TimetableEvent>, Serializable
 {
 	private static final long serialVersionUID = 2900289895051796020L;
-
-	public static class EventViewHolder
-	{
-		protected final TextView tvEventTime, tvEventLocation, tvEventTitle, tvEventType, tvEventLecturer, tvEventGroup;
-		public final View background, eventTile;
-		
-		public EventViewHolder(TextView tvEventTime, TextView tvEventLocation,
-				TextView tvEventTitle, TextView tvEventType,
-				TextView tvEventLecturer, TextView tvEventGroup, View background, View eventTile) {
-			this.tvEventTime = tvEventTime;
-			this.tvEventLocation = tvEventLocation;
-			this.tvEventTitle = tvEventTitle;
-			this.tvEventType = tvEventType;
-			this.tvEventLecturer = tvEventLecturer;
-			this.tvEventGroup = tvEventGroup;
-			this.background = background;
-			this.eventTile = eventTile;
-		}
-		
-		public EventViewHolder(View view)
-		{
-			this((TextView)view.findViewById(R.id.eventTime),
-					(TextView)view.findViewById(R.id.eventLocation),
-					(TextView)view.findViewById(R.id.eventTitle),
-					(TextView)view.findViewById(R.id.eventType),
-					(TextView)view.findViewById(R.id.eventLecturer),
-					(TextView)view.findViewById(R.id.eventGroup),
-					view.findViewById(R.id.timetable_event_small),
-					view.findViewById(R.id.timetable_event_small));
-		}
-	}
 		
 	public static enum ClassType {Other, Lecture, Laboratory, Tutorial};
 	public static final int 
@@ -414,12 +383,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 	}
 
 	@Override
-	public int getViewType()
-	{
-		return ITEM_TYPE_EVENT;
-	}
-	
-	@Override
 	public int hashCode()
 	{
 		return getId();
@@ -433,74 +396,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, EventItem, Se
 			return ((TimetableEvent) o).getId() == this.getId();
 		}
 		else return false;
-	}
-
-	@Override
-	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator, boolean allowHighlight, final Timetable timetable)
-	{
-		View view = convertView;
-		EventViewHolder viewHolder;
-		if (view == null)
-		{
-			view = layoutInflater.inflate(R.layout.timetable_event, parent, false);
-			if (fontApplicator != null) fontApplicator.applyFont(view);
-			viewHolder = new EventViewHolder(view);
-			view.setTag(viewHolder);
-		}
-		else viewHolder = (EventViewHolder) view.getTag();
-		
-		if (allowHighlight && isEventOn())
-			viewHolder.background.setBackgroundResource(R.drawable.event_selected_selector);
-		else
-			viewHolder.background.setBackgroundResource(R.drawable.event_selector);
-		
-		viewHolder.eventTile.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				Context context = v.getContext().getApplicationContext();
-				Intent intent = new Intent(context, EventDetailsSwipableActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				intent.putExtra(EventDetailsSwipableActivity.EXTRA_SELECTED_EVENT, TimetableEvent.this);
-				intent.putExtra(EventDetailsSwipableActivity.EXTRA_DAY, timetable.getDay(day));
-				context.startActivity(intent);				
-			}
-		});
-		
-		viewHolder.tvEventGroup.setText(getGroupStr());
-		viewHolder.tvEventLecturer.setText(getLecturer());
-		viewHolder.tvEventLocation.setText(getRoom());
-		viewHolder.tvEventTime.setText(getEventTimeString());
-		viewHolder.tvEventType.setText(getEventType().toString());
-		viewHolder.tvEventTitle.setText(getName());
-		
-		int colourRes = 0;
-		switch (getEventType())
-		{
-			case Laboratory:
-				colourRes = R.color.color_laboratory;
-				break;
-			case Lecture:
-				colourRes = R.color.color_lecture;
-				break;
-			case Tutorial:
-				colourRes = R.color.color_tutorial;
-				break;			
-		}
-		
-		if (colourRes != 0)
-		{
-			viewHolder
-			.tvEventType
-			.setTextColor(viewHolder
-					.tvEventType
-					.getContext()
-					.getResources()
-					.getColor(colourRes));
-		}
-		return view;		
 	}
 
 	public void setId(int id)
