@@ -96,7 +96,7 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 				}
 			}
 			
-			int numEvents = timetableDay.getNumEventsAt(event.getStartHour(), settings.getHiddenGroups(), showWeek);
+			int numEvents = timetableDay.getNumEventsAt(event.getStartHour(), settings, showWeek);
 			boolean singleEvent = (numEvents == 1);
 			
 			if (singleEvent)

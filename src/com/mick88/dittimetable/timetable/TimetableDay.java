@@ -67,11 +67,11 @@ public class TimetableDay implements Serializable
 		return getName().subSequence(0, 3);
 	}
 	
-	public int getNumEventsAt(int hour, Set<String> hiddenGroups, int week)
+	public int getNumEventsAt(int hour, AppSettings appSettings, int week)
 	{
 		int n=0;
-		for (TimetableEvent event : events) 
-			if (event.getStartHour() == hour && event.isInWeek(week) && event.isVisibleForGroupExcluding(hiddenGroups))
+		for (TimetableEvent event : getEvents(appSettings)) 
+			if (event.getStartHour() == hour && event.isInWeek(week))
 				n++;
 		return n;
 	}
