@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,6 +17,7 @@ public class AppSettings implements Serializable
 	
 	private static final String PREF_ONLY_CURRENT_WEEK = "only_current_week";
 	private static final String PREF_HIDDEN_GROUPS = "hidden_groups";
+	private static final String PREF_HIDDEN_MODULES = "hidden_modules";
 	private static final String PREF_YEAR = "year";
 	private static final String PREF_WEEKS = "weeks";
 	private static final String PREF_COURSE = "course";
@@ -27,6 +29,8 @@ public class AppSettings implements Serializable
 		DEFAULT_PASSWORD = "timetables";
 	public static final String PREFERENCES_NAME = "com.mick88.dittimetable";
 	public static final String GROUP_SEPARATOR = ",";
+
+	private static final String MODULE_SEPARATOR = "|";
 	
 	String username, 
 		password;	
@@ -35,6 +39,7 @@ public class AppSettings implements Serializable
 	int year;
 	boolean onlyCurrentWeek;
 	Set<String> hiddenGroups;
+	Set<String> hiddenModules;
 	
 	public AppSettings()
 	{		
@@ -47,6 +52,7 @@ public class AppSettings implements Serializable
 		
 		onlyCurrentWeek = false;
 		hiddenGroups = new HashSet<String>();
+		hiddenModules = new HashSet<String>();
 	}
 	
 	public boolean isCourseDataSpecified()
@@ -77,6 +83,7 @@ public class AppSettings implements Serializable
 		onlyCurrentWeek = sharedPreferences.getBoolean(PREF_ONLY_CURRENT_WEEK, false);
 		
 		setHiddenGroups(sharedPreferences.getString(PREF_HIDDEN_GROUPS, ""));
+		setHiddenModules(sharedPreferences.getString(PREF_HIDDEN_MODULES, ""));
 		
 		Log.i(toString(), "Settings loaded");
 	}
@@ -98,6 +105,7 @@ public class AppSettings implements Serializable
 			
 			.putString(PREF_HIDDEN_GROUPS, getHiddenGroupsString())
 			.putBoolean(PREF_ONLY_CURRENT_WEEK, onlyCurrentWeek)
+			.putString(PREF_HIDDEN_MODULES, getHiddenModulesString())
 			
 			.commit();
 		Log.i(toString(), "App settings saved");
@@ -113,6 +121,16 @@ public class AppSettings implements Serializable
 		return builder.toString();
 	}
 	
+	private String getHiddenModulesString()
+	{
+		StringBuilder builder = new StringBuilder();
+		for (String module : hiddenModules)
+		{
+			builder.append(module).append(MODULE_SEPARATOR);
+		}
+		return builder.toString();
+	}
+	
 	/**
 	 * Sets hidden groups and clears previous values
 	 */
@@ -121,6 +139,13 @@ public class AppSettings implements Serializable
 		String [] groups = groupString.split(GROUP_SEPARATOR);
 		hiddenGroups.clear();
 		hiddenGroups.addAll(Arrays.asList(groups));
+	}
+	
+	private void setHiddenModules(String moduleString)
+	{
+		String [] modules = moduleString.split(Pattern.quote(MODULE_SEPARATOR));
+		hiddenModules.clear();
+		hiddenModules.addAll(Arrays.asList(modules));
 	}
 	
 	public String getPassword()
@@ -200,5 +225,21 @@ public class AppSettings implements Serializable
 	public void unhideGroup(String group)
 	{
 		hiddenGroups.remove(group);
+	}
+
+	public Set<String> getHiddenModules()
+	{
+		return hiddenModules;
+	}
+
+	public void unhideModule(String s)
+	{
+		hiddenModules.remove(s);
+	}
+
+	public void hideModule(String s)
+	{
+		hiddenModules.add(s);
+		
 	}
 }

@@ -88,7 +88,7 @@ public class TimetableDay implements Serializable
 			showWeek = settings.getOnlyCurrentWeek()?currentWeek : 0;
 		
 		for (TimetableEvent event : events) 
-			if (event.isVisibleForGroupExcluding(settings.getHiddenGroups()) && event.isInWeek(showWeek))
+			if (event.isVisibleForGroupExcluding(settings.getHiddenGroups()) && event.isInWeek(showWeek) && settings.getHiddenModules().contains(event.getName()) == false)
 				result++;
 		return result;
 	}
@@ -204,7 +204,7 @@ public class TimetableDay implements Serializable
 		int	showWeek = settings.getOnlyCurrentWeek() ? Timetable.getCurrentWeek() : 0;
 		
 		for (TimetableEvent event : this.events) 
-			if (event.isVisibleForGroupExcluding(settings.getHiddenGroups()) && event.isInWeek(showWeek))
+			if (event.isVisibleForGroupExcluding(settings.getHiddenGroups()) && event.isInWeek(showWeek) && settings.getHiddenModules().contains(event.getName()) == false)
 			{
 				events.add(event);
 			}

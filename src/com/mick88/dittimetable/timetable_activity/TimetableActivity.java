@@ -1,5 +1,6 @@
 package com.mick88.dittimetable.timetable_activity;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,9 +21,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
@@ -738,6 +736,45 @@ public class TimetableActivity extends ActionBarActivity
 		}
 	}
 	
+	void showModuleSelectionDialog()
+	{
+		Set<String> allModules = timetable.getModuleNames();
+		
+		if (allModules.isEmpty())
+		{
+			new AlertDialog.Builder(this)
+			.setTitle(R.string.app_name)
+			.setMessage(R.string.no_modules_detected_in_current_timetable)
+			.setNeutralButton(android.R.string.ok, null)
+			.setNegativeButton(R.string.reload, new OnClickListener()
+			{
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which)
+				{
+					onBtnRefreshPressed();
+//					refresh();
+				}
+			})
+			.setIcon(R.drawable.ic_launcher)
+			.show();
+		}
+		else
+		{
+			List<String> modules = new ArrayList<String>(allModules);
+			Collections.sort(modules);
+			String[] allModulesArray = new String[modules.size()];
+			modules.toArray(allModulesArray);
+			
+			Set<String> hiddenModuleSet = application.getSettings().getHiddenModules();
+			String[] hiddenModules = new String[hiddenModuleSet.size()];
+			hiddenModuleSet.toArray(hiddenModules);
+			
+			ModuleSelectionDialog dialog = new ModuleSelectionDialog();
+			dialog.show(getSupportFragmentManager(), "GroupSelector");
+		}
+	}
+	
 	@Override
 	public Object onRetainCustomNonConfigurationInstance()
 	{
@@ -795,6 +832,10 @@ public class TimetableActivity extends ActionBarActivity
 			
 		case R.id.menu_groups:
 			showGroupSelectionDialog();
+			return true;
+			
+		case R.id.menu_modules:
+			showModuleSelectionDialog();
 			return true;
 			
 		case R.id.share_timetable:
@@ -913,13 +954,29 @@ public class TimetableActivity extends ActionBarActivity
 			SelectionDialogFragment dialogFragment)
 	{
 		AppSettings settings = getSettings();
-		for (Map.Entry<String, Boolean> entry : items.entrySet())
+		
+		if (dialogFragment instanceof GroupSelectionDialog)
 		{
-			if (entry.getValue())
-				settings.unhideGroup(entry.getKey());
-			else
-				settings.hideGroup(entry.getKey());
+			for (Map.Entry<String, Boolean> entry : items.entrySet())
+			{
+				if (entry.getValue())
+					settings.unhideGroup(entry.getKey());
+				else
+					settings.hideGroup(entry.getKey());
+			}
 		}
+		else if (dialogFragment instanceof ModuleSelectionDialog)
+		{
+			for (Map.Entry<String, Boolean> entry : items.entrySet())
+			{
+				if (entry.getValue())
+					settings.unhideModule(entry.getKey());
+				else 
+					settings.hideModule(entry.getKey());
+			}	
+		}
+		else throw new RuntimeException();
+		
 		settings.saveSettings(this);
 		refresh();		
 	}
@@ -943,9 +1000,22 @@ public class TimetableActivity extends ActionBarActivity
 			}
 			return result;
 		}
+		else if (selectionDialogFragment instanceof ModuleSelectionDialog)
+		{
+			Set<String> hiddenModules = getSettings().getHiddenModules();
+			Set<String> allModules = getTimetable().getModuleNames();
+			
+			Map<String, Boolean> result = new HashMap<String, Boolean>(allModules.size());
+			for (String module : allModules)
+			{
+				result.put(module, hiddenModules.contains(module) == false);
+			}
+			return result;
+		}
 		else
 		{
 			throw new RuntimeException("Unknown selection dialog "+selectionDialogFragment.toString());
 		}
 	}
+
 }

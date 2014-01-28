@@ -320,6 +320,18 @@ public class Timetable extends TimetableStub
 		this.days = days;
 	}
 	
+	/**
+	 * Gets set of names of all modules in this timetable
+	 */
+	public Set<String> getModuleNames()
+	{
+		Set<String> result = new HashSet<String>();
+		for (TimetableDay day : days)
+			for (TimetableEvent event : day.getEvents())
+				result.add(event.getName());
+		return result;
+	}
+	
 	public boolean isEmpty()
 	{
 		for (TimetableDay day : days)

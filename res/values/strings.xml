@@ -86,5 +86,7 @@
     <string name="select_your_group_s_">Select your group(s):</string>
     <string name="no_groups_detected_in_current_timetable">No groups detected in current timetable</string>
     <string name="reload">Reload</string>
-
+    <string name="no_modules_detected_in_current_timetable">No modules detected in current timetable</string>
+    <string name="modules">Modules</string>
+    <string name="select_modules_you_are_taking_">Select modules you are taking:</string>
 </resources>
