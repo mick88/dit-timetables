@@ -83,7 +83,7 @@ public class DayFragment extends Fragment
 	{
 		if (listView != null)
 		{
-			if (getTimetableDay().isEmpty())
+			if (getTimetableDay().isEmpty(appSettings))
 			{
 				listView.setVisibility(View.GONE);
 				tvText.setVisibility(View.VISIBLE);
