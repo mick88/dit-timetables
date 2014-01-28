@@ -1,5 +1,6 @@
 package com.mick88.dittimetable.timetable_activity.event_list;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -10,8 +11,10 @@ import android.widget.ArrayAdapter;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
+import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableDay;
+import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 import com.mick88.dittimetable.utils.FontApplicator;
 
@@ -39,9 +42,9 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 	private final boolean isToday;
 	Timetable timetable;
 
-	public EventAdapter(Context context, List<EventItem> objects, TimetableDay timetableDay, Timetable timetable) 
+	public EventAdapter(Context context, TimetableDay timetableDay, Timetable timetable, AppSettings settings) 
 	{
-		super(context, R.layout.timetable_event, objects);
+		super(context, R.layout.timetable_event, getTimetableEntries(settings, timetableDay));
 		fontApplicator = new FontApplicator(getContext().getAssets(), TimetableApp.FONT_NAME);
 		this.isToday = timetableDay.isToday();
 		this.timetable = timetable;
@@ -68,5 +71,54 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 	public int getViewTypeCount()
 	{
 		return EventItem.NUM_TYPES;
+	}
+	
+	private static List<EventItem> getTimetableEntries(AppSettings settings, TimetableDay timetableDay)
+	{
+		List<EventItem> entries = new ArrayList<EventItem>(timetableDay.getEvents().size());
+		
+		int lastEndHour=0;
+		TimetableEvent lastEvent=null;
+		
+		int currentWeek = Timetable.getCurrentWeek(),
+			showWeek = settings.getOnlyCurrentWeek()?currentWeek : 0;
+		
+		List<SingleEvent> sameHourEvents = new ArrayList<SingleEvent>();
+		
+		for (TimetableEvent event : timetableDay.getEvents(settings)) 
+		{
+			if (lastEvent != null)
+			{
+				// add space if there was a time off between the events
+				if (lastEndHour < event.getStartHour())
+				{
+					entries.add(new Space(event.getStartHour() - lastEndHour, lastEndHour));
+				}
+			}
+			
+			int numEvents = timetableDay.getNumEventsAt(event.getStartHour(), settings.getHiddenGroups(), showWeek);
+			boolean singleEvent = (numEvents == 1);
+			
+			if (singleEvent)
+			{
+				entries.add(SingleEvent.instantiateForEvent(event));
+			}
+			else
+			{
+				if (sameHourEvents.isEmpty()) entries.add(new MultiEvent(sameHourEvents));
+				else if (sameHourEvents.get(0).getEvent().getStartHour() != event.getStartHour())
+				{
+					sameHourEvents = new ArrayList<SingleEvent>();
+					entries.add(new MultiEvent(sameHourEvents));
+				}
+					
+				sameHourEvents.add(SingleEvent.instantiateForEvent(event));
+			}
+			
+			lastEvent = event;
+			lastEndHour = event.getEndHour();
+		}
+
+		return entries;
 	}
 }

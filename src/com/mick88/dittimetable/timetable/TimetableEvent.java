@@ -6,20 +6,8 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.mick88.dittimetable.R;
-import com.mick88.dittimetable.event_details.EventDetailsSwipableActivity;
-import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
-import com.mick88.dittimetable.utils.FontApplicator;
 
 
 /**

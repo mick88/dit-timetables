@@ -1,6 +1,5 @@
 package com.mick88.dittimetable.timetable_activity.event_list;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
