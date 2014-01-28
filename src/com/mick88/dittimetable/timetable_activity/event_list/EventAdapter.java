@@ -44,7 +44,7 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 
 	public EventAdapter(Context context, TimetableDay timetableDay, Timetable timetable, AppSettings settings) 
 	{
-		super(context, R.layout.timetable_event, getTimetableEntries(settings, timetableDay));
+		super(context, R.layout.timetable_event, getTimetableEntries(settings, timetableDay, timetable));
 		fontApplicator = new FontApplicator(getContext().getAssets(), TimetableApp.FONT_NAME);
 		this.isToday = timetableDay.isToday();
 		this.timetable = timetable;
@@ -73,7 +73,7 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 		return EventItem.NUM_TYPES;
 	}
 	
-	private static List<EventItem> getTimetableEntries(AppSettings settings, TimetableDay timetableDay)
+	private static List<EventItem> getTimetableEntries(AppSettings settings, TimetableDay timetableDay, Timetable timetable)
 	{
 		List<EventItem> entries = new ArrayList<EventItem>(timetableDay.getEvents().size());
 		
@@ -101,7 +101,7 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 			
 			if (singleEvent)
 			{
-				entries.add(SingleEventItem.instantiateForEvent(event));
+				entries.add(SingleEventItem.instantiateForEvent(event, timetable));
 			}
 			else
 			{
@@ -112,7 +112,7 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 					entries.add(new MultiEventItem(sameHourEvents));
 				}
 					
-				sameHourEvents.add(SingleEventItem.instantiateForEvent(event));
+				sameHourEvents.add(SingleEventItem.instantiateForEvent(event, timetable));
 			}
 			
 			lastEvent = event;

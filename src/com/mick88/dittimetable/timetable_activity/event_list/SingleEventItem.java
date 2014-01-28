@@ -19,9 +19,10 @@ import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 import com.mick88.dittimetable.utils.FontApplicator;
 
-public class SingleEventItem implements EventItem
+public class SingleEventItem implements EventItem, OnClickListener
 {
 	private final TimetableEvent event;
+	private final Timetable timetable;
 	
 	public static class EventViewHolder
 	{
@@ -54,20 +55,21 @@ public class SingleEventItem implements EventItem
 		}
 	}
 
-	private SingleEventItem(TimetableEvent event)
+	private SingleEventItem(TimetableEvent event, Timetable timetable)
 	{
 		this.event = event;
+		this.timetable = timetable;
 	}
 	
-	public static SingleEventItem instantiateForEvent(TimetableEvent event)
+	public static SingleEventItem instantiateForEvent(TimetableEvent event, Timetable timetable)
 	{
-		return new SingleEventItem(event);
+		return new SingleEventItem(event, timetable);
 	}
 	
-	public static List<SingleEventItem> instantiateForEvents(Collection<TimetableEvent> events)
+	public static List<SingleEventItem> instantiateForEvents(Collection<TimetableEvent> events, Timetable timetable)
 	{
 		List<SingleEventItem> result = new ArrayList<SingleEventItem>(events.size());
-		for (TimetableEvent event : events) result.add(instantiateForEvent(event));
+		for (TimetableEvent event : events) result.add(instantiateForEvent(event, timetable));
 		return result;
 	}
 
@@ -96,20 +98,7 @@ public class SingleEventItem implements EventItem
 		else
 			viewHolder.background.setBackgroundResource(R.drawable.event_selector);
 		
-		viewHolder.eventTile.setOnClickListener(new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				Context context = v.getContext().getApplicationContext();
-				Intent intent = new Intent(context, EventDetailsSwipableActivity.class);
-				intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				intent.putExtra(EventDetailsSwipableActivity.EXTRA_SELECTED_EVENT, event);
-				intent.putExtra(EventDetailsSwipableActivity.EXTRA_DAY, timetable.getDay(event.getDay()));
-				context.startActivity(intent);				
-			}
-		});
+		viewHolder.eventTile.setOnClickListener(this);
 		
 		viewHolder.tvEventGroup.setText(event.getGroupStr());
 		viewHolder.tvEventLecturer.setText(event.getLecturer());
@@ -148,6 +137,17 @@ public class SingleEventItem implements EventItem
 	public TimetableEvent getEvent()
 	{
 		return event;
+	}
+
+	@Override
+	public void onClick(View v)
+	{
+		Context context = v.getContext().getApplicationContext();
+		Intent intent = new Intent(context, EventDetailsSwipableActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.putExtra(EventDetailsSwipableActivity.EXTRA_SELECTED_EVENT, event);
+		intent.putExtra(EventDetailsSwipableActivity.EXTRA_DAY, timetable.getDay(event.getDay()));
+		context.startActivity(intent);		
 	}
 	
 }
