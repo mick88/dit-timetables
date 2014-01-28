@@ -476,7 +476,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		String stripped = stripCurlyBraces(s);
 		String [] parts = stripped.split(",");
 		if (parts.length == 0) return s;
-		else return parts[0];
+		else return parts[0].trim();
 	}
 	
 	private static String parseRooms(String text)
