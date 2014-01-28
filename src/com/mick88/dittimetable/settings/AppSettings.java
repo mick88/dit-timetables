@@ -13,6 +13,14 @@ public class AppSettings implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
+	private static final String PREF_ONLY_CURRENT_WEEK = "only_current_week";
+	private static final String PREF_HIDDEN_GROUPS = "hidden_groups";
+	private static final String PREF_YEAR = "year";
+	private static final String PREF_WEEKS = "weeks";
+	private static final String PREF_COURSE = "course";
+	private static final String PREF_PASSWORD = "password";
+	private static final String PREF_USERNAME = "username";
+	
 	private static final String 
 		DEFAULT_USERNAME = "students",
 		DEFAULT_PASSWORD = "timetables";
@@ -58,16 +66,16 @@ public class AppSettings implements Serializable
 	
 	public void loadSettings(SharedPreferences sharedPreferences)
 	{
-		username = sharedPreferences.getString("username", DEFAULT_USERNAME);
-		password = sharedPreferences.getString("password", DEFAULT_PASSWORD);
+		username = sharedPreferences.getString(PREF_USERNAME, DEFAULT_USERNAME);
+		password = sharedPreferences.getString(PREF_PASSWORD, DEFAULT_PASSWORD);
 		
-		course = sharedPreferences.getString("course", "");
-		weekRange = sharedPreferences.getString("weeks", "");
-		year = sharedPreferences.getInt("year", 0);
+		course = sharedPreferences.getString(PREF_COURSE, "");
+		weekRange = sharedPreferences.getString(PREF_WEEKS, "");
+		year = sharedPreferences.getInt(PREF_YEAR, 0);
 		
-		onlyCurrentWeek = sharedPreferences.getBoolean("only_current_week", false);
+		onlyCurrentWeek = sharedPreferences.getBoolean(PREF_ONLY_CURRENT_WEEK, false);
 		
-		setHiddenGroups(sharedPreferences.getString("hidden_groups", ""));
+		setHiddenGroups(sharedPreferences.getString(PREF_HIDDEN_GROUPS, ""));
 		
 		Log.i(toString(), "Settings loaded");
 	}
@@ -80,15 +88,15 @@ public class AppSettings implements Serializable
 	public void saveSettings(SharedPreferences sharedPreferences)
 	{
 		sharedPreferences.edit()
-			.putString("username", username)
-			.putString("password", password)
+			.putString(PREF_USERNAME, username)
+			.putString(PREF_PASSWORD, password)
 			
-			.putString("course", course)
-			.putString("weeks", weekRange)
-			.putInt("year", year)
+			.putString(PREF_COURSE, course)
+			.putString(PREF_WEEKS, weekRange)
+			.putInt(PREF_YEAR, year)
 			
-			.putString("hidden_groups", getHiddenGroupsString())
-			.putBoolean("only_current_week", onlyCurrentWeek)
+			.putString(PREF_HIDDEN_GROUPS, getHiddenGroupsString())
+			.putBoolean(PREF_ONLY_CURRENT_WEEK, onlyCurrentWeek)
 			
 			.commit();
 		Log.i(toString(), "App settings saved");
