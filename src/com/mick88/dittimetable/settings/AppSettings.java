@@ -1,6 +1,7 @@
 package com.mick88.dittimetable.settings;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -119,10 +120,7 @@ public class AppSettings implements Serializable
 	{
 		String [] groups = groupString.split(GROUP_SEPARATOR);
 		hiddenGroups.clear();
-		for (String group : groups)
-		{
-			this.hiddenGroups.add(group);
-		}
+		hiddenGroups.addAll(Arrays.asList(groups));
 	}
 	
 	public String getPassword()
