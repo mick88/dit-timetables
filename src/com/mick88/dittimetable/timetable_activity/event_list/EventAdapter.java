@@ -105,11 +105,11 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 			}
 			else
 			{
-				if (sameHourEvents.isEmpty()) entries.add(new MultiEventItem(sameHourEvents));
+				if (sameHourEvents.isEmpty()) entries.add(new MultiEventItem(sameHourEvents, timetable));
 				else if (sameHourEvents.get(0).getEvent().getStartHour() != event.getStartHour())
 				{
 					sameHourEvents = new ArrayList<SingleEventItem>();
-					entries.add(new MultiEventItem(sameHourEvents));
+					entries.add(new MultiEventItem(sameHourEvents, timetable));
 				}
 					
 				sameHourEvents.add(SingleEventItem.instantiateForEvent(event, timetable));
