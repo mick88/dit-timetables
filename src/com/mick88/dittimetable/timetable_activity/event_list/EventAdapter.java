@@ -83,7 +83,7 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 		int currentWeek = Timetable.getCurrentWeek(),
 			showWeek = settings.getOnlyCurrentWeek()?currentWeek : 0;
 		
-		List<SingleEvent> sameHourEvents = new ArrayList<SingleEvent>();
+		List<SingleEventItem> sameHourEvents = new ArrayList<SingleEventItem>();
 		
 		for (TimetableEvent event : timetableDay.getEvents(settings)) 
 		{
@@ -101,18 +101,18 @@ public class EventAdapter extends ArrayAdapter<EventItem>
 			
 			if (singleEvent)
 			{
-				entries.add(SingleEvent.instantiateForEvent(event));
+				entries.add(SingleEventItem.instantiateForEvent(event));
 			}
 			else
 			{
-				if (sameHourEvents.isEmpty()) entries.add(new MultiEvent(sameHourEvents));
+				if (sameHourEvents.isEmpty()) entries.add(new MultiEventItem(sameHourEvents));
 				else if (sameHourEvents.get(0).getEvent().getStartHour() != event.getStartHour())
 				{
-					sameHourEvents = new ArrayList<SingleEvent>();
-					entries.add(new MultiEvent(sameHourEvents));
+					sameHourEvents = new ArrayList<SingleEventItem>();
+					entries.add(new MultiEventItem(sameHourEvents));
 				}
 					
-				sameHourEvents.add(SingleEvent.instantiateForEvent(event));
+				sameHourEvents.add(SingleEventItem.instantiateForEvent(event));
 			}
 			
 			lastEvent = event;

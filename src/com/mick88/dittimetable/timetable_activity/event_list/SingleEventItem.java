@@ -19,7 +19,7 @@ import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 import com.mick88.dittimetable.utils.FontApplicator;
 
-public class SingleEvent implements EventItem
+public class SingleEventItem implements EventItem
 {
 	private final TimetableEvent event;
 	
@@ -54,19 +54,19 @@ public class SingleEvent implements EventItem
 		}
 	}
 
-	private SingleEvent(TimetableEvent event)
+	private SingleEventItem(TimetableEvent event)
 	{
 		this.event = event;
 	}
 	
-	public static SingleEvent instantiateForEvent(TimetableEvent event)
+	public static SingleEventItem instantiateForEvent(TimetableEvent event)
 	{
-		return new SingleEvent(event);
+		return new SingleEventItem(event);
 	}
 	
-	public static List<SingleEvent> instantiateForEvents(Collection<TimetableEvent> events)
+	public static List<SingleEventItem> instantiateForEvents(Collection<TimetableEvent> events)
 	{
-		List<SingleEvent> result = new ArrayList<SingleEvent>(events.size());
+		List<SingleEventItem> result = new ArrayList<SingleEventItem>(events.size());
 		for (TimetableEvent event : events) result.add(instantiateForEvent(event));
 		return result;
 	}
