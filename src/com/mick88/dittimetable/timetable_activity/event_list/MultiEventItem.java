@@ -16,9 +16,9 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout.LayoutParams;
 
 import com.mick88.dittimetable.R;
-import com.mick88.dittimetable.UnfoldActivity;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableEvent;
+import com.mick88.dittimetable.timetable_activity.UnfoldActivity;
 import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 import com.mick88.dittimetable.timetable_activity.event_list.SingleEventItem.EventViewHolder;
 import com.mick88.dittimetable.utils.FontApplicator;

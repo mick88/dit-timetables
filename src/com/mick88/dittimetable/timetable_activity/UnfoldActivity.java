@@ -1,4 +1,4 @@
-package com.mick88.dittimetable;
+package com.mick88.dittimetable.timetable_activity;
 
 import java.util.List;
 
@@ -13,6 +13,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 
+import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.TimetableApp;
+import com.mick88.dittimetable.R.id;
+import com.mick88.dittimetable.R.layout;
 import com.mick88.dittimetable.event_details.EventDetailsSwipableActivity;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableEvent;

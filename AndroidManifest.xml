@@ -32,7 +32,7 @@
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
-            android:name="com.mick88.dittimetable.UnfoldActivity"
+            android:name="com.mick88.dittimetable.timetable_activity.UnfoldActivity"
             android:label="@string/title_activity_unfold"
             android:parentActivityName="com.mick88.dittimetable.timetable_activity.TimetableActivity"
             android:theme="@style/details_theme" >
