@@ -846,35 +846,6 @@ public class TimetableActivity extends ActionBarActivity
 			FlurryAgent.onEvent("Share timetable");
 			return true;
 			
-		/*case R.id.menu_web:
-			new Thread (new Runnable()
-			{
-				
-				@Override
-				public void run()
-				{
-					final String url = timetable.getQueryAddress();
-					final Bundle cookie = timetable.getConnection().getCookie().getBundle();
-					final Uri uri = Uri.parse(String.format(Locale.getDefault(), "%s%s", Connection.WEBSITE_ADDRESS, url));
-					uiHandler.postDelayed(new Runnable()
-					{
-						
-						@Override
-						public void run()
-						{
-							Intent intent = new Intent(Intent.ACTION_VIEW,  uri);
-							intent.putExtra(Browser.EXTRA_HEADERS, cookie);
-							startActivity(Intent.createChooser(intent, "Open in web browser:"));
-							
-						}
-					}, 100);
-					
-					
-					
-				}
-			}).start();
-			return true;*/
-			
 		case R.id.menu_about:
 			CharSequence timetableDescription = timetable.describe();
 			startActivity(new Intent(getApplicationContext(), AboutActivity.class).putExtra(AboutActivity.EXTRA_TIMETABLE_INFO, timetableDescription));

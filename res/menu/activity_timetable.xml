@@ -49,12 +49,6 @@
         android:visible="true"
         appCompat:showAsAction="never"/>
     <item
-        android:id="@+id/menu_web"
-        android:orderInCategory="104"
-        android:title="@string/web_view"
-        android:visible="false"
-        appCompat:showAsAction="never"/>
-    <item
         android:id="@+id/menu_about"
         android:icon="@drawable/about"
         android:orderInCategory="201"
