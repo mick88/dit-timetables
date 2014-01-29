@@ -86,20 +86,11 @@ public class MultiEventItem implements EventItem, OnClickListener
 		if (v instanceof ViewGroup)
 		{
 			Context context = v.getContext();
-			ArrayList<Integer> positions = new ArrayList<Integer>(events.size());
-			ViewGroup viewGroup = (ViewGroup) v;
-			for (int i=0; i  < viewGroup.getChildCount(); i++)
-			{
-				Rect rect = new Rect();
-				viewGroup.getChildAt(i).getGlobalVisibleRect(rect);
-				positions.add(rect.top);
-			}
 			List<TimetableEvent> events = new ArrayList<TimetableEvent>(MultiEventItem.this.events.size());
 			for (SingleEventItem event : MultiEventItem.this.events)
 				events.add(event.getEvent());
 			context.startActivity(new Intent(context, UnfoldActivity.class)
 				.putExtra(UnfoldActivity.EXTRA_EVENTS, (Serializable)events)
-				.putExtra(UnfoldActivity.EXTRA_POSITIONS, positions)
 				.putExtra(UnfoldActivity.EXTRA_TIMETABLE, timetable));
 		}		
 	}
