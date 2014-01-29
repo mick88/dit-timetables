@@ -771,7 +771,7 @@ public class TimetableActivity extends ActionBarActivity
 			hiddenModuleSet.toArray(hiddenModules);
 			
 			ModuleSelectionDialog dialog = new ModuleSelectionDialog();
-			dialog.show(getSupportFragmentManager(), "GroupSelector");
+			dialog.show(getSupportFragmentManager(), DIALOG_FRAGMENT_TAG);
 		}
 	}
 	
