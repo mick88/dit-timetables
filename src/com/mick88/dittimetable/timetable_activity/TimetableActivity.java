@@ -428,7 +428,14 @@ public class TimetableActivity extends ActionBarActivity
 				long t = System.currentTimeMillis();
 				List<TimetableStub> timetables = new DatabaseHelper(getApplicationContext()).getSavedTimetables();
 				if (timetables.contains(timetable) == false) timetables.add(timetable);
-				Collections.sort(timetables);
+				try
+				{
+					Collections.sort(timetables);
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 				t = System.currentTimeMillis() - t;
 				Log.d("Timetable activity", "Timetables loaded in "+String.valueOf(t));
 				return timetables;
