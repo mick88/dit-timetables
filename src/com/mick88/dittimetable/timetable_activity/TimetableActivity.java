@@ -1,12 +1,10 @@
 package com.mick88.dittimetable.timetable_activity;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
@@ -20,9 +18,11 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBar.OnNavigationListener;
@@ -41,6 +41,8 @@ import com.flurry.android.FlurryAgent;
 import com.mick88.dittimetable.DatabaseHelper;
 import com.mick88.dittimetable.PdfDownloaderService;
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.SelectionDialogFragment;
+import com.mick88.dittimetable.SelectionDialogFragment.SelectionResultListener;
 import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.about.AboutActivity;
 import com.mick88.dittimetable.downloader.Exceptions;
@@ -50,12 +52,13 @@ import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.settings.SettingsActivity;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableStub;
-import com.mick88.dittimetable.timetable_activity.GroupSelectionDialog.GroupSelectionListener;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class TimetableActivity extends ActionBarActivity 
-									implements GroupSelectionListener, TimetableDownloadListener
+									implements SelectionResultListener, TimetableDownloadListener
 {
+	private static final String DIALOG_FRAGMENT_TAG = "dialog_fragment";
+
 	private static class RetainedConfiguration
 	{
 		final TimetableDownloader downloader;
@@ -712,9 +715,9 @@ public class TimetableActivity extends ActionBarActivity
 		{
 			new AlertDialog.Builder(this)
 			.setTitle(R.string.app_name)
-			.setMessage("No groups detected in current timetable")
+			.setMessage(R.string.no_groups_detected_in_current_timetable)
 			.setNeutralButton(android.R.string.ok, null)
-			.setNegativeButton("Reload", new OnClickListener()
+			.setNegativeButton(R.string.reload, new OnClickListener()
 			{
 				
 				@Override
@@ -729,18 +732,9 @@ public class TimetableActivity extends ActionBarActivity
 		}
 		else
 		{
-			List<String> gList = new ArrayList<String>(groups);
-			Collections.sort(gList);
-			String[] gArray = new String[gList.size()];
-			gList.toArray(gArray);
-			
-			groups = application.getSettings().getHiddenGroups();
-			String[] hiddenGroups = new String[groups.size()];
-			groups.toArray(hiddenGroups);
-			
 			GroupSelectionDialog dialog = new GroupSelectionDialog();
-			dialog.setGroups(gArray, hiddenGroups);
-			dialog.show(getSupportFragmentManager(), "GroupSelector");
+
+			dialog.show(getSupportFragmentManager(), DIALOG_FRAGMENT_TAG);
 		}
 	}
 	
@@ -881,17 +875,6 @@ public class TimetableActivity extends ActionBarActivity
 				.setIcon(R.drawable.ic_launcher)
 				.show();
 	}
-
-	@Override
-	public void onGroupsSelected(
-			ArrayList<String> selected,
-			ArrayList<String> unselected)
-	{
-		for (String s : selected) application.getSettings().unhideGroup(s);
-		for (String s : unselected) application.getSettings().hideGroup(s);
-		application.getSettings().saveSettings(this);
-		refresh();
-	}
 	
 	public Timetable getTimetable()
 	{
@@ -923,5 +906,46 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		setStatusMessage(downloader.getStatusMessage());
 		
+	}
+
+	@Override
+	public void onGroupsSelected(Map<String, Boolean> items,
+			SelectionDialogFragment dialogFragment)
+	{
+		AppSettings settings = getSettings();
+		for (Map.Entry<String, Boolean> entry : items.entrySet())
+		{
+			if (entry.getValue())
+				settings.unhideGroup(entry.getKey());
+			else
+				settings.hideGroup(entry.getKey());
+		}
+		settings.saveSettings(this);
+		refresh();		
+	}
+
+	@Override
+	public Map<String, Boolean> getDialogListItems(
+			SelectionDialogFragment selectionDialogFragment)
+	{
+		if (selectionDialogFragment instanceof GroupSelectionDialog)
+		{
+			Set<String> hiddenGroups = getSettings().getHiddenGroups();
+			Set<String> allGroups = getTimetable().getGroupsInTimetable();
+			
+			// remove item representing all groups
+			allGroups.remove(timetable.getCourseYearCode());
+			
+			Map<String, Boolean> result = new HashMap<String, Boolean>(allGroups.size());
+			for (String group : allGroups)
+			{
+				result.put(group, hiddenGroups.contains(group) == false);
+			}
+			return result;
+		}
+		else
+		{
+			throw new RuntimeException("Unknown selection dialog "+selectionDialogFragment.toString());
+		}
 	}
 }
