@@ -35,6 +35,12 @@
         android:visible="true"
         appCompat:showAsAction="ifRoom"/>
     <item
+        android:id="@+id/menu_modules"
+        android:orderInCategory="104"
+        android:title="@string/modules"
+        android:visible="true"
+        appCompat:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/share_timetable"
         android:icon="@drawable/share"
         android:orderInCategory="105"

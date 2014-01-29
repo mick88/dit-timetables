@@ -19,19 +19,21 @@ import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.UnfoldActivity;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableEvent;
-import com.mick88.dittimetable.timetable.TimetableEvent.EventViewHolder;
 import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
+import com.mick88.dittimetable.timetable_activity.event_list.SingleEventItem.EventViewHolder;
 import com.mick88.dittimetable.utils.FontApplicator;
 
-public class MultiEvent implements EventItem
+public class MultiEventItem implements EventItem, OnClickListener
 {
-	private final List<TimetableEvent> events;
+	private final List<SingleEventItem> events;
+	private final Timetable timetable;
 	@Deprecated
 	private final static int MARGIN_INCREMENT = 25;
 	
-	public MultiEvent(List<TimetableEvent> events)
+	public MultiEventItem(List<SingleEventItem> events, Timetable timetable)
 	{
 		this.events = events;
+		this.timetable = timetable;
 	}
 	
 	@Override
@@ -55,33 +57,8 @@ public class MultiEvent implements EventItem
 			viewGroup.removeAllViews();
 		}
 		else viewGroup = (ViewGroup) layoutInflater.inflate(R.layout.timetable_event_multi, parent, false);
-		
-		OnClickListener clickListener = new OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				if (v instanceof ViewGroup)
-				{
-					Context context = v.getContext();
-					ArrayList<Integer> positions = new ArrayList<Integer>(events.size());
-					ViewGroup viewGroup = (ViewGroup) v;
-					for (int i=0; i  < viewGroup.getChildCount(); i++)
-					{
-						Rect rect = new Rect();
-						viewGroup.getChildAt(i).getGlobalVisibleRect(rect);
-						positions.add(rect.top);
-					}
-					context.startActivity(new Intent(context, UnfoldActivity.class)
-						.putExtra(UnfoldActivity.EXTRA_EVENTS, (Serializable)events)
-						.putExtra(UnfoldActivity.EXTRA_POSITIONS, positions)
-						.putExtra(UnfoldActivity.EXTRA_TIMETABLE, timetable));
-				}
-			}
-		};
 
-		viewGroup.setOnClickListener(clickListener);
+		viewGroup.setOnClickListener(this);
 
 		int margin = (int)(offset * events.size());
 
@@ -92,7 +69,7 @@ public class MultiEvent implements EventItem
 			View recycle = recyclableViews.isEmpty() ? null : recyclableViews.pop();
 			View eventTile = events.get(i).getView(layoutInflater, recycle, viewGroup, fontApplicator, allowHighlight, timetable);
 			EventViewHolder eventViewHolder = (EventViewHolder) eventTile.getTag();
-			eventViewHolder.eventTile.setOnClickListener(clickListener);
+			eventViewHolder.eventTile.setOnClickListener(this);
 			eventTile.setClickable(false);
 			LayoutParams params = (LayoutParams) eventTile.getLayoutParams();
 			params.setMargins(0, margin, 0, 0);
@@ -101,5 +78,29 @@ public class MultiEvent implements EventItem
 		}
 		
 		return viewGroup;
+	}
+
+	@Override
+	public void onClick(View v)
+	{
+		if (v instanceof ViewGroup)
+		{
+			Context context = v.getContext();
+			ArrayList<Integer> positions = new ArrayList<Integer>(events.size());
+			ViewGroup viewGroup = (ViewGroup) v;
+			for (int i=0; i  < viewGroup.getChildCount(); i++)
+			{
+				Rect rect = new Rect();
+				viewGroup.getChildAt(i).getGlobalVisibleRect(rect);
+				positions.add(rect.top);
+			}
+			List<TimetableEvent> events = new ArrayList<TimetableEvent>(MultiEventItem.this.events.size());
+			for (SingleEventItem event : MultiEventItem.this.events)
+				events.add(event.getEvent());
+			context.startActivity(new Intent(context, UnfoldActivity.class)
+				.putExtra(UnfoldActivity.EXTRA_EVENTS, (Serializable)events)
+				.putExtra(UnfoldActivity.EXTRA_POSITIONS, positions)
+				.putExtra(UnfoldActivity.EXTRA_TIMETABLE, timetable));
+		}		
 	}
 }

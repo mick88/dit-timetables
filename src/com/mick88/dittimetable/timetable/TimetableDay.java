@@ -9,9 +9,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.mick88.dittimetable.settings.AppSettings;
-import com.mick88.dittimetable.timetable_activity.event_list.MultiEvent;
-import com.mick88.dittimetable.timetable_activity.event_list.Space;
-import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 
 /**
  * ontains list of classes in a day
@@ -70,11 +67,11 @@ public class TimetableDay implements Serializable
 		return getName().subSequence(0, 3);
 	}
 	
-	public int getNumEventsAt(int hour, Set<String> hiddenGroups, int week)
+	public int getNumEventsAt(int hour, AppSettings appSettings, int week)
 	{
 		int n=0;
-		for (TimetableEvent event : events) 
-			if (event.getStartHour() == hour && event.isInWeek(week) && event.isVisibleForGroupExcluding(hiddenGroups))
+		for (TimetableEvent event : getEvents(appSettings)) 
+			if (event.getStartHour() == hour && event.isInWeek(week))
 				n++;
 		return n;
 	}
@@ -82,6 +79,18 @@ public class TimetableDay implements Serializable
 	public List<TimetableEvent> getEvents()
 	{
 		return events;
+	}
+	
+	public int getEventCount(AppSettings settings)
+	{
+		int result = 0;
+		int currentWeek = Timetable.getCurrentWeek(),
+			showWeek = settings.getOnlyCurrentWeek()?currentWeek : 0;
+		
+		for (TimetableEvent event : events) 
+			if (event.isVisibleForGroupExcluding(settings.getHiddenGroups()) && event.isInWeek(showWeek) && settings.getHiddenModules().contains(event.getName()) == false)
+				result++;
+		return result;
 	}
 	
 	public void getGroups(Set<String> groupSet)
@@ -195,7 +204,7 @@ public class TimetableDay implements Serializable
 		int	showWeek = settings.getOnlyCurrentWeek() ? Timetable.getCurrentWeek() : 0;
 		
 		for (TimetableEvent event : this.events) 
-			if (event.isVisibleForGroupExcluding(settings.getHiddenGroups()) && event.isInWeek(showWeek))
+			if (event.isVisibleForGroupExcluding(settings.getHiddenGroups()) && event.isInWeek(showWeek) && settings.getHiddenModules().contains(event.getName()) == false)
 			{
 				events.add(event);
 			}
@@ -203,55 +212,7 @@ public class TimetableDay implements Serializable
 		return events;
 	}
 	
-	public List<EventItem> getTimetableEntries(AppSettings settings)
-	{
-		List<EventItem> entries = new ArrayList<EventItem>(events.size());
-		
-		int lastEndHour=0;
-		TimetableEvent lastEvent=null;
-		
-		int currentWeek = Timetable.getCurrentWeek(),
-			showWeek = settings.getOnlyCurrentWeek()?currentWeek : 0;
-		
-		List<TimetableEvent> sameHourEvents = new ArrayList<TimetableEvent>();
-		
-		for (TimetableEvent event : events) 
-			if (event.isVisibleForGroupExcluding(settings.getHiddenGroups()) && event.isInWeek(showWeek))
-		{
-			if (lastEvent != null)
-			{
-				// add space if there was a time off between the events
-				if (lastEndHour < event.getStartHour())
-				{
-					entries.add(new Space(event.getStartHour() - lastEndHour, lastEndHour));
-				}
-			}
-			
-			int numEvents = getNumEventsAt(event.getStartHour(), settings.getHiddenGroups(), showWeek);
-			boolean singleEvent = (numEvents == 1);
-			
-			if (singleEvent)
-			{
-				entries.add(event);
-			}
-			else
-			{
-				if (sameHourEvents.isEmpty()) entries.add(new MultiEvent(sameHourEvents));
-				else if (sameHourEvents.get(0).getStartHour() != event.getStartHour())
-				{
-					sameHourEvents = new ArrayList<TimetableEvent>();
-					entries.add(new MultiEvent(sameHourEvents));
-				}
-					
-				sameHourEvents.add(event);
-			}
-			
-			lastEvent = event;
-			lastEndHour = event.getEndHour();
-		}
-
-		return entries;
-	}
+	
 	
 	@Override
 	public int hashCode()
@@ -272,6 +233,11 @@ public class TimetableDay implements Serializable
 	public int getId()
 	{
 		return id;
+	}
+	
+	public boolean isEmpty(AppSettings settings)
+	{
+		return getEventCount(settings) == 0;
 	}
 
 	public boolean isEmpty()

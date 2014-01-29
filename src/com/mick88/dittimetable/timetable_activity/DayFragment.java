@@ -1,7 +1,5 @@
 package com.mick88.dittimetable.timetable_activity;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,7 +16,6 @@ import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableDay;
 import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter;
-import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 public class DayFragment extends Fragment
@@ -86,8 +83,7 @@ public class DayFragment extends Fragment
 	{
 		if (listView != null)
 		{
-			List<EventItem> items = getTimetableDay().getTimetableEntries(appSettings);
-			if (items.isEmpty())
+			if (getTimetableDay().isEmpty(appSettings))
 			{
 				listView.setVisibility(View.GONE);
 				tvText.setVisibility(View.VISIBLE);
@@ -95,7 +91,7 @@ public class DayFragment extends Fragment
 			}
 			else
 			{
-				listView.setAdapter(new EventAdapter(getActivity(), items, getTimetableDay(), getTimetable()));
+				listView.setAdapter(new EventAdapter(getActivity(), getTimetableDay(), getTimetable(), appSettings));
 				listView.setVisibility(View.VISIBLE);
 				tvText.setVisibility(View.GONE);
 			}
