@@ -869,6 +869,10 @@ public class TimetableActivity extends ActionBarActivity
 		{
 			menu.findItem(R.id.menu_refresh_cancel).setVisible(true);
 			menu.findItem(R.id.menu_refresh_timetable).setVisible(false);
+			menu.findItem(R.id.menu_settings).setVisible(false);
+			menu.findItem(R.id.menu_groups).setVisible(false);
+			menu.findItem(R.id.menu_modules).setVisible(false);
+			menu.findItem(R.id.share_timetable).setVisible(false);
 		}
 		return true;
 	}
