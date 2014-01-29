@@ -8,6 +8,7 @@ import java.util.Stack;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -43,7 +44,7 @@ public class MultiEventItem implements EventItem, OnClickListener
 	public View getView(LayoutInflater layoutInflater, View convertView, ViewGroup parent, FontApplicator fontApplicator, boolean allowHighlight, final Timetable timetable)
 	{
 		Resources resources = layoutInflater.getContext().getResources();
-		float offset = (float)(resources.getDimension(R.dimen.multievent_offset));
+		int offset = (int)(resources.getDimension(R.dimen.multievent_offset));
 		final ViewGroup viewGroup;
 		Stack<View> recyclableViews = new Stack<View>();
 		if (convertView != null)
@@ -62,7 +63,11 @@ public class MultiEventItem implements EventItem, OnClickListener
 		for (int i=events.size()-1; i >= 0; i--)
 		{
 			margin -= offset;
-			if (margin < 0) margin = 0;
+			if (margin < 0) 
+			{
+				Log.e("Margin is negative!", String.valueOf(margin));
+				margin = 0;
+			}
 			View recycle = recyclableViews.isEmpty() ? null : recyclableViews.pop();
 			View eventTile = events.get(i).getView(layoutInflater, recycle, viewGroup, fontApplicator, allowHighlight, timetable);
 			EventViewHolder eventViewHolder = (EventViewHolder) eventTile.getTag();
