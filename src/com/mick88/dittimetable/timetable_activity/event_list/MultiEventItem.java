@@ -8,7 +8,6 @@ import java.util.Stack;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Rect;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,8 +26,6 @@ public class MultiEventItem implements EventItem, OnClickListener
 {
 	private final List<SingleEventItem> events;
 	private final Timetable timetable;
-	@Deprecated
-	private final static int MARGIN_INCREMENT = 25;
 	
 	public MultiEventItem(List<SingleEventItem> events, Timetable timetable)
 	{
