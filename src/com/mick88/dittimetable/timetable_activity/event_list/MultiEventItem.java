@@ -62,7 +62,6 @@ public class MultiEventItem implements EventItem, OnClickListener
 
 		int margin = (int)(offset * events.size());
 
-//		for (TimetableEvent event : events)
 		for (int i=events.size()-1; i >= 0; i--)
 		{
 			margin -= offset;
