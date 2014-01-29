@@ -62,6 +62,7 @@ public class MultiEventItem implements EventItem, OnClickListener
 		for (int i=events.size()-1; i >= 0; i--)
 		{
 			margin -= offset;
+			if (margin < 0) margin = 0;
 			View recycle = recyclableViews.isEmpty() ? null : recyclableViews.pop();
 			View eventTile = events.get(i).getView(layoutInflater, recycle, viewGroup, fontApplicator, allowHighlight, timetable);
 			EventViewHolder eventViewHolder = (EventViewHolder) eventTile.getTag();
