@@ -83,5 +83,8 @@
     <string name="dit_timetable_feedback">DIT Timetable feedback</string>
     <string name="other_apps">Other Apps</string>
     <string name="no_events">No events</string>
+    <string name="select_your_group_s_">Select your group(s):</string>
+    <string name="no_groups_detected_in_current_timetable">No groups detected in current timetable</string>
+    <string name="reload">Reload</string>
 
 </resources>
