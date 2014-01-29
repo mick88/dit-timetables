@@ -3,6 +3,7 @@ package com.mick88.dittimetable.about;
 import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mick88.dittimetable.R;
@@ -41,6 +43,14 @@ public class AboutActivity extends ActionBarActivity implements OnItemClickListe
 		ListView listView = (ListView) findViewById(android.R.id.list);
 		
 		View header = getLayoutInflater().inflate(R.layout.about_header, listView, false);
+		TextView tvVersion = (TextView) header.findViewById(R.id.tvTimetableAppVersion);
+		try
+		{
+			tvVersion.setText(getString(R.string.version_s, getAppVersion()));
+		} catch (NameNotFoundException e)
+		{
+			tvVersion.setVisibility(View.INVISIBLE);
+		}
 		listView.addHeaderView(header);
 		listView.setOnItemClickListener(this);
 		
@@ -56,6 +66,11 @@ public class AboutActivity extends ActionBarActivity implements OnItemClickListe
 		FontApplicator fontApplicator = new FontApplicator(getAssets(), TimetableApp.FONT_NAME);
 		fontApplicator.applyFont(getWindow().getDecorView());
 		fontApplicator.applyFont(header);
+	}
+	
+	String getAppVersion() throws NameNotFoundException
+	{
+		return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
 	}
 	
 	/**

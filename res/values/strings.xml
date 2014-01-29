@@ -89,4 +89,5 @@
     <string name="no_modules_detected_in_current_timetable">No modules detected in current timetable</string>
     <string name="modules">Modules</string>
     <string name="select_modules_you_are_taking_">Select modules you are taking:</string>
+    <string name="version_s">Version %s</string>
 </resources>
