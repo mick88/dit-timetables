@@ -147,13 +147,13 @@ public class TimetableDay implements Serializable
 		return builder.toString();
 	}
 	
-	public String toString(Set<String> hiddenGroups, int week)
+	public String toString(AppSettings appSettings)
 	{
 		if (events.isEmpty()) return new String();
 		int n=0;
 		StringBuilder builder = new StringBuilder(getName());
 		
-		for (TimetableEvent event : events) if (event.isInWeek(week) && event.isVisibleForGroupExcluding(hiddenGroups))
+		for (TimetableEvent event : getEvents(appSettings))
 		{
 			builder.append('\n');
 			builder.append(event.toString());

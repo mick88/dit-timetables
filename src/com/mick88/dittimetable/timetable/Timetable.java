@@ -269,12 +269,11 @@ public class Timetable extends TimetableStub
 	public String toString(AppSettings settings)
 	{
 		StringBuilder builder= new StringBuilder();
-		int n=0,
-			week = getCurrentWeek();
+		int n=0;
 		for (TimetableDay day : getDays())
 		{
-			if (day.getEvents().isEmpty()) continue;
-			String s = day.toString(settings.getHiddenGroups(), settings.getOnlyCurrentWeek()?week:0);
+			if (day.isEmpty(settings)) continue;
+			String s = day.toString(settings);
 			if (TextUtils.isEmpty(s)) continue;
 			
 			if (n > 0) builder.append("\n\n");
