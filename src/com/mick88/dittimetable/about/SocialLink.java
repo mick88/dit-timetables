@@ -1,5 +1,6 @@
 package com.mick88.dittimetable.about;
 
+import android.content.Context;
 import android.net.Uri;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,6 +40,11 @@ public class SocialLink implements SocialLinkItem
 	public String getUrl()
 	{
 		return url;
+	}
+	
+	public String getText(Context context)
+	{
+		return context.getString(stringResource);
 	}
 
 }

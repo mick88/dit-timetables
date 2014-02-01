@@ -1,5 +1,8 @@
 package com.mick88.dittimetable.about;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -17,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flurry.android.FlurryAgent;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.about.SocialLinkAdapter.SocialLinkItem;
@@ -100,11 +104,42 @@ public class AboutActivity extends ActionBarActivity implements OnItemClickListe
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	@Override
+	protected void onStart()
+	{
+		super.onStart();
+		FlurryAgent.onStartSession(this, TimetableApp.FLURRY_API_KEY);
+		FlurryAgent.onEvent("AboutActivity started");
+	}
+	
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+		FlurryAgent.onEndSession(this);
+	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3)
 	{
 		Object clickedObject = arg0.getItemAtPosition(arg2);
+		
+		if (clickedObject instanceof SocialLink)
+		{
+			try
+			{
+				Map<String, String> args = new HashMap<String, String>(2);
+				args.put("Title", ((SocialLink) clickedObject).getText(getApplicationContext()));
+				args.put("URL", ((SocialLink) clickedObject).getUrl());
+				FlurryAgent.onEvent("Social link clicked", args);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
 		if (clickedObject instanceof ShareLink)
 		{
 			startActivity(Intent.createChooser(((ShareLink) clickedObject).getIntent(),
