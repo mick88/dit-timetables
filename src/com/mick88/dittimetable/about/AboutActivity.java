@@ -57,8 +57,8 @@ public class AboutActivity extends ActionBarActivity implements OnItemClickListe
 		listView.setAdapter(new SocialLinkAdapter(this, new SocialLinkItem[]{
 				new FeedbackLink(),
 				new ShareLink(R.string.share_app, SHARE_URL),
-				new SocialLink(R.drawable.ic_website, R.string.visit_website, WEBSITE_URL),
 				new SocialLink(R.drawable.ic_android_apps, R.string.other_apps, ANDROID_APPS_URL),
+				new SocialLink(R.drawable.ic_website, R.string.visit_website, WEBSITE_URL),
 				new SocialLink(R.drawable.ic_google_plus, R.string.google_plus, GOOGLE_PLUS_URL),
 				new SocialLink(R.drawable.ic_twitter, R.string.twitter, TWITTER_URL),
 		}));
