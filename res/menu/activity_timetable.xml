@@ -39,6 +39,7 @@
         android:orderInCategory="104"
         android:title="@string/modules"
         android:visible="true"
+        android:icon="@drawable/ic_modules"
         appCompat:showAsAction="ifRoom"/>
     <item
         android:id="@+id/share_timetable"
