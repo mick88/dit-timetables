@@ -36,6 +36,8 @@ public class UnfoldActivity extends Activity implements OnClickListener
 	
 	private List<TimetableEvent> events = null;
 	private Timetable timetable = null;
+	private int initialCardPositionOffset;
+	private int spaceBetweenCards;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -48,14 +50,13 @@ public class UnfoldActivity extends Activity implements OnClickListener
 		LinearLayout container = (LinearLayout) findViewById(R.id.container);
 		container.removeAllViews();
 		
-		int space = (int) getResources().getDimension(R.dimen.multievent_offset);
+		this.spaceBetweenCards = (int) getResources().getDimension(R.dimen.multievent_offset);
 		
 		if (getIntent() != null)
 		{
 			events = (List<TimetableEvent>) getIntent().getSerializableExtra(EXTRA_EVENTS);
 
-			int offset = getIntent().getIntExtra(EXTRA_OFFSET, 0);
-			offset -= space;
+			this.initialCardPositionOffset = getIntent().getIntExtra(EXTRA_OFFSET, 0) - spaceBetweenCards;
 			
 			if (events != null)
 			{
@@ -77,7 +78,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 					});
 					container.addView(view);
 
-					animateTile(view, offset + (i*space));
+					animateTile(view, initialCardPositionOffset + (i*spaceBetweenCards));
 					i++;
 				}
 			}
