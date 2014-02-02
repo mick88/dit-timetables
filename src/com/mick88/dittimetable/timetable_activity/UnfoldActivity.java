@@ -32,7 +32,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 	 */
 	public static final String EXTRA_EVENTS = "events";	
 	public static final String EXTRA_TIMETABLE = "timetable";
-	public static final String EXTRA_POSITIONS = "positions";
+	public static final String EXTRA_OFFSET = "offset";
 	
 	private List<TimetableEvent> events = null;
 	private Timetable timetable = null;
@@ -48,11 +48,14 @@ public class UnfoldActivity extends Activity implements OnClickListener
 		LinearLayout container = (LinearLayout) findViewById(R.id.container);
 		container.removeAllViews();
 		
+		int space = (int) getResources().getDimension(R.dimen.multievent_offset);
+		
 		if (getIntent() != null)
 		{
 			events = (List<TimetableEvent>) getIntent().getSerializableExtra(EXTRA_EVENTS);
 
-			List<Integer> positions = getIntent().getExtras().getIntegerArrayList(EXTRA_POSITIONS);
+			int offset = getIntent().getIntExtra(EXTRA_OFFSET, 0);
+			offset -= space;
 			
 			if (events != null)
 			{
@@ -74,7 +77,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 					});
 					container.addView(view);
 
-					animateTile(view, positions.get(i));
+					animateTile(view, offset + (i*space));
 					i++;
 				}
 			}
