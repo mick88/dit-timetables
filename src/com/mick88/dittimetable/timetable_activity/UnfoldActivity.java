@@ -48,7 +48,6 @@ public class UnfoldActivity extends Activity implements OnClickListener
 		FontApplicator fontApplicator = new FontApplicator(getAssets(), TimetableApp.FONT_NAME);
 		timetable = (Timetable) getIntent().getExtras().getSerializable(EXTRA_TIMETABLE);
 		LinearLayout container = (LinearLayout) findViewById(R.id.container);
-		container.removeAllViews();
 		
 		this.spaceBetweenCards = (int) getResources().getDimension(R.dimen.multievent_offset);
 		
