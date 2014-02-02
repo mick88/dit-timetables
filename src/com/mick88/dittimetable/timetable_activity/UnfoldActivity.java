@@ -2,6 +2,8 @@ package com.mick88.dittimetable.timetable_activity;
 
 import java.util.List;
 
+import android.animation.Animator;
+import android.animation.Animator.AnimatorListener;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
@@ -92,6 +94,71 @@ public class UnfoldActivity extends Activity implements OnClickListener
 	}
 	
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+	void animateCardOut(final View view, final int toY, final Runnable onAnimEnd)
+	{
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
+
+		final int fromY;
+		int[] location = new int[2];
+		view.getLocationOnScreen(location);
+		fromY = location[1];
+		
+		AnimatorSet set = new AnimatorSet();
+		set.play(ObjectAnimator.ofFloat(view, View.Y, fromY, toY));
+		set.setDuration(ANIMATION_DURATION);
+		set.addListener(new AnimatorListener()
+		{
+			
+			@Override
+			public void onAnimationStart(Animator animation)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animator animation)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAnimationEnd(Animator animation)
+			{
+				onAnimEnd.run();				
+			}
+			
+			@Override
+			public void onAnimationCancel(Animator animation)
+			{
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		set.start();		
+	}
+	
+	@Override
+	public void onBackPressed()
+	{		
+		LinearLayout container = (LinearLayout) findViewById(R.id.container);
+		for (int i=0; i < container.getChildCount(); i++)
+		{
+			View child = container.getChildAt(i);
+			animateCardOut(child, calcualteCardOriginY(i), new Runnable()
+			{
+				
+				@Override
+				public void run()
+				{
+					finish();					
+				}
+			});
+		}
+	}
+	
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	void animateCardIn(final View view, final int fromY)
 	{
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
@@ -131,7 +198,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 	{
 		if (v.getId() == R.id.container)
 		{
-			finish();
+			onBackPressed();
 		}
 		
 	}
