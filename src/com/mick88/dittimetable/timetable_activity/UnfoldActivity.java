@@ -110,6 +110,13 @@ public class UnfoldActivity extends Activity implements OnClickListener
 
 		
 	}
+	
+	@Override
+	public void finish()
+	{
+		super.finish();
+		overridePendingTransition(0, 0);
+	}
 
 	@Override
 	public void onClick(View v)
