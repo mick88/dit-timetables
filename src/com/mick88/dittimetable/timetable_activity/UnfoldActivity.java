@@ -77,13 +77,18 @@ public class UnfoldActivity extends Activity implements OnClickListener
 					});
 					container.addView(view);
 
-					animateTile(view, initialCardPositionOffset + (i*spaceBetweenCards));
+					if (savedInstanceState == null) animateTile(view, calcualteCardOriginY(i));
 					i++;
 				}
 			}
 		}
 		
 		container.setOnClickListener(this);
+	}
+	
+	int calcualteCardOriginY(int n)
+	{
+		return initialCardPositionOffset + (n*spaceBetweenCards);
 	}
 	
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
