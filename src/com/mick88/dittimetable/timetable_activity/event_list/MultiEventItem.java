@@ -109,6 +109,7 @@ public class MultiEventItem implements EventItem, OnClickListener
 				int[] location = new int[2];
 				child.getLocationOnScreen(location);
 				positions.add(location[1] - space);
+				child.setVisibility(View.INVISIBLE);
 			}
 			context.startActivity(new Intent(context, UnfoldActivity.class)
 				.putExtra(UnfoldActivity.EXTRA_EVENTS, (Serializable)events)
