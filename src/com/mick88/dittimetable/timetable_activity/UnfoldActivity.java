@@ -77,7 +77,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 					});
 					container.addView(view);
 
-					if (savedInstanceState == null) animateTile(view, calcualteCardOriginY(i));
+					if (savedInstanceState == null) animateCardIn(view, calcualteCardOriginY(i));
 					i++;
 				}
 			}
@@ -92,7 +92,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 	}
 	
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-	void animateTile(final View view, final int fromY)
+	void animateCardIn(final View view, final int fromY)
 	{
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
 		Log.d("View from Y", String.valueOf(fromY));
