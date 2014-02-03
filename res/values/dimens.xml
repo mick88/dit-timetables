@@ -17,4 +17,5 @@
 	<dimen name="multievent_offset">25dp</dimen>
 	<dimen name="dot_size">8dp</dimen>
 	<dimen name="dot_shadow_offset">@dimen/card_shadow_offset</dimen>
+	<dimen name="dot_spacing">3dp</dimen>
 </resources>

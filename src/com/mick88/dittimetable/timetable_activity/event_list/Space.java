@@ -2,6 +2,7 @@ package com.mick88.dittimetable.timetable_activity.event_list;
 
 import java.util.Calendar;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,16 +43,19 @@ public class Space implements EventItem
 		ViewGroup space = (ViewGroup) layoutInflater.inflate(R.layout.timetable_event_empty, parent, false);
 		ViewGroup container = (ViewGroup) space.findViewById(R.id.separator_dot_container);
 		
+		Context context = layoutInflater.getContext();
+		int separator = (int) context.getResources().getDimension(R.dimen.dot_spacing);
+		
 		for (int i=0; i < numSpaces; i++)
 		{
-			ImageView imageView = new ImageView(layoutInflater.getContext());
+			ImageView imageView = new ImageView(context);
 			
 			if (allowHighlight && (i == current))
 				imageView.setImageResource(R.drawable.dot_selected);
 			else
 				imageView.setImageResource(R.drawable.dot);
 			
-			imageView.setPadding(5, 5, 5, 5);
+			imageView.setPadding(separator, separator, separator, separator);
 			
 			container.addView(imageView);
 		}
