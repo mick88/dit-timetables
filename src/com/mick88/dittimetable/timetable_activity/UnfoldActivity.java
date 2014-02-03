@@ -9,6 +9,7 @@ import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -56,7 +57,8 @@ public class UnfoldActivity extends Activity implements OnClickListener
 		if (getIntent() != null)
 		{
 			events = (List<TimetableEvent>) getIntent().getSerializableExtra(EXTRA_EVENTS);
-
+			TransitionDrawable transitionDrawable = (TransitionDrawable) container.getBackground();
+			transitionDrawable.startTransition(ANIMATION_DURATION);
 			this.initialCardPositionOffset = getIntent().getIntExtra(EXTRA_OFFSET, 0) - spaceBetweenCards;
 			
 			if (events != null)
@@ -143,6 +145,8 @@ public class UnfoldActivity extends Activity implements OnClickListener
 	public void onBackPressed()
 	{		
 		LinearLayout container = (LinearLayout) findViewById(R.id.container);
+		TransitionDrawable transitionDrawable = (TransitionDrawable) container.getBackground();
+		transitionDrawable.reverseTransition(ANIMATION_DURATION);
 		for (int i=0; i < container.getChildCount(); i++)
 		{
 			View child = container.getChildAt(i);
