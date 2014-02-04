@@ -103,7 +103,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 		final int fromY;
 		int[] location = new int[2];
 		view.getLocationOnScreen(location);
-		fromY = location[1];
+		fromY = location[1] - spaceBetweenCards;
 		
 		AnimatorSet set = new AnimatorSet();
 		set.play(ObjectAnimator.ofFloat(view, View.Y, fromY, toY));
