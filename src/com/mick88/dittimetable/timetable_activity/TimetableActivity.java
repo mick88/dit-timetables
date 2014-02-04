@@ -118,6 +118,7 @@ public class TimetableActivity extends ActionBarActivity
 	
 	private Timer timedUpdateTimer = null;
 	private TimetableDownloader timetableDownloader;
+	private Calendar nextUpdate = null;
        
     void downloadTimetable()
     {
@@ -515,7 +516,7 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		timedUpdateTimer = new Timer();
 		
-		Calendar nextUpdate = Calendar.getInstance();
+		nextUpdate = Calendar.getInstance();
 		nextUpdate.set(Calendar.MINUTE, 0);
 		nextUpdate.set(Calendar.SECOND, 0);
 		nextUpdate.add(Calendar.HOUR, 1);
@@ -549,7 +550,8 @@ public class TimetableActivity extends ActionBarActivity
 	protected void onResume() 
 	{
 		super.onResume();
-		refresh();
+		if (nextUpdate == null || nextUpdate.before(Calendar.getInstance()))
+			refresh();
 		scheduleTabUpdate();
 	};
 	
