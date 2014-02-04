@@ -5,5 +5,6 @@
     android:layout_height="match_parent"
     android:headerDividersEnabled="false"
     tools:listheader="@layout/about_header"
+    android:cacheColorHint="@android:color/transparent"
     tools:listitem="@layout/list_item_img_text" />
 
