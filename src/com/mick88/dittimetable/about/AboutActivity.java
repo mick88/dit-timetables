@@ -55,7 +55,7 @@ public class AboutActivity extends ActionBarActivity implements OnItemClickListe
 		{
 			tvVersion.setVisibility(View.INVISIBLE);
 		}
-		listView.addHeaderView(header);
+		listView.addHeaderView(header, null, false);
 		listView.setOnItemClickListener(this);
 		
 		listView.setAdapter(new SocialLinkAdapter(this, new SocialLinkItem[]{
