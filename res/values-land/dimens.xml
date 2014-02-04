@@ -8,5 +8,6 @@
     </dimen>
     
     <dimen name="timetable_header_height">6dp</dimen>
+    
 
 </resources>

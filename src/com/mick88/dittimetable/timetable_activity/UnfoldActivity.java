@@ -15,8 +15,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver.OnPreDrawListener;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
@@ -50,7 +51,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 		setContentView(R.layout.activity_unfold);
 		FontApplicator fontApplicator = new FontApplicator(getAssets(), TimetableApp.FONT_NAME);
 		timetable = (Timetable) getIntent().getExtras().getSerializable(EXTRA_TIMETABLE);
-		LinearLayout container = (LinearLayout) findViewById(R.id.container);
+		ViewGroup container = (ViewGroup) findViewById(R.id.container);
 		
 		this.spaceBetweenCards = (int) getResources().getDimension(R.dimen.multievent_offset);
 		
@@ -60,13 +61,17 @@ public class UnfoldActivity extends Activity implements OnClickListener
 			TransitionDrawable transitionDrawable = (TransitionDrawable) container.getBackground();
 			transitionDrawable.startTransition(ANIMATION_DURATION);
 			this.initialCardPositionOffset = getIntent().getIntExtra(EXTRA_OFFSET, 0) - spaceBetweenCards;
+			int margin=(int) getResources().getDimension(R.dimen.event_card_height);
 			
 			if (events != null)
 			{
-				int i=0;
-				for (final TimetableEvent event : events)
+				for (int i=events.size()-1; i >= 0; i--)
 				{
+					final TimetableEvent event = events.get(i) ;
 					View view = SingleEventItem.instantiateForEvent(event, timetable).getView(getLayoutInflater(), null, container, fontApplicator, false, timetable);
+					RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
+					params.setMargins(0, margin*i, 0, 0);
+					view.setLayoutParams(params);
 					view.setOnClickListener(new OnClickListener()
 					{
 						
@@ -82,7 +87,6 @@ public class UnfoldActivity extends Activity implements OnClickListener
 					container.addView(view);
 
 					if (savedInstanceState == null) animateCardIn(view, calcualteCardOriginY(i));
-					i++;
 				}
 			}
 		}
@@ -144,13 +148,15 @@ public class UnfoldActivity extends Activity implements OnClickListener
 	@Override
 	public void onBackPressed()
 	{		
-		LinearLayout container = (LinearLayout) findViewById(R.id.container);
+		ViewGroup container = (ViewGroup) findViewById(R.id.container);
 		TransitionDrawable transitionDrawable = (TransitionDrawable) container.getBackground();
 		transitionDrawable.reverseTransition(ANIMATION_DURATION);
-		for (int i=0; i < container.getChildCount(); i++)
+		int maxChildId = container.getChildCount()-1;
+		for (int i=maxChildId; i >= 0 ; i--)
 		{
+			int j = maxChildId-i;
 			View child = container.getChildAt(i);
-			animateCardOut(child, calcualteCardOriginY(i), new Runnable()
+			animateCardOut(child, calcualteCardOriginY(j), new Runnable()
 			{
 				
 				@Override
