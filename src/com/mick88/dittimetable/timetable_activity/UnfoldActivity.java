@@ -42,6 +42,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 	private Timetable timetable = null;
 	private int initialCardPositionOffset;
 	private int spaceBetweenCards;
+	private boolean enableAnimations = true;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -52,6 +53,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 		FontApplicator fontApplicator = new FontApplicator(getAssets(), TimetableApp.FONT_NAME);
 		timetable = (Timetable) getIntent().getExtras().getSerializable(EXTRA_TIMETABLE);
 		ViewGroup container = (ViewGroup) findViewById(R.id.container);
+		this.enableAnimations = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 		
 		this.spaceBetweenCards = (int) getResources().getDimension(R.dimen.multievent_offset);
 		
@@ -86,7 +88,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 					});
 					container.addView(view);
 
-					if (savedInstanceState == null) animateCardIn(view, calcualteCardOriginY(i));
+					if (savedInstanceState == null && enableAnimations) animateCardIn(view, calcualteCardOriginY(i));
 				}
 			}
 		}
@@ -148,24 +150,28 @@ public class UnfoldActivity extends Activity implements OnClickListener
 	@Override
 	public void onBackPressed()
 	{		
-		ViewGroup container = (ViewGroup) findViewById(R.id.container);
-		TransitionDrawable transitionDrawable = (TransitionDrawable) container.getBackground();
-		transitionDrawable.reverseTransition(ANIMATION_DURATION);
-		int maxChildId = container.getChildCount()-1;
-		for (int i=maxChildId; i >= 0 ; i--)
+		if (enableAnimations)
 		{
-			int j = maxChildId-i;
-			View child = container.getChildAt(i);
-			animateCardOut(child, calcualteCardOriginY(j), new Runnable()
+			ViewGroup container = (ViewGroup) findViewById(R.id.container);
+			TransitionDrawable transitionDrawable = (TransitionDrawable) container.getBackground();
+			transitionDrawable.reverseTransition(ANIMATION_DURATION);
+			int maxChildId = container.getChildCount()-1;
+			for (int i=maxChildId; i >= 0 ; i--)
 			{
-				
-				@Override
-				public void run()
+				int j = maxChildId-i;
+				View child = container.getChildAt(i);
+				animateCardOut(child, calcualteCardOriginY(j), new Runnable()
 				{
-					finish();					
-				}
-			});
+					
+					@Override
+					public void run()
+					{
+						finish();					
+					}
+				});
+			}
 		}
+		else super.onBackPressed();
 	}
 	
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
