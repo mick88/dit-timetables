@@ -46,6 +46,8 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/eventTime"
             android:layout_toLeftOf="@+id/eventType"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:text="Module name" />
 
         <TextView

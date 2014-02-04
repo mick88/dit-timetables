@@ -47,7 +47,8 @@
             android:layout_centerInParent="true"
             android:gravity="center"
             android:singleLine="true"
-            android:ellipsize="middle"
+            android:maxLines="1"
+            android:ellipsize="end"
             style="@style/card_text" />
 
         <TextView
