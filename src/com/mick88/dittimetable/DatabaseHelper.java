@@ -75,6 +75,12 @@ public class DatabaseHelper extends MSQLiteOpenHelper
 		return timetableStubs;
 	}
 	
+	@Override
+	public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion)
+	{
+		onUpgrade(db, oldVersion, newVersion);
+	}
+	
 	public void deleteAllTimetables()
 	{
 		SQLiteDatabase database = getWritableDatabase();
