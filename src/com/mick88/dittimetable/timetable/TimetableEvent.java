@@ -1,11 +1,9 @@
 package com.mick88.dittimetable.timetable;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -476,9 +474,39 @@ public class TimetableEvent implements Comparable<TimetableEvent>, Serializable
 		this.type = type;
 	}
 
+	private static String formatLecturerName(String name)
+	{
+		if (name.equalsIgnoreCase("to be arranged")) return name;
+		String[] names = name.split(",");
+		StringBuilder builder = new StringBuilder();
+		for (int i=names.length-1; i >= 0; i--)
+		{
+			String n = names[i].trim().toLowerCase(Locale.ENGLISH);
+			for (int j=0; j < n.length(); j++)
+			{
+				char previousLetter = j == 0 ? ' ' : n.charAt(j-1);
+				if (previousLetter < 'a' || previousLetter > 'z' ||  
+						(j > 1 && previousLetter == 'c' && n.charAt(j-2) == 'm')) //Mc 
+					builder.append(n.toUpperCase(Locale.ENGLISH).charAt(j));
+				else builder.append(n.charAt(j));
+			}
+
+			if (i != 0) builder.append(' ');
+		}
+		return builder.toString();		
+	}
+	
 	public void setLecturer(String lecturer)
 	{
-		this.lecturer = lecturer;
+		try
+		{
+			this.lecturer = formatLecturerName(lecturer);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			this.lecturer = lecturer;
+		}
 	}
 	
 	public void setCustom(boolean custom)
