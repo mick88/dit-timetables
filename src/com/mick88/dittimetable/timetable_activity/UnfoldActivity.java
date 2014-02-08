@@ -29,7 +29,7 @@ import com.mick88.dittimetable.utils.FontApplicator;
 
 public class UnfoldActivity extends Activity implements OnClickListener
 {
-	private static final int ANIMATION_DURATION = 200;
+	private static final int ANIMATION_DURATION = 300;
 	/**
 	 * Extra argument containing a List of TimetableEvents
 	 * as a Serializable object
