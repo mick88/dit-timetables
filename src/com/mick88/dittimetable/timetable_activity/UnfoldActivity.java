@@ -43,6 +43,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 	private int initialCardPositionOffset;
 	private int spaceBetweenCards;
 	private boolean enableAnimations = true;
+	private boolean isClosing=false;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -147,9 +148,9 @@ public class UnfoldActivity extends Activity implements OnClickListener
 		set.start();		
 	}
 	
-	@Override
-	public void onBackPressed()
-	{		
+	void closeActivity()
+	{
+		if (isClosing) return;
 		if (enableAnimations)
 		{
 			ViewGroup container = (ViewGroup) findViewById(R.id.container);
@@ -171,7 +172,14 @@ public class UnfoldActivity extends Activity implements OnClickListener
 				});
 			}
 		}
-		else super.onBackPressed();
+		else finish();		
+		isClosing=true;
+	}
+	
+	@Override
+	public void onBackPressed()
+	{		
+		closeActivity();
 	}
 	
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -214,7 +222,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 	{
 		if (v.getId() == R.id.container)
 		{
-			onBackPressed();
+			closeActivity();
 		}
 		
 	}
