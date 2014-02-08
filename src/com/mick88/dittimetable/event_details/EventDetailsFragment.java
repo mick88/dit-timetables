@@ -2,6 +2,7 @@ package com.mick88.dittimetable.event_details;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,6 +57,14 @@ public class EventDetailsFragment extends Fragment
 		}
 		else
 		{		
+			// sort groups if there's more than 1
+			if (groupsCollection.size() > 1)
+			{
+				List<String> groupList = new ArrayList<String>(groupsCollection);
+				Collections.sort(groupList);
+				groupsCollection = groupList;
+			}
+			
 			StringBuilder groupsBuilder = new StringBuilder();
 			String glue = "";
 			for (String group : groupsCollection)
