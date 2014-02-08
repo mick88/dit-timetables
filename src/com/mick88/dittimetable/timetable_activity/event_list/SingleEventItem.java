@@ -100,7 +100,7 @@ public class SingleEventItem implements EventItem, OnClickListener
 		
 		viewHolder.eventTile.setOnClickListener(this);
 		
-		viewHolder.tvEventGroup.setText(event.getGroupStr());
+		viewHolder.tvEventGroup.setText(event.getGroupsString(timetable.getCourse()));
 		viewHolder.tvEventLecturer.setText(event.getLecturer());
 		viewHolder.tvEventLocation.setText(event.getRoom());
 		viewHolder.tvEventTime.setText(event.getEventTimeString());

@@ -1,8 +1,11 @@
 package com.mick88.dittimetable.timetable;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -90,6 +93,21 @@ public class TimetableEvent implements Comparable<TimetableEvent>, Serializable
 		return groups;
 	}
 	
+	/**
+	 * get groups that start with the course code specified
+	 */
+	public Set<String> getGroups(String courseCode)
+	{
+		Set<String> result = new HashSet<String>();
+		for (String group : getGroups())
+		{
+			if (group.startsWith("DT") == false ||  group.startsWith(courseCode) == true)
+				result.add(group);
+		}
+		
+		return result;
+	}
+	
 	public String getWeeks()
 	{
 		return weekRange;
@@ -99,6 +117,28 @@ public class TimetableEvent implements Comparable<TimetableEvent>, Serializable
 	{
 		StringBuilder builder = new StringBuilder();
 		int n=0;
+		for (String g : groups)
+		{
+			if (n++ > 0) builder.append(GROUP_SEPARATOR);
+			builder.append(g);
+		}
+		return builder.toString();
+	}
+	
+	/**
+	 * Shows group string only for specified course
+	 */
+	public String getGroupsString(String courseCode)
+	{
+		StringBuilder builder = new StringBuilder();
+		if (groups.isEmpty()) return builder.toString();
+		
+		int n=0;
+		Set<String> groupSet = getGroups(courseCode);
+		String[] groups = new String[groupSet.size()];
+		groupSet.toArray(groups);
+		Arrays.sort(groups);
+		
 		for (String g : groups)
 		{
 			if (n++ > 0) builder.append(GROUP_SEPARATOR);
