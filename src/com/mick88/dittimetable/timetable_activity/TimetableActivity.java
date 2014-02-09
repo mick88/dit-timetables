@@ -674,25 +674,52 @@ public class TimetableActivity extends ActionBarActivity
 		}
 	}
 	
-	void openTimetable(AppSettings appSettings)
+	void openTimetable(final AppSettings appSettings)
 	{
-		DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
-		Timetable timetable = databaseHelper.loadTimetable(appSettings);
-		if (timetable == null) 
+		
+		new AsyncTask<AppSettings, Void, Timetable>()
 		{
-			timetable = new Timetable(appSettings);
-			try
+			@Override
+			protected Timetable doInBackground(AppSettings... params) 
 			{
-				timetable.importSavedTimetable(getApplicationContext());
-				databaseHelper.saveTimetable(timetable);
+				DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
+				Timetable timetable = databaseHelper.loadTimetable(params[0]);
+				
+				// attempt loading from file cache
+				if (timetable == null) 
+				{
+					timetable = new Timetable(params[0]);
+					try
+					{
+						timetable.importSavedTimetable(getApplicationContext());
+						databaseHelper.saveTimetable(timetable);
+					}
+					catch (Exceptions.NoLocalCopyException e)
+					{
+						return null;
+					}
+				}
+				return timetable;
 			}
-			catch (Exceptions.NoLocalCopyException e)
+			
+			@Override
+			protected void onPostExecute(Timetable timetable) 
 			{
-				this.timetable = timetable;
-				downloadTimetable();
+				if (timetable == null)
+				{
+					timetable = new Timetable(appSettings);
+					TimetableActivity.this.timetable = timetable;
+					downloadTimetable();
+				}
+				else
+				{
+					setTimetable(timetable);
+					showTimetable();
+				}
 			}
-		}
-		setTimetable(timetable);
+		}.execute(appSettings);
+		
+		
 	}
 	
 	@Override
