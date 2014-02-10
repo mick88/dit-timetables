@@ -80,6 +80,14 @@ public class TimetableActivity extends ActionBarActivity
 		}
 	}	
 	
+	private static class TimetableDownloadingExcpetion extends RuntimeException
+	{
+		public TimetableDownloadingExcpetion()
+		{
+			super("Cannot show timetable while downloading");
+		}
+	}
+	
 	public static final String EXTRA_ERROR_MESSAGE = "pdf_error_message";
 	final int SETTINGS_REQUEST_CODE = 1;
 	public static final String EXTRA_TIMETABLE = "timetable";
@@ -600,7 +608,7 @@ public class TimetableActivity extends ActionBarActivity
 	void showTimetable()
 	{
 		if (timetableDownloader != null)
-			throw new RuntimeException("Cannot show timetable while downloading");
+			throw new TimetableDownloadingExcpetion();
 		if (timetable.isEmpty())
 		{
 			showEmptyTimetableMessage();
