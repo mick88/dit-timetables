@@ -47,7 +47,9 @@ public class UnfoldActivity extends Activity implements OnClickListener
 		
 	}
 	
-	private static final int ANIMATION_DURATION = 250;
+	private static final int 
+		ANIMATION_IN_DURATION = 400,
+		ANIMATION_OUT_DURATION = ANIMATION_IN_DURATION / 2;
 	
 	/**
 	 * Extra argument containing a List of TimetableEvents
@@ -82,7 +84,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 		{
 			events = (List<TimetableEvent>) getIntent().getSerializableExtra(EXTRA_EVENTS);
 			TransitionDrawable transitionDrawable = (TransitionDrawable) container.getBackground();
-			transitionDrawable.startTransition(ANIMATION_DURATION);
+			transitionDrawable.startTransition(ANIMATION_IN_DURATION);
 			this.initialCardPositionOffset = getIntent().getIntExtra(EXTRA_OFFSET, 0) - spaceBetweenCards;
 			int margin=(int) getResources().getDimension(R.dimen.event_card_height);
 			final long startAt = getIntent().getLongExtra(EXTRA_START_AT, System.currentTimeMillis());
@@ -135,7 +137,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 		
 		AnimatorSet set = new AnimatorSet();
 		set.play(ObjectAnimator.ofFloat(view, View.Y, fromY, toY));
-		set.setDuration(ANIMATION_DURATION);
+		set.setDuration(ANIMATION_OUT_DURATION);
 		set.addListener(new AnimatorListener()
 		{
 			
@@ -176,7 +178,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 		{
 			ViewGroup container = (ViewGroup) findViewById(R.id.container);
 			TransitionDrawable transitionDrawable = (TransitionDrawable) container.getBackground();
-			transitionDrawable.reverseTransition(ANIMATION_DURATION);
+			transitionDrawable.reverseTransition(ANIMATION_OUT_DURATION);
 			int maxChildId = container.getChildCount()-1;
 			for (int i=maxChildId; i >= 0 ; i--)
 			{
@@ -222,8 +224,8 @@ public class UnfoldActivity extends Activity implements OnClickListener
 				
 				AnimatorSet set = new AnimatorSet();
 				set.play(ObjectAnimator.ofFloat(view, View.Y, fromY, toY));
-				set.setDuration(ANIMATION_DURATION);
-				set.setInterpolator(new SkippableInterpolator(skipMilliseconds, ANIMATION_DURATION));
+				set.setDuration(ANIMATION_IN_DURATION);
+				set.setInterpolator(new SkippableInterpolator(skipMilliseconds, ANIMATION_IN_DURATION));
 				set.start();
 				return true;
 			}
