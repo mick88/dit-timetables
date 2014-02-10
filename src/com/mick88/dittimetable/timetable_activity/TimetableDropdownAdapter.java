@@ -65,6 +65,12 @@ public class TimetableDropdownAdapter extends RobotoArrayAdapter<TimetableStub>
 	{
 		ViewHolder holder = (ViewHolder) view.getTag();
 		
+		if (timetable == null) throw new NullPointerException("Timetablestub is null");
+		if (holder == null) throw new NullPointerException("holder is null");
+		
+		if (holder.tvCourse == null) throw new NullPointerException("Tvcourse is null");
+		if (holder.tvWeeks == null) throw new NullPointerException("tvweeks is null");
+		
 		holder.tvCourse.setText(timetable.describe());
 		holder.tvWeeks.setText(timetable.describeWeeks());
 	}
