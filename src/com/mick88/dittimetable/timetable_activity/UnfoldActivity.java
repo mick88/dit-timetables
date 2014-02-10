@@ -6,6 +6,7 @@ import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.TimeInterpolator;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
@@ -29,7 +30,25 @@ import com.mick88.dittimetable.utils.FontApplicator;
 
 public class UnfoldActivity extends Activity implements OnClickListener
 {
+	private static class SkippableInterpolator implements TimeInterpolator
+	{
+		private float skipOffset;
+		public SkippableInterpolator(int skipMilliseconds, int duration)
+		{
+			this.skipOffset = (float) skipMilliseconds / (float) duration;
+		}
+
+		@Override
+		public float getInterpolation(float input)
+		{
+			float result = input + skipOffset;
+			return result < 1f ? result : 1f;
+		}
+		
+	}
+	
 	private static final int ANIMATION_DURATION = 250;
+	
 	/**
 	 * Extra argument containing a List of TimetableEvents
 	 * as a Serializable object
@@ -37,6 +56,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 	public static final String EXTRA_EVENTS = "events";	
 	public static final String EXTRA_TIMETABLE = "timetable";
 	public static final String EXTRA_OFFSET = "offset";
+	public static final String EXTRA_START_AT = "start_at";
 	
 	private List<TimetableEvent> events = null;
 	private Timetable timetable = null;
@@ -65,6 +85,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 			transitionDrawable.startTransition(ANIMATION_DURATION);
 			this.initialCardPositionOffset = getIntent().getIntExtra(EXTRA_OFFSET, 0) - spaceBetweenCards;
 			int margin=(int) getResources().getDimension(R.dimen.event_card_height);
+			final long startAt = getIntent().getLongExtra(EXTRA_START_AT, System.currentTimeMillis());
 			
 			if (events != null)
 			{
@@ -89,7 +110,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 					});
 					container.addView(view);
 
-					if (savedInstanceState == null && enableAnimations) animateCardIn(view, calcualteCardOriginY(i));
+					if (savedInstanceState == null && enableAnimations) animateCardIn(view, calcualteCardOriginY(i), (int)(System.currentTimeMillis()-startAt));
 				}
 			}
 		}
@@ -183,7 +204,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 	}
 	
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-	void animateCardIn(final View view, final int fromY)
+	void animateCardIn(final View view, final int fromY, final int skipMilliseconds)
 	{
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) return;
 		Log.d("View from Y", String.valueOf(fromY));
@@ -202,6 +223,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 				AnimatorSet set = new AnimatorSet();
 				set.play(ObjectAnimator.ofFloat(view, View.Y, fromY, toY));
 				set.setDuration(ANIMATION_DURATION);
+				set.setInterpolator(new SkippableInterpolator(skipMilliseconds, ANIMATION_DURATION));
 				set.start();
 				return true;
 			}

@@ -107,6 +107,7 @@ public class MultiEventItem implements EventItem, OnClickListener
 			context.startActivity(new Intent(context, UnfoldActivity.class)
 				.putExtra(UnfoldActivity.EXTRA_EVENTS, (Serializable)events)
 				.putExtra(UnfoldActivity.EXTRA_OFFSET, location[1])
+				.putExtra(UnfoldActivity.EXTRA_START_AT, System.currentTimeMillis())
 				.putExtra(UnfoldActivity.EXTRA_TIMETABLE, timetable));
 		}		
 	}
