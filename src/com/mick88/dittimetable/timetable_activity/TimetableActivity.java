@@ -445,7 +445,7 @@ public class TimetableActivity extends ActionBarActivity
 			@Override
 			protected void onPostExecute(final List<TimetableStub> timetables)
 			{
-				if (timetables.size() == 1) return;
+				if (timetables.size() <= 1) return;
 				getSupportActionBar().setDisplayShowTitleEnabled(false);
 				
 				Context context = new ContextThemeWrapper(TimetableActivity.this, R.style.Theme_AppCompat);
