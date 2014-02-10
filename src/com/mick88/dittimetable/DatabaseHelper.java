@@ -71,6 +71,7 @@ public class DatabaseHelper extends MSQLiteOpenHelper
 	{
 		SQLiteDatabase database = getReadableDatabase();
 		List<TimetableStub> timetableStubs = select(database, TimetableStub.class, new String [] {"course", "year", "weekRange"}, null, null, "course, year", null);
+		Log.d("Timetables loaded", timetableStubs.toString());
 		database.close();
 		return timetableStubs;
 	}

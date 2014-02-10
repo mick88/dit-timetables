@@ -132,6 +132,12 @@ public class TimetableStub implements Serializable, Comparable<TimetableStub>
 		return new StringBuilder(course).append('-').append(getYear());
 	}
 	
+	@Override
+	public String toString()
+	{
+		return describe().toString();
+	}
+	
 	public CharSequence describeWeeks()
 	{
 		if (getWeekRange().equals(SEMESTER_1)) return "Semester 1";
