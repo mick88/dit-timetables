@@ -3,6 +3,7 @@ package com.mick88.dittimetable.timetable_activity;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +44,15 @@ public class TimetableDropdownAdapter extends RobotoArrayAdapter<TimetableStub>
 			view.setTag(new ViewHolder(view));
 			applyRobotoFont(view);
 		}
-		setData(view, getItem(position));
+		try
+		{
+			setData(view, getItem(position));
+		}
+		catch (NullPointerException e)
+		{
+			e.printStackTrace();
+			Log.e("TimetableDropdownAdapter", "Null item at pos "+position);
+		}
 		return view;
 	}
 	
@@ -66,10 +75,6 @@ public class TimetableDropdownAdapter extends RobotoArrayAdapter<TimetableStub>
 		ViewHolder holder = (ViewHolder) view.getTag();
 		
 		if (timetable == null) throw new NullPointerException("Timetablestub is null");
-		if (holder == null) throw new NullPointerException("holder is null");
-		
-		if (holder.tvCourse == null) throw new NullPointerException("Tvcourse is null");
-		if (holder.tvWeeks == null) throw new NullPointerException("tvweeks is null");
 		
 		holder.tvCourse.setText(timetable.describe());
 		holder.tvWeeks.setText(timetable.describeWeeks());

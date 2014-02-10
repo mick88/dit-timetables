@@ -436,7 +436,12 @@ public class TimetableActivity extends ActionBarActivity
 			{
 				long t = System.currentTimeMillis();
 				List<TimetableStub> timetables = new DatabaseHelper(getApplicationContext()).getSavedTimetables();
-				if (timetables.contains(timetable) == false) timetables.add(timetable);
+				if (timetable != null && timetables.contains(timetable) == false) timetables.add(timetable);
+				for (int i=timetables.size()-1; i >= 0; i--) if (timetables.get(i) == null)
+				{
+					timetables.remove(i);
+					Log.e("TimetableActivity", "Empty timetable removed at pos "+i);
+				}
 				try
 				{
 					Collections.sort(timetables);
