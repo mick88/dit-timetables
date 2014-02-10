@@ -597,6 +597,7 @@ public class TimetableActivity extends ActionBarActivity
 	
 	void refresh()
 	{
+		if (timetable == null) return;
 		try
 		{
 			setTitle();
