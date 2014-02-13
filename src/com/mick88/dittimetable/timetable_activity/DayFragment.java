@@ -100,7 +100,7 @@ public class DayFragment extends Fragment
 			}
 			else
 			{
-				listView.setAdapter(new EventAdapter(getActivity(), getTimetableDay(), getTimetable(), appSettings));
+				listView.setAdapter(new EventAdapter(getActivity(), timetable.getDay(dayId), timetable, appSettings));
 				listView.setVisibility(View.VISIBLE);
 				tvText.setVisibility(View.GONE);
 			}
