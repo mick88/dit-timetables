@@ -171,6 +171,7 @@ public class TimetableActivity extends ActionBarActivity
 			RuntimeException exception)
 	{
 		timetableDownloader = null;
+		setupActionBar();
 		supportInvalidateOptionsMenu();
 
 		if (exception == null)
@@ -457,7 +458,7 @@ public class TimetableActivity extends ActionBarActivity
 			@Override
 			protected void onPostExecute(final List<TimetableStub> timetables)
 			{
-				if (timetables.size() <= 1) return;
+				if (timetables.size() <= 1  || timetableDownloader != null) return;
 				getSupportActionBar().setDisplayShowTitleEnabled(false);
 				
 				Context context = new ContextThemeWrapper(TimetableActivity.this, R.style.Theme_AppCompat);
@@ -710,6 +711,7 @@ public class TimetableActivity extends ActionBarActivity
 					timetable = new Timetable(appSettings);
 					TimetableActivity.this.timetable = timetable;
 					downloadTimetable();
+					setTitle();
 				}
 				else
 				{
