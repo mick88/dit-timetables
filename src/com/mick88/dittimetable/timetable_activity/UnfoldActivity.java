@@ -94,7 +94,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 				for (int i=events.size()-1; i >= 0; i--)
 				{
 					final TimetableEvent event = events.get(i) ;
-					View view = SingleEventItem.instantiateForEvent(event, timetable).getView(getLayoutInflater(), null, container, fontApplicator, false, timetable);
+					View view = SingleEventItem.instantiateForEvent(event, timetable).getView(getLayoutInflater(), null, container, fontApplicator, true, timetable);
 					RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) view.getLayoutParams();
 					params.setMargins(0, margin*i, 0, 0);
 					view.setLayoutParams(params);
