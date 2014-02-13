@@ -175,9 +175,8 @@ public class TimetableActivity extends ActionBarActivity
 
 		if (exception == null)
 		{
-			showTimetable();
-			refresh();
 			new DatabaseHelper(getApplicationContext()).saveTimetable(timetable);
+			refresh();
 		}
 		else if (exception instanceof Exceptions.SettingsEmptyException)
 		{
