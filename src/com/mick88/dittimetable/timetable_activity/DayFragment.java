@@ -38,7 +38,9 @@ public class DayFragment extends Fragment
 	
 	private TimetableDay getTimetableDay()
 	{
-		return getTimetable().getDay(dayId);
+		Timetable timetable = getTimetable();
+		if (timetable == null) return null;
+		return timetable.getDay(dayId);
 	}
 	
 	@Override
@@ -76,7 +78,7 @@ public class DayFragment extends Fragment
 	
 	public String getDayName()
 	{
-		return getTimetableDay().getName();
+		return Timetable.DAY_NAMES[dayId];
 	}
 	
 	public void refresh()
