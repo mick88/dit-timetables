@@ -411,8 +411,9 @@ public class TimetableActivity extends ActionBarActivity
 			}
 			else openTimetable(getSettings());
 		}
+		else setupTimetableDropdown();
+		
 		setupViewPager();
-		setupTimetableDropdown();
 	}
 	
 	@Override
@@ -470,7 +471,7 @@ public class TimetableActivity extends ActionBarActivity
 					@Override
 					public boolean onNavigationItemSelected(int arg0, long arg1)
 					{
-						if (timetables.get(arg0).equals(timetable) == false)
+						if (timetable != null && timetables.get(arg0).equals(timetable) == false)
 						{
 							onTimetableDropdownSelected(timetables.get(arg0));
 							return true;
@@ -717,6 +718,7 @@ public class TimetableActivity extends ActionBarActivity
 				{
 					setTimetable(timetable);
 					showTimetable();
+					setupTimetableDropdown();
 				}
 			}
 		}.execute(appSettings);
