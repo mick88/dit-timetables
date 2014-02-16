@@ -171,7 +171,7 @@ public class TimetableActivity extends ActionBarActivity
 			RuntimeException exception)
 	{
 		timetableDownloader = null;
-		setupActionBar();
+		setupTimetableDropdown();
 		supportInvalidateOptionsMenu();
 
 		if (exception == null)
@@ -412,7 +412,7 @@ public class TimetableActivity extends ActionBarActivity
 			else openTimetable(getSettings());
 		}
 		setupViewPager();
-		setupActionBar();
+		setupTimetableDropdown();
 	}
 	
 	@Override
@@ -426,7 +426,7 @@ public class TimetableActivity extends ActionBarActivity
 			super.onBackPressed();
 	}
 	
-	void setupActionBar()
+	void setupTimetableDropdown()
 	{
 		new AsyncTask<Void, Void, List<TimetableStub>>()
 		{
