@@ -3,6 +3,7 @@ package com.mick88.dittimetable.settings;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -109,6 +110,12 @@ public class AppSettings implements Serializable
 			
 			.commit();
 		Log.i(toString(), "App settings saved");
+	}
+	
+	@Override
+	public String toString()
+	{
+		return String.format(Locale.ENGLISH, "%s-%d %s", course, year, weekRange);
 	}
 	
 	private String getHiddenGroupsString()
