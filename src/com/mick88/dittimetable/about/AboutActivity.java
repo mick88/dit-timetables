@@ -50,7 +50,9 @@ public class AboutActivity extends ActionBarActivity implements OnItemClickListe
 		TextView tvVersion = (TextView) header.findViewById(R.id.tvTimetableAppVersion);
 		try
 		{
-			tvVersion.setText(getString(R.string.version_s, getAppVersion()));
+			tvVersion.setText(getString(R.string.version_s, 
+					getAppVersion(),
+					getAppBuild()));
 		} catch (NameNotFoundException e)
 		{
 			tvVersion.setVisibility(View.INVISIBLE);
@@ -75,6 +77,11 @@ public class AboutActivity extends ActionBarActivity implements OnItemClickListe
 	String getAppVersion() throws NameNotFoundException
 	{
 		return getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+	}
+	
+	int getAppBuild() throws NameNotFoundException
+	{
+		return getPackageManager().getPackageInfo(getPackageName(), 0).versionCode;
 	}
 	
 	/**
@@ -162,6 +169,20 @@ public class AboutActivity extends ActionBarActivity implements OnItemClickListe
 			{
 			}
 			
+			String appVersion;
+			int appBuild;
+			
+			try
+			{
+				appVersion = getAppVersion();
+				appBuild = getAppBuild();
+			} catch (NameNotFoundException e1)
+			{
+				appVersion = "?";
+				appBuild = -1;
+			}
+			
+			
 			Intent feedbackIntent = new Intent(Intent.ACTION_SENDTO,
 					Uri.parse(FEEDBACK_URI));
 			feedbackIntent.putExtra(Intent.EXTRA_SUBJECT,
@@ -170,7 +191,9 @@ public class AboutActivity extends ActionBarActivity implements OnItemClickListe
 					Intent.EXTRA_TEXT,
 					getString(R.string.feedback_preset_string, Build.BRAND,
 							Build.MODEL, Build.VERSION.RELEASE,
-							Build.VERSION.SDK_INT, timetableDescription));
+							Build.VERSION.SDK_INT, timetableDescription,
+							appVersion, appBuild
+							));
 			try
 			{
 				startActivity(feedbackIntent);

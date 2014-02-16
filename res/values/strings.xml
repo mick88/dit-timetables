@@ -74,7 +74,8 @@
     <string name="feedback">Send Feedback</string>
     <string name="share_app">Share this app</string>
     <string name="share_attach_text">Check out this app!</string>
-    <string name="feedback_preset_string">Device: %1$s %2$s.Android %3$s, API %4$d.Dataset: %5$s</string>
+    <string name="feedback_preset_string">App version %6$s (build %7$d)
+Device: %1$s %2$s.Android %3$s, API %4$d.Dataset: %5$s</string>
     <string name="visit_website">Visit website</string>
     <string name="no_e_mail_client_detected">No E-mail client detected</string>
     <string name="google_plus">Google+</string>
@@ -89,5 +90,5 @@
     <string name="no_modules_detected_in_current_timetable">No modules detected in current timetable</string>
     <string name="modules">Modules</string>
     <string name="select_modules_you_are_taking_">Select modules you are taking:</string>
-    <string name="version_s">Version %s</string>
+    <string name="version_s">Version %1$s (build %2$d)</string>
 </resources>
