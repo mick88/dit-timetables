@@ -114,7 +114,7 @@ public class PdfDownloaderService extends Service
 				Timetable timetable = params[0];
 				try
 				{
-					url = timetable.getPdfUrl(new Connection(new AppSettings(getApplicationContext(), true)));
+					url = timetable.getPdfUrl(new Connection(AppSettings.loadFromPreferences(getApplicationContext())));
 				}
 				catch (Exception e)
 				{

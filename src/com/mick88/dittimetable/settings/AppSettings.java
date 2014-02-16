@@ -42,7 +42,7 @@ public class AppSettings implements Serializable
 	Set<String> hiddenGroups;
 	Set<String> hiddenModules;
 	
-	public AppSettings()
+	private AppSettings()
 	{		
 		username = new String();
 		password = new String();
@@ -61,7 +61,7 @@ public class AppSettings implements Serializable
 		return TextUtils.isEmpty(course) == false && TextUtils.isEmpty(weekRange) == false && year > 0;
 	}
 	
-	public AppSettings(Context context, boolean loadSettings)
+	private AppSettings(Context context, boolean loadSettings)
 	{
 		this();
 		if (loadSettings == true) this.loadSettings(context);
@@ -70,6 +70,7 @@ public class AppSettings implements Serializable
 	public void loadSettings(Context context)
 	{
 		loadSettings(context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE));
+		Log.d("AppSettings", "Settings loaded: "+toString());
 	}
 	
 	public void loadSettings(SharedPreferences sharedPreferences)
@@ -109,7 +110,7 @@ public class AppSettings implements Serializable
 			.putString(PREF_HIDDEN_MODULES, getHiddenModulesString())
 			
 			.commit();
-		Log.i(toString(), "App settings saved");
+		Log.i(toString(), "App settings saved: "+toString());
 	}
 	
 	@Override
@@ -248,5 +249,10 @@ public class AppSettings implements Serializable
 	{
 		hiddenModules.add(s);
 		
+	}
+	
+	public static AppSettings loadFromPreferences(Context context)
+	{
+		return new AppSettings(context, true);
 	}
 }
