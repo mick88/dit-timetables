@@ -616,7 +616,7 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		if (timetableDownloader != null)
 			throw new TimetableDownloadingExcpetion();
-		if (timetable.isEmpty())
+		if (timetable != null && timetable.isEmpty())
 		{
 			showEmptyTimetableMessage();
 		}
