@@ -10,6 +10,7 @@
     
     <dimen name="dot_size">10dp</dimen>
 	<dimen name="dot_shadow_offset">2dp</dimen>
+	<dimen name="dot_shadow_offset_top">-2dp</dimen>
 	
 	<!-- Card height used to space uncollapsed cards -->
 	<dimen name="event_card_height">110dp</dimen>

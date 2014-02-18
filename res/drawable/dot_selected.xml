@@ -12,7 +12,8 @@
                 android:width="@dimen/dot_size" />
         </shape>
     </item>
-    <item android:bottom="@dimen/dot_shadow_offset">
+    <item android:bottom="@dimen/dot_shadow_offset"
+        android:top="@dimen/dot_shadow_offset_top">
         <shape
             android:dither="true"
             android:shape="oval" >
