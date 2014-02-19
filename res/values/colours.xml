@@ -8,7 +8,8 @@
     
     <color name="color_lecturer">#707070</color>
     
-    <color name="semi_transparent">#C0000000</color>
+    <color name="semi_transparent">#C000</color>
+    <color name="text">#222</color>
     
      <!-- Card colours -->
     <color name="card">#FFFFFF</color>
@@ -24,4 +25,9 @@
     <color name="dit_light_blue">#0096D7</color>
     <color name="dit_yellow">#FFB10F</color>
     <color name="dit_white">#FFFFFF</color>
+    
+    <!-- Widget colours -->
+    <color name="widget_item">@android:color/transparent</color>
+    <color name="widget_item_selected">#AA0096D7</color>
+    <color name="widget_item_active">#440096D7</color>
 </resources>

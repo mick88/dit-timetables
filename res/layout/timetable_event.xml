@@ -18,6 +18,7 @@
 
         <TextView
             android:id="@+id/eventTime"
+            android:textColor="@color/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -28,6 +29,7 @@
         <TextView
             android:id="@+id/eventLocation"
             style="@style/card_text_big"
+            android:textColor="@color/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

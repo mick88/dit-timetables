@@ -338,4 +338,19 @@ public class Timetable extends TimetableStub
 				return false;
 		return true;
 	}
+	
+	/**
+	 * Create Timetable instance from user preferences
+	 */
+	public static Timetable loadTimetable(Context context)
+	{
+		Timetable timetable = new Timetable(AppSettings.loadFromPreferences(context));
+		timetable.importTimetable(context);
+		return timetable;
+	}
+
+	public TimetableDay getToday(boolean defaultMonday)
+	{
+		return getDay(getTodayId(defaultMonday));
+	}
 }

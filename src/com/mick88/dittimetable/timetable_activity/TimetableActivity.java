@@ -11,7 +11,10 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -19,6 +22,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
@@ -51,6 +55,8 @@ import com.mick88.dittimetable.settings.SettingsActivity;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableStub;
 import com.mick88.dittimetable.utils.FontApplicator;
+import com.mick88.dittimetable.widget.TimetableUpdateService;
+import com.mick88.dittimetable.widget.TimetableWidget;
 
 public class TimetableActivity extends ActionBarActivity 
 									implements SelectionResultListener, TimetableDownloadListener
@@ -91,6 +97,7 @@ public class TimetableActivity extends ActionBarActivity
 	public static final String EXTRA_ERROR_MESSAGE = "pdf_error_message";
 	final int SETTINGS_REQUEST_CODE = 1;
 	public static final String EXTRA_TIMETABLE = "timetable";
+	public static final String EXTRA_SHOW_DAY_ID = "day_id";
 	
 	final String logTag = "Timetable";
 	Timetable timetable = null;
@@ -371,6 +378,16 @@ public class TimetableActivity extends ActionBarActivity
 			
 		}
 	}
+	
+	@Override
+	protected void onNewIntent(Intent intent)
+	{
+		super.onNewIntent(intent);
+		if (intent.hasExtra(EXTRA_SHOW_DAY_ID) && viewPager != null)
+		{
+			viewPager.setCurrentItem(intent.getIntExtra(EXTRA_SHOW_DAY_ID, 0), true);
+		}
+	}
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -414,6 +431,9 @@ public class TimetableActivity extends ActionBarActivity
 		else setupTimetableDropdown();
 		
 		setupViewPager();
+		
+		if (getIntent() != null)
+			onNewIntent(getIntent());
 	}
 	
 	@Override
@@ -605,6 +625,7 @@ public class TimetableActivity extends ActionBarActivity
 			for (DayFragment dayFragment : fragments)
 				dayFragment.refresh();
 			showTimetable();
+			refreshWidget();
 		}
 		catch (Exception e)
 		{
@@ -912,6 +933,12 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		downloadTimetable();
 		FlurryAgent.onEvent("Timetable refreshed by user");
+	}
+	
+	public void refreshWidget()
+	{
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+			TimetableUpdateService.refreshWidget(getApplicationContext());
 	}
 	
 	@Override
