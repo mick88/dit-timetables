@@ -84,8 +84,8 @@ public class TimetableWidget extends AppWidgetProvider
 			result.setTextViewText(R.id.tvWidgetCourseCode, new StringBuilder(timetable.describe()).append(' ').append(timetable.describeWeeks()));
 		}
 		Intent timetableIntent = new Intent(context, TimetableActivity.class);
-		timetableIntent.putExtra(TimetableActivity.EXTRA_SHOW_DAY_ID, day);
-		result.setOnClickPendingIntent(R.id.widget_header, PendingIntent.getActivity(context, 0, timetableIntent, PendingIntent.FLAG_UPDATE_CURRENT | Intent.FLAG_ACTIVITY_NEW_TASK));		
+		//timetableIntent.putExtra(TimetableActivity.EXTRA_SHOW_DAY_ID, day);
+		result.setOnClickPendingIntent(R.id.widget_header, PendingIntent.getActivity(context, 0, timetableIntent, 0));		
 		
 		result.setTextViewText(R.id.tvWidgetDate, Timetable.DAY_NAMES[day]);
 		
