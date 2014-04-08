@@ -90,9 +90,9 @@ public class Timetable extends TimetableStub
     {
 		int day = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) - 2 + 7) % 7;
 		if (defaultMonday)
-			return (day > DAY_FRIDAY) ? DAY_MONDAY : day;
+			return (day > DAY_SATURDAY) ? DAY_MONDAY : day;
 		else 
-			return (day > DAY_FRIDAY) ? -1 : day;
+			return (day > DAY_SATURDAY) ? -1 : day;
     }
 	
 	/**
