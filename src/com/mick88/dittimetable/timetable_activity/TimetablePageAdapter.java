@@ -25,11 +25,7 @@ public class TimetablePageAdapter extends FragmentPagerAdapter
 	@Override
 	public Fragment getItem(int arg0)
 	{
-		DayFragment fragment = new DayFragment();
-		Bundle args = new Bundle();
-		args.putSerializable(DayFragment.EXTRA_DAY_ID, arg0);
-		fragment.setArguments(args);
-		return fragment;
+		return DayFragment.newInstance(arg0);
 	}
 	
 	@Override

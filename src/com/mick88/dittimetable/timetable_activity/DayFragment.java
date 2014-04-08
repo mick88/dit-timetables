@@ -131,4 +131,13 @@ public class DayFragment extends Fragment
 		this.listView = null;
 		this.tvText = null;
 	}
+	
+	public static DayFragment newInstance(int dayId)
+	{
+		DayFragment fragment = new DayFragment();
+		Bundle args = new Bundle();
+		args.putSerializable(DayFragment.EXTRA_DAY_ID, dayId);
+		fragment.setArguments(args);
+		return fragment;
+	}
 }
