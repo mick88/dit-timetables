@@ -43,6 +43,6 @@ public class TimetablePageAdapter extends FragmentPagerAdapter
 	@Override
 	public int getCount()
 	{
-		return 5;
+		return Timetable.NUM_DAYS;
 	}
 }
