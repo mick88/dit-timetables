@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2011 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/widget_item_selector"
+    android:minHeight="48dp" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="4dip"
+        android:layout_marginRight="4dip"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/eventTitle"
+            style="?android:attr/textAppearanceMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:maxLines="2"
+            android:text="Object Oriented Programming"
+            android:textColor="@color/dit_white"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/eventTime"
+            style="?android:attr/textAppearanceSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/eventTitle"
+            android:layout_below="@+id/eventTitle"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:text="10:00 - 12:00"
+            android:textColor="@color/dit_white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/eventLocation"
+            style="?android:attr/textAppearanceSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/eventTime"
+            android:layout_alignParentRight="true"
+            android:ellipsize="marquee"
+            android:paddingBottom="2dip"
+            android:singleLine="true"
+            android:text="KA - 308"
+            android:textColor="@color/dit_white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/eventGroup"
+            style="?android:attr/textAppearanceSmallInverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/eventTitle"
+            android:layout_below="@+id/eventTime"
+            android:ellipsize="marquee"
+            android:paddingBottom="2dip"
+            android:singleLine="true"
+            android:text="DT211/3A"
+            android:textColor="@color/dit_white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/eventType"
+            style="?android:attr/textAppearanceSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/eventTitle"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/eventTitle"
+            android:ellipsize="marquee"
+            android:paddingBottom="2dip"
+            android:singleLine="true"
+            android:text="Lecture"
+            android:maxLines="1"
+            android:gravity="right"
+            android:textColor="@color/dit_white"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+
+</FrameLayout>

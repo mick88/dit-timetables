@@ -91,4 +91,7 @@ Device: %1$s %2$s.Android %3$s, API %4$d.Dataset: %5$s</string>
     <string name="modules">Modules</string>
     <string name="select_modules_you_are_taking_">Select modules you are taking:</string>
     <string name="version_s">Version %1$s (build %2$d)</string>
+    <string name="no_more_events_today">No upcoming events</string>
+    <string name="remaining_events_today_">Upcoming events:</string>
+    <string name="please_download_timetable">Please download timetable</string>
 </resources>

@@ -21,4 +21,6 @@
 	<dimen name="dot_shadow_offset">@dimen/card_shadow_offset</dimen>
 	<dimen name="dot_shadow_offset_top">-2dp</dimen>
 	<dimen name="dot_spacing">3dp</dimen>
+	<dimen name="widget_min_width">192dp</dimen>
+	<dimen name="widget_min_height">96dp</dimen>
 </resources>
