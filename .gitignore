@@ -18,7 +18,9 @@ local.properties
 # Eclipse project files
 .classpath
 .project
-*.properties
-lint.xml
 
-todo.txt
+# Android Studio
+.idea
+.gradle
+build/
+*.iml
