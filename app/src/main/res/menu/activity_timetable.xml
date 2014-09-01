@@ -19,7 +19,7 @@
         android:icon="@drawable/download"
         android:orderInCategory="101"
         android:title="@string/menu_download_pdf"
-        android:visible="true"
+        android:visible="@bool/show_download_pdf"
         appCompat:showAsAction="never"/>
     <item
         android:id="@+id/menu_settings"

@@ -1,20 +1,6 @@
 package com.mick88.dittimetable.timetable_activity;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -56,7 +42,17 @@ import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableStub;
 import com.mick88.dittimetable.utils.FontApplicator;
 import com.mick88.dittimetable.widget.TimetableUpdateService;
-import com.mick88.dittimetable.widget.TimetableWidget;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class TimetableActivity extends ActionBarActivity 
 									implements SelectionResultListener, TimetableDownloadListener
@@ -880,7 +876,6 @@ public class TimetableActivity extends ActionBarActivity
 			return false;
 			
 		case R.id.menu_download_pdf:			
-//			downloadPdf();
 			downloadPdfInService();
 			return true;
 			

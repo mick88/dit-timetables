@@ -2,5 +2,6 @@
 <resources>
 
     <bool name="enable_widget">false</bool>
+    <bool name="show_download_pdf">false</bool>
 
 </resources>

@@ -1,11 +1,24 @@
 package com.mick88.dittimetable;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import android.annotation.TargetApi;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Environment;
+import android.os.IBinder;
+import android.support.v4.app.NotificationCompat.Builder;
+import android.util.Log;
+
+import com.mick88.dittimetable.downloader.Connection;
+import com.mick88.dittimetable.settings.AppSettings;
+import com.mick88.dittimetable.timetable.Timetable;
+import com.mick88.dittimetable.timetable_activity.TimetableActivity;
+import com.mick88.dittimetable.utils.HttpUtils;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -16,25 +29,14 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Environment;
-import android.os.IBinder;
-import android.support.v4.app.NotificationCompat.Builder;
-import android.util.Log;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-import com.mick88.dittimetable.R;
-import com.mick88.dittimetable.downloader.Connection;
-import com.mick88.dittimetable.settings.AppSettings;
-import com.mick88.dittimetable.timetable.Timetable;
-import com.mick88.dittimetable.timetable_activity.TimetableActivity;
-import com.mick88.dittimetable.utils.HttpUtils;
-
+@TargetApi(Build.VERSION_CODES.FROYO)
 public class PdfDownloaderService extends Service
 {
 	private static final int INTENT_ID_VIEW_PDF = 3;
