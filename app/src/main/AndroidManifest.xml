@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mick88.dittimetable"
     android:installLocation="auto"
-    android:versionCode="32"
+    android:versionCode="33"
     android:versionName="3.5" >
 
     <uses-permission android:name="android.permission.INTERNET" />
