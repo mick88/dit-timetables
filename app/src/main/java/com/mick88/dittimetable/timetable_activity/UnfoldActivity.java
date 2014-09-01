@@ -1,7 +1,5 @@
 package com.mick88.dittimetable.timetable_activity;
 
-import java.util.List;
-
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.animation.AnimatorSet;
@@ -28,8 +26,11 @@ import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.timetable_activity.event_list.SingleEventItem;
 import com.mick88.dittimetable.utils.FontApplicator;
 
+import java.util.List;
+
 public class UnfoldActivity extends Activity implements OnClickListener
 {
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	private static class SkippableInterpolator implements TimeInterpolator
 	{
 		private float skipOffset;
