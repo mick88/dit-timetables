@@ -46,8 +46,8 @@ public class Timetable extends TimetableStub
 		
 		NUM_DAYS = DAY_SATURDAY+1,
 		INVALID_WEEK_RANGE = -1,
-		START_MONTH = Calendar.AUGUST,
-		START_DAY = 26;
+		START_MONTH = Calendar.SEPTEMBER,
+		START_DAY = 1;
 	
 	public static final String [] 
 			DAY_NAMES = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
