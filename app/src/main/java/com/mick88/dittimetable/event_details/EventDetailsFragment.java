@@ -1,11 +1,5 @@
 package com.mick88.dittimetable.event_details;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,6 +9,12 @@ import android.widget.ListView;
 
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.timetable.TimetableEvent;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 public class EventDetailsFragment extends Fragment
 {

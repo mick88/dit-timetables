@@ -1,7 +1,5 @@
 package com.mick88.dittimetable.event_details;
 
-import java.util.List;
-
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +10,8 @@ import android.text.Spanned;
 import android.text.style.StyleSpan;
 
 import com.mick88.dittimetable.timetable.TimetableEvent;
+
+import java.util.List;
 
 public class EventPageAdapter extends FragmentPagerAdapter
 {

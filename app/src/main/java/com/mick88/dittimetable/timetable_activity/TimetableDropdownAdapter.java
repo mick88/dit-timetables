@@ -1,7 +1,5 @@
 package com.mick88.dittimetable.timetable_activity;
 
-import java.util.List;
-
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +10,8 @@ import android.widget.TextView;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.RobotoArrayAdapter;
 import com.mick88.dittimetable.timetable.TimetableStub;
+
+import java.util.List;
 
 public class TimetableDropdownAdapter extends RobotoArrayAdapter<TimetableStub>
 {

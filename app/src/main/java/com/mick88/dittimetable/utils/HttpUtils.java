@@ -1,9 +1,7 @@
 package com.mick88.dittimetable.utils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.mick88.dittimetable.downloader.Connection;
+import com.mick88.dittimetable.downloader.Cookie;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -12,8 +10,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import com.mick88.dittimetable.downloader.Connection;
-import com.mick88.dittimetable.downloader.Cookie;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class HttpUtils
 {

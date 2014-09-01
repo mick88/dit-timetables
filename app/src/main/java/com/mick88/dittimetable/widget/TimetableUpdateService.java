@@ -11,7 +11,6 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.mick88.dittimetable.R;
-import com.mick88.dittimetable.R.id;
 
 public class TimetableUpdateService extends Service
 {

@@ -1,8 +1,5 @@
 package com.mick88.dittimetable.timetable_activity.event_list;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +14,9 @@ import com.mick88.dittimetable.timetable.TimetableDay;
 import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 import com.mick88.dittimetable.utils.FontApplicator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EventAdapter extends ArrayAdapter<EventItem>
 {	

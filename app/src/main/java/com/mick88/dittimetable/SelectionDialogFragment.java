@@ -1,11 +1,5 @@
 package com.mick88.dittimetable;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,7 +9,10 @@ import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
-import com.mick88.dittimetable.R;
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Map;
 
 public abstract class SelectionDialogFragment extends DialogFragment implements OnMultiChoiceClickListener, OnClickListener
 {

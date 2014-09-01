@@ -1,9 +1,5 @@
 package com.mick88.dittimetable.timetable_activity.event_list;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -18,6 +14,10 @@ import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 import com.mick88.dittimetable.utils.FontApplicator;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class SingleEventItem implements EventItem, OnClickListener
 {
@@ -126,10 +126,10 @@ public class SingleEventItem implements EventItem, OnClickListener
 			viewHolder
 			.tvEventType
 			.setTextColor(viewHolder
-					.tvEventType
-					.getContext()
-					.getResources()
-					.getColor(colourRes));
+                    .tvEventType
+                    .getContext()
+                    .getResources()
+                    .getColor(colourRes));
 		}
 		return view;		
 	}

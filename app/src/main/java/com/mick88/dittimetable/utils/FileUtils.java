@@ -1,8 +1,8 @@
 package com.mick88.dittimetable.utils;
 
-import java.io.FileInputStream;
-
 import android.content.Context;
+
+import java.io.FileInputStream;
 
 public class FileUtils
 {

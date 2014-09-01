@@ -1,8 +1,5 @@
 package com.mick88.dittimetable.about;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -25,6 +22,9 @@ import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.about.SocialLinkAdapter.SocialLinkItem;
 import com.mick88.dittimetable.utils.FontApplicator;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class AboutActivity extends ActionBarActivity implements OnItemClickListener
 {

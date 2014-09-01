@@ -1,9 +1,9 @@
 package com.mick88.dittimetable.downloader;
 
-import java.io.Serializable;
-
 import android.os.Bundle;
 import android.util.Log;
+
+import java.io.Serializable;
 
 public class Cookie implements Serializable
 {

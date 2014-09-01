@@ -1,7 +1,5 @@
 package com.mick88.dittimetable;
 
-import java.util.List;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -11,6 +9,8 @@ import com.michaldabski.msqlite.MSQLiteOpenHelper;
 import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableStub;
+
+import java.util.List;
 
 public class DatabaseHelper extends MSQLiteOpenHelper
 {

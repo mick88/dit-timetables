@@ -1,12 +1,9 @@
 package com.mick88.dittimetable.widget;
 
-import java.util.List;
-
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 import android.widget.RemoteViewsService.RemoteViewsFactory;
@@ -16,6 +13,8 @@ import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableEvent;
+
+import java.util.List;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class RemoteTimetableAdapter extends RemoteViewsService implements RemoteViewsFactory

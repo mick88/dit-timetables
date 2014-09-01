@@ -1,14 +1,14 @@
 package com.mick88.dittimetable.timetable;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
-
-import android.text.TextUtils;
-import android.util.Log;
 
 
 /**

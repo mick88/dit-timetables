@@ -1,7 +1,5 @@
 package com.mick88.dittimetable.event_details;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +10,8 @@ import android.widget.TextView;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.utils.FontApplicator;
+
+import java.util.List;
 
 public class KeyValueAdapter extends ArrayAdapter<KeyValue>
 {

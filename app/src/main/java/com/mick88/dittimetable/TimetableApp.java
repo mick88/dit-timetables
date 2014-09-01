@@ -1,12 +1,12 @@
 package com.mick88.dittimetable;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.app.Application;
+import android.os.Build;
 
 import com.mick88.dittimetable.settings.AppSettings;
 
-import android.app.Application;
-import android.os.Build;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TimetableApp extends Application
 {

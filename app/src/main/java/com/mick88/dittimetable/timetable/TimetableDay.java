@@ -1,5 +1,7 @@
 package com.mick88.dittimetable.timetable;
 
+import com.mick88.dittimetable.settings.AppSettings;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -7,8 +9,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.mick88.dittimetable.settings.AppSettings;
 
 /**
  * ontains list of classes in a day

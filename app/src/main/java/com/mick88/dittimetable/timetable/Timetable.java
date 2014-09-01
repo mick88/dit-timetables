@@ -1,5 +1,19 @@
 package com.mick88.dittimetable.timetable;
 
+import android.content.Context;
+import android.text.TextUtils;
+
+import com.michaldabski.msqlite.Annotations.TableName;
+import com.mick88.dittimetable.downloader.Connection;
+import com.mick88.dittimetable.downloader.Exceptions;
+import com.mick88.dittimetable.downloader.TimetableDownloader;
+import com.mick88.dittimetable.settings.AppSettings;
+import com.mick88.dittimetable.utils.FileUtils;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
@@ -10,20 +24,6 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import android.content.Context;
-import android.text.TextUtils;
-
-import com.michaldabski.msqlite.Annotations.TableName;
-import com.mick88.dittimetable.downloader.Connection;
-import com.mick88.dittimetable.downloader.Exceptions;
-import com.mick88.dittimetable.downloader.TimetableDownloader;
-import com.mick88.dittimetable.settings.AppSettings;
-import com.mick88.dittimetable.utils.FileUtils;
 
 /**
  * Class containing a timetable divided into days

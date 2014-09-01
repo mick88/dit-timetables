@@ -1,7 +1,5 @@
 package com.mick88.dittimetable.timetable_activity.event_list;
 
-import java.util.Calendar;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +10,8 @@ import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 import com.mick88.dittimetable.utils.FontApplicator;
+
+import java.util.Calendar;
 
 /**
  * Represents space between events

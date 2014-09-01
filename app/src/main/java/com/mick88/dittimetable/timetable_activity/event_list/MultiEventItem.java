@@ -1,11 +1,5 @@
 package com.mick88.dittimetable.timetable_activity.event_list;
 
-import java.io.Serializable;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -23,6 +17,12 @@ import com.mick88.dittimetable.timetable_activity.UnfoldActivity;
 import com.mick88.dittimetable.timetable_activity.event_list.EventAdapter.EventItem;
 import com.mick88.dittimetable.timetable_activity.event_list.SingleEventItem.EventViewHolder;
 import com.mick88.dittimetable.utils.FontApplicator;
+
+import java.io.Serializable;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 public class MultiEventItem implements EventItem, OnClickListener
 {
@@ -105,7 +105,7 @@ public class MultiEventItem implements EventItem, OnClickListener
 			container.getLocationOnScreen(location);
 			
 			context.startActivity(new Intent(context, UnfoldActivity.class)
-				.putExtra(UnfoldActivity.EXTRA_EVENTS, (Serializable)events)
+				.putExtra(UnfoldActivity.EXTRA_EVENTS, (Serializable) events)
 				.putExtra(UnfoldActivity.EXTRA_OFFSET, location[1])
 				.putExtra(UnfoldActivity.EXTRA_START_AT, System.currentTimeMillis())
 				.putExtra(UnfoldActivity.EXTRA_TIMETABLE, timetable));

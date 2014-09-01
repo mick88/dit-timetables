@@ -1,9 +1,5 @@
 package com.mick88.dittimetable.widget;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -22,6 +18,10 @@ import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableDay;
 import com.mick88.dittimetable.timetable.TimetableEvent;
 import com.mick88.dittimetable.timetable_activity.TimetableActivity;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class TimetableWidget extends AppWidgetProvider

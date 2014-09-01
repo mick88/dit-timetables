@@ -1,9 +1,13 @@
 package com.mick88.dittimetable.downloader;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import android.annotation.SuppressLint;
+import android.os.Build;
+import android.os.Environment;
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.mick88.dittimetable.settings.AppSettings;
+import com.mick88.dittimetable.utils.HttpUtils;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -15,14 +19,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
-import android.annotation.SuppressLint;
-import android.os.Build;
-import android.os.Environment;
-import android.text.TextUtils;
-import android.util.Log;
-
-import com.mick88.dittimetable.settings.AppSettings;
-import com.mick88.dittimetable.utils.HttpUtils;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Connection implements Serializable
 {

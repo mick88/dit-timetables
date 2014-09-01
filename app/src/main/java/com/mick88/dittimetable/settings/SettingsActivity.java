@@ -1,9 +1,5 @@
 package com.mick88.dittimetable.settings;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
@@ -34,6 +30,10 @@ import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableStub;
 import com.mick88.dittimetable.timetable_activity.TimetableActivity;
 import com.mick88.dittimetable.utils.FontApplicator;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 public class SettingsActivity extends ActionBarActivity implements OnClickListener
 {	
@@ -328,27 +328,27 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 			}
 		})
 		.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener()
-		{
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which)
-			{
-				// strip list of unchecked items
-				for (int i=checked.length-1; i >= 0; i--)
-					if (checked[i] == false) 
-						timetables.remove(i);
-				
-				if (timetables.isEmpty())
-				{
-					Toast.makeText(getApplicationContext(), R.string.no_items_deleted, Toast.LENGTH_SHORT).show();
-					return;
-				}
-				
-				// delete
-				int n = databaseHelper.delete(TimetableStub.class, timetables);
-				Toast.makeText(getApplicationContext(), getString(R.string._d_items_deleted, n), Toast.LENGTH_SHORT).show();
-			}
-		})
+        {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                // strip list of unchecked items
+                for (int i = checked.length - 1; i >= 0; i--)
+                    if (checked[i] == false)
+                        timetables.remove(i);
+
+                if (timetables.isEmpty())
+                {
+                    Toast.makeText(getApplicationContext(), R.string.no_items_deleted, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // delete
+                int n = databaseHelper.delete(TimetableStub.class, timetables);
+                Toast.makeText(getApplicationContext(), getString(R.string._d_items_deleted, n), Toast.LENGTH_SHORT).show();
+            }
+        })
 		.setNegativeButton(android.R.string.cancel, null)
 		.setTitle(R.string.delete_timetables_)
 		.show();
@@ -364,15 +364,15 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 				.setMessage(R.string.all_cached_timetables_will_be_deleted_if_you_wish_to_use_them_again_they_will_be_re_downloaded_continue_)
 				.setTitle(R.string.clear_cache)
 				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
-				{
-					
-					@Override
-					public void onClick(DialogInterface dialog, int which)
-					{
-						new DatabaseHelper(getApplicationContext()).deleteAllTimetables();
-						Toast.makeText(getApplicationContext(), "Timetable cache cleared", Toast.LENGTH_SHORT).show();
-					}
-				})
+                {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        new DatabaseHelper(getApplicationContext()).deleteAllTimetables();
+                        Toast.makeText(getApplicationContext(), "Timetable cache cleared", Toast.LENGTH_SHORT).show();
+                    }
+                })
 				.setNegativeButton(android.R.string.cancel, null)
 				.show();
 				break;
