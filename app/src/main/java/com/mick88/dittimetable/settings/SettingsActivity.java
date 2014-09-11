@@ -248,7 +248,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 			valid = false;
 		}
 		
-		if (editCourse.getText().toString().toUpperCase(Locale.ENGLISH).matches("DT[0-9]{3}[A-Z]?") == false)
+		if (editCourse.getText().toString().toUpperCase(Locale.ENGLISH).matches("(DT|B)[0-9]{3}[A-Z]?") == false)
 		{
 			if (editCourse.getText().toString().matches("[0-9]{3}[A-Z]?") == true)
 			{
