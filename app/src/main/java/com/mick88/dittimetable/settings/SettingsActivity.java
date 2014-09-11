@@ -252,9 +252,9 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		}
 
         final String course = editCourse.getText().toString().toUpperCase(Locale.ENGLISH);
-		if (course.matches("(DT|B)[0-9]{3}[A-Z]?") == false)
+		if (course.matches("(DT|B)[0-9]{3,4}[A-Z]?") == false)
 		{
-			if (course.matches("[0-9]{3}[A-Z]?") == true)
+			if (course.matches("[0-9]{3,4}[A-Z]?") == true)
 			{
 				// autocorrect
 				editCourse.setText(new StringBuilder("DT").append(course));
