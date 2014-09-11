@@ -21,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.flurry.android.FlurryAgent;
 import com.mick88.dittimetable.DatabaseHelper;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.RobotoArrayAdapter;
@@ -32,8 +33,10 @@ import com.mick88.dittimetable.timetable_activity.TimetableActivity;
 import com.mick88.dittimetable.utils.FontApplicator;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class SettingsActivity extends ActionBarActivity implements OnClickListener
 {	
@@ -247,20 +250,24 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 			editWeeks.setError("Incorrect week range");
 			valid = false;
 		}
-		
-		if (editCourse.getText().toString().toUpperCase(Locale.ENGLISH).matches("DT[0-9]{3}[A-Z]?") == false)
+
+        final String course = editCourse.getText().toString().toUpperCase(Locale.ENGLISH);
+		if (course.matches("(DT|B)[0-9]{3,4}[A-Z]?") == false)
 		{
-			if (editCourse.getText().toString().matches("[0-9]{3}[A-Z]?") == true)
+			if (course.matches("[0-9]{3,4}[A-Z]?") == true)
 			{
 				// autocorrect
-				CharSequence text = editCourse.getText();
-				editCourse.setText(new StringBuilder("DT").append(text));
+				editCourse.setText(new StringBuilder("DT").append(course));
 			}
 			else
 			{
 				editCourse.requestFocus();
 				editCourse.setError("Invalid course code");
 				valid = false;
+                
+                Map<String, String> stringMap = new HashMap<String, String>(1);
+                stringMap.put("course", course);
+                FlurryAgent.onEvent("Invalid course code");
 			}
 		}
 		
