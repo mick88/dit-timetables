@@ -247,14 +247,14 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 			editWeeks.setError("Incorrect week range");
 			valid = false;
 		}
-		
-		if (editCourse.getText().toString().toUpperCase(Locale.ENGLISH).matches("(DT|B)[0-9]{3}[A-Z]?") == false)
+
+        final String course = editCourse.getText().toString().toUpperCase(Locale.ENGLISH);
+		if (course.matches("(DT|B)[0-9]{3}[A-Z]?") == false)
 		{
-			if (editCourse.getText().toString().matches("[0-9]{3}[A-Z]?") == true)
+			if (course.matches("[0-9]{3}[A-Z]?") == true)
 			{
 				// autocorrect
-				CharSequence text = editCourse.getText();
-				editCourse.setText(new StringBuilder("DT").append(text));
+				editCourse.setText(new StringBuilder("DT").append(course));
 			}
 			else
 			{
