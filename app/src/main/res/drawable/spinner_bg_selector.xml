@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:drawable="@color/card_semi_selected" android:state_activated="true" android:state_pressed="true"/>
-    <item android:drawable="@color/card_selected" android:state_activated="true"/>"
+    <item android:drawable="@color/card_selected" android:state_activated="true"/>
     <item android:drawable="@android:color/transparent"/>
 
 </selector>
