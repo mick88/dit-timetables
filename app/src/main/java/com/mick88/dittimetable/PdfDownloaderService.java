@@ -63,7 +63,6 @@ public class PdfDownloaderService extends Service
 	@Override
 	public IBinder onBind(Intent intent)
 	{
-		// TODO: Return the communication channel to the service.
 		throw new UnsupportedOperationException("Not yet implemented");
 	}
 	
@@ -133,7 +132,6 @@ public class PdfDownloaderService extends Service
 			@Override
 			protected void onCancelled(File result) 
 			{
-				// TODO: clean if necessary
 				stopForeground(true);
 			}
 			

@@ -261,7 +261,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, Serializable
 	{
 		return String.format(Locale.ENGLISH, "%s: %s (%s)", getStartTime(), getName(), room);
 	}
-	
+
 	private void decodeWeeks()
 	{
 		weeks.clear();

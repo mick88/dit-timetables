@@ -40,7 +40,6 @@ public class RemoteTimetableAdapter extends RemoteViewsService implements Remote
 	@Override
 	public RemoteViews getLoadingView()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
  
@@ -100,8 +99,7 @@ public class RemoteTimetableAdapter extends RemoteViewsService implements Remote
 	@Override
 	public void onDestroy()
 	{
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
