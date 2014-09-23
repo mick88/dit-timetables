@@ -91,7 +91,6 @@ public class TimetableActivity extends ActionBarActivity
 	}
 	
 	public static final String EXTRA_ERROR_MESSAGE = "pdf_error_message";
-	final int SETTINGS_REQUEST_CODE = 1;
 	public static final String EXTRA_TIMETABLE = "timetable";
 	public static final String EXTRA_SHOW_DAY_ID = "day_id";
 	
@@ -208,7 +207,6 @@ public class TimetableActivity extends ActionBarActivity
 						downloadTimetable();					
 					}
 				}, getString(R.string.retry));
-//				setStatusMessage(R.string.no_local_copy);
 			}
 			else 
 			{
@@ -332,8 +330,6 @@ public class TimetableActivity extends ActionBarActivity
 			try
 			{
 				Map<String, String> values = parseQuery(data);
-				// https://www.dit.ie/timetables/PortalServ?reqtype=timetable&ttType=COURSE&sKey=201213|DT211&sYear=2&weekRange=4603
-				// 201213%7CDT211
 				if (values.get("reqtype").equalsIgnoreCase("timetable") == false)
 				{
 					return;
@@ -361,8 +357,7 @@ public class TimetableActivity extends ActionBarActivity
 				}
 				if (weekRange == Timetable.INVALID_WEEK_RANGE) setTimetable(new Timetable(course, year, weeks));
 				else setTimetable(new Timetable(course, year, weekRange));
-				
-//				loadTimetable();
+
 				isTemporaryTimetable = true;
 				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 			} catch (Exception e)
@@ -713,21 +708,6 @@ public class TimetableActivity extends ActionBarActivity
         }
 	}
 	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
-	{
-		switch (requestCode)
-		{
-		case SETTINGS_REQUEST_CODE:
-			if (resultCode == RESULT_OK)
-			{
-				setTimetable(new Timetable(application.getSettings()));
-			}
-			break;
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-	
 	void downloadPdfInService()
 	{
 		Intent intent = new Intent(getApplicationContext(), PdfDownloaderService.class);
@@ -762,7 +742,6 @@ public class TimetableActivity extends ActionBarActivity
 				public void onClick(DialogInterface dialog, int which)
 				{
 					onBtnRefreshPressed();
-//					refresh();
 				}
 			})
 			.setIcon(R.drawable.ic_launcher)
@@ -793,7 +772,6 @@ public class TimetableActivity extends ActionBarActivity
 				public void onClick(DialogInterface dialog, int which)
 				{
 					onBtnRefreshPressed();
-//					refresh();
 				}
 			})
 			.setIcon(R.drawable.ic_launcher)
