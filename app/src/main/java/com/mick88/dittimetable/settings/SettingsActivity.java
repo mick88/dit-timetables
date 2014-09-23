@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
+import com.mick88.dittimetable.BuildConfig;
 import com.mick88.dittimetable.DatabaseHelper;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.RobotoArrayAdapter;
@@ -264,10 +265,13 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 				editCourse.requestFocus();
 				editCourse.setError("Invalid course code");
 				valid = false;
-                
-                Map<String, String> stringMap = new HashMap<String, String>(1);
-                stringMap.put("course", course);
-                FlurryAgent.onEvent("Invalid course code");
+
+                if (BuildConfig.DEBUG == false)
+                {
+                    Map<String, String> stringMap = new HashMap<String, String>(1);
+                    stringMap.put("course", course);
+                    FlurryAgent.onEvent("Invalid course code");
+                }
 			}
 		}
 		

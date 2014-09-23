@@ -11,6 +11,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix '.dev'
+        }
         release {
             runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'

@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.flurry.android.FlurryAgent;
+import com.mick88.dittimetable.BuildConfig;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.downloader.Exceptions.ServerConnectionException;
 import com.mick88.dittimetable.settings.AppSettings;
@@ -378,7 +379,8 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		}
 		catch (Exception e)
 		{
-			FlurryAgent.onError("parseAdditionalInfo", "TimetableEvent", e);
+            if (BuildConfig.DEBUG == false)
+			    FlurryAgent.onError("parseAdditionalInfo", "TimetableEvent", e);
 			e.printStackTrace();
 			return false;
 		}

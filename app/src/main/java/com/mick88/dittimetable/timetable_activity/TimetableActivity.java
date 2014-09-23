@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
+import com.mick88.dittimetable.BuildConfig;
 import com.mick88.dittimetable.DatabaseHelper;
 import com.mick88.dittimetable.PdfDownloaderService;
 import com.mick88.dittimetable.R;
@@ -558,20 +559,24 @@ public class TimetableActivity extends ActionBarActivity
 	@Override
 	protected void onStart()
 	{
-		FlurryAgent.onStartSession(this, TimetableApp.FLURRY_API_KEY);
-		Map<String, String> data = TimetableApp.getDeviceData();
-		if (timetable != null)
-		{
-			data.putAll(timetable.ToHashMap());
-		}
-		FlurryAgent.onEvent("Timetable app started", data);
-		super.onStart();
+        super.onStart();
+        if (BuildConfig.DEBUG == false)
+        {
+            FlurryAgent.onStartSession(this, TimetableApp.FLURRY_API_KEY);
+            Map<String, String> data = TimetableApp.getDeviceData();
+            if (timetable != null)
+            {
+                data.putAll(timetable.ToHashMap());
+            }
+            FlurryAgent.onEvent("Timetable app started", data);
+        }
 	}
 	
 	@Override
 	protected void onStop()
 	{
-		FlurryAgent.onEndSession(this);
+        if (BuildConfig.DEBUG == false)
+		    FlurryAgent.onEndSession(this);
 		super.onStop();
 	}
 	
@@ -818,7 +823,8 @@ public class TimetableActivity extends ActionBarActivity
 			
 		case R.id.menu_settings:
 			showSettingsScreen(true);
-			FlurryAgent.onEvent("Settings screen open");
+            if (BuildConfig.DEBUG == false)
+			    FlurryAgent.onEvent("Settings screen open");
 			return true;
 			
 		case R.id.menu_groups:
@@ -834,13 +840,15 @@ public class TimetableActivity extends ActionBarActivity
 			intent.setType("text/plain");
 			intent.putExtra(Intent.EXTRA_TEXT, timetable.toString(application.getSettings()));
 			startActivity(Intent.createChooser(intent, "Share timetable via..."));
-			FlurryAgent.onEvent("Share timetable");
+            if (BuildConfig.DEBUG == false)
+			    FlurryAgent.onEvent("Share timetable");
 			return true;
 			
 		case R.id.menu_about:
 			CharSequence timetableDescription = timetable.describe();
 			startActivity(new Intent(getApplicationContext(), AboutActivity.class).putExtra(AboutActivity.EXTRA_TIMETABLE_INFO, timetableDescription));
-			FlurryAgent.onEvent("About Screen");
+            if (BuildConfig.DEBUG == false)
+			    FlurryAgent.onEvent("About Screen");
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -849,7 +857,8 @@ public class TimetableActivity extends ActionBarActivity
 	void onBtnRefreshPressed()
 	{
 		downloadTimetable();
-		FlurryAgent.onEvent("Timetable refreshed by user");
+        if (BuildConfig.DEBUG == false)
+		    FlurryAgent.onEvent("Timetable refreshed by user");
 	}
 	
 	public void refreshWidget()
