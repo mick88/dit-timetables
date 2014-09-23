@@ -698,27 +698,19 @@ public class TimetableActivity extends ActionBarActivity
         DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
         Timetable timetable = databaseHelper.loadTimetable(appSettings);
 
-        // attempt loading from file cache
         if (timetable == null)
         {
             timetable = new Timetable(appSettings);
-            try
-            {
-                timetable.importSavedTimetable(getApplicationContext());
-                databaseHelper.saveTimetable(timetable);
-            }
-            catch (Exceptions.NoLocalCopyException e)
-            {
-                timetable = new Timetable(appSettings);
-                this.timetable = timetable;
-                downloadTimetable();
-                setTitle();
-            }
+            this.timetable = timetable;
+            downloadTimetable();
+            setTitle();
         }
-
-        setTimetable(timetable);
-        showTimetable();
-        setupTimetableDropdown();
+        else
+        {
+            setTimetable(timetable);
+            showTimetable();
+            setupTimetableDropdown();
+        }
 	}
 	
 	@Override

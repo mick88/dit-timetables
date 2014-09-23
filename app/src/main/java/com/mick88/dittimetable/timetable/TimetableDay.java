@@ -17,8 +17,6 @@ import java.util.Set;
 public class TimetableDay implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	@Deprecated
-	private final String EXPORT_DAY_SEPARATOR = "\n";
 	private int id;
 	protected List<TimetableEvent> events = new ArrayList<TimetableEvent>();	
 	
@@ -162,34 +160,6 @@ public class TimetableDay implements Serializable
 		}
 		if (n == 0) return new String();
 		else return builder.toString();
-	}
-	
-	@Deprecated
-	public CharSequence export()
-	{
-		StringBuilder builder = new StringBuilder();
-		for (TimetableEvent event : events)
-		{
-			builder.append(event.export()).append(EXPORT_DAY_SEPARATOR);
-		}
-		return builder;
-	}
-	
-	@Deprecated
-	public int importFromString(String string)
-	{
-		int n=0;
-		String [] events = string.split(EXPORT_DAY_SEPARATOR);
-		for (String eventString : events)
-		{
-			TimetableEvent event = new TimetableEvent(eventString, getId());
-			if (event.isValid() /*&& event.isGroup(timetable.hiddenGroups)*/)
-			{
-				n++;
-				addEvent(event);
-			}
-		}
-		return n;
 	}
 	
 	public boolean isToday()

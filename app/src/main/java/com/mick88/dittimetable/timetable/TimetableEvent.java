@@ -213,16 +213,7 @@ public class TimetableEvent implements Comparable<TimetableEvent>, Serializable
 		this();
 		this.day = day;		
 	}
-	
-	/**
-	 * Creates new object by importing data from string
-	 */
-	@Deprecated
-	public TimetableEvent(String importString, int day)
-	{
-		this(day);
-		importFromString(importString);
-	}
+
 	
 	/**
 	 * Returns true if class should be shown to user.
@@ -336,50 +327,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, Serializable
 					Log.e(logTag, "Cannot parse week "+sectionTrimmed);
 				}
 			}
-		}
-	}
-	
-	/**
-	 * imports saved event from file
-	 */
-	@Deprecated
-	public void importFromString(String string)
-	{
-		if (TextUtils.isEmpty(string)) 
-		{
-			return;
-		}
-		try
-		{
-			String [] fields = string.split(exportItemSeparator, -1);
-			int field = 0;
-			setId(Integer.valueOf(fields[field++]));
-			setName(fields[field++]);
-			room = fields[field++];
-			setLecturer(fields[field++]);
-			
-			setStartHour(Integer.valueOf(fields[field++]));
-			setStartMin(Integer.valueOf(fields[field++]));
-			setEndHour(Integer.valueOf(fields[field++]));
-			setEndMin(Integer.valueOf(fields[field++]));
-			
-			weekRange = fields[field++];
-			setType(ClassType.valueOf(fields[field++]));
-			
-			if (fields.length >= field+1)
-			{
-				String [] g = fields[field++].split(GROUP_SEPARATOR);
-				for (String s : g)
-				{
-					addGroup(s);
-				}
-			}
-			decodeWeeks();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();		
-			Log.w(logTag, "Cannot parse event "+string);
 		}
 	}
 	

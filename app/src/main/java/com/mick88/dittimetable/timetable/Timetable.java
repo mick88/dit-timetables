@@ -1,20 +1,16 @@
 package com.mick88.dittimetable.timetable;
 
-import android.content.Context;
 import android.text.TextUtils;
 
 import com.michaldabski.msqlite.Annotations.TableName;
 import com.mick88.dittimetable.downloader.Connection;
-import com.mick88.dittimetable.downloader.Exceptions;
 import com.mick88.dittimetable.downloader.TimetableDownloader;
 import com.mick88.dittimetable.settings.AppSettings;
-import com.mick88.dittimetable.utils.FileUtils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
@@ -95,12 +91,6 @@ public class Timetable extends TimetableStub
 			return (day > DAY_SATURDAY) ? -1 : day;
     }
 	
-	/**
-	 * For saving timetable locally
-	 */
-	@Deprecated
-	private static final String DAY_SEPARATOR = ":day:";
-	
 	private int weekRangeId = INVALID_WEEK_RANGE; // alternative to weeks
 	private TimetableDay[] days = new TimetableDay[NUM_DAYS];
 	
@@ -175,29 +165,8 @@ public class Timetable extends TimetableStub
 		if (getWeekRange().equals(SEMESTER_1)) weeksStr = "S1";
 		else if (getWeekRange().equals(SEMESTER_2)) weeksStr = "S2";
 		else weeksStr = "W"+getWeekRange();
-		
+
 		return String.format(Locale.getDefault(), "Timetable_%s-%d_%s.pdf", course, getYear(), weeksStr);
-	}
-	
-	/**
-	 * Writes timetable to file
-	 */
-	@Deprecated
-	public void exportTimetable(Context context)
-	{
-		StringBuilder builder = new StringBuilder();
-		for (TimetableDay day : getDays())
-		{
-			builder.append(day.export());
-			builder.append(DAY_SEPARATOR);
-		}
-		try
-		{
-			writeFile(context, "export"+getFilename(), builder.toString());
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
 	}
 	
 	public TimetableDay getDay(int id)
@@ -222,38 +191,6 @@ public class Timetable extends TimetableStub
 	{
 		if (groupCode.equals(getCourseYearCode())) return; //cannot hide whole class
 		settings.hideGroup(groupCode);
-	}
-	
-	/**
-	 * Loads timetable from file
-	 */
-	@Deprecated
-	public void importSavedTimetable(Context context)
-	{
-		if (importTimetable(context) == false) 
-			throw new Exceptions.NoLocalCopyException();
-	}
-	
-	@Deprecated
-	private boolean importTimetable(Context context)
-	{
-		String content = FileUtils.readFile(context, "export"+getFilename());
-		if (content == null) return false;
-		
-		int dayId = DAY_MONDAY,
-				n=0;
-		String [] day = content.split(DAY_SEPARATOR);
-		if (day.length < DAY_SATURDAY) return false;
-		clearEvents();
-		
-		for (String d : day)
-		{
-			if (dayId < getDays().length)
-			{
-				n += getDays()[dayId++].importFromString(d);
-			}
-		}
-		return (n > 0);
 	}
 	
 	public Map<String,String> ToHashMap()
@@ -288,16 +225,7 @@ public class Timetable extends TimetableStub
 	{
 		return describe().toString();
 	}
-	
-	@Deprecated
-	public void writeFile(Context context, String filename, String content) throws IOException
-	{
-		FileOutputStream file = context.openFileOutput(filename, Context.MODE_PRIVATE);			
-		byte[] buffer = content.getBytes();
-		file.write(buffer);
-		file.flush();
-		file.close();
-	}
+
 
 	public int getWeekRangeId()
 	{
@@ -337,16 +265,6 @@ public class Timetable extends TimetableStub
 			if (day.isEmpty() == false)
 				return false;
 		return true;
-	}
-	
-	/**
-	 * Create Timetable instance from user preferences
-	 */
-	public static Timetable loadTimetable(Context context)
-	{
-		Timetable timetable = new Timetable(AppSettings.loadFromPreferences(context));
-		timetable.importTimetable(context);
-		return timetable;
 	}
 
 	public TimetableDay getToday(boolean defaultMonday)
