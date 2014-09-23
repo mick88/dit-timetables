@@ -82,9 +82,9 @@ public class TimetableActivity extends ActionBarActivity
 		}
 	}	
 	
-	private static class TimetableDownloadingExcpetion extends RuntimeException
+	private static class TimetableDownloadingException extends RuntimeException
 	{
-		public TimetableDownloadingExcpetion()
+		public TimetableDownloadingException()
 		{
 			super("Cannot show timetable while downloading");
 		}
@@ -632,7 +632,7 @@ public class TimetableActivity extends ActionBarActivity
 	void showTimetable()
 	{
 		if (timetableDownloader != null)
-			throw new TimetableDownloadingExcpetion();
+			throw new TimetableDownloadingException();
 		if (timetable != null && timetable.isEmpty())
 		{
 			showEmptyTimetableMessage();
