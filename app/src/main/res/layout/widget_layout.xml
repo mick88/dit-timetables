@@ -57,7 +57,7 @@
 	        android:gravity="center"
 	        android:text="@string/no_more_events_today"
 	        android:textAppearance="?android:attr/textAppearanceLarge"
-	        android:textColor="@color/dit_white" />
+	        android:textColor="@color/white" />
 	
 	    <ListView
 	        android:id="@+id/listEvents"
