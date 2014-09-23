@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -243,17 +242,6 @@ public class TimetableActivity extends ActionBarActivity
     	actionBar.setTitle(timetable.describe());
     	actionBar.setSubtitle(timetable.describeWeeks());
     }
-    
-    @Override
-    public void onConfigurationChanged(Configuration newConfig)
-    {
-    	super.onConfigurationChanged(newConfig);
-    }
-    
-    public ViewPager getViewPager()
-	{
-		return viewPager;
-	}
     
     void setupViewPager()
     {
@@ -565,7 +553,7 @@ public class TimetableActivity extends ActionBarActivity
 		if (nextUpdate == null || nextUpdate.before(Calendar.getInstance()))
 			refresh();
 		scheduleTabUpdate();
-	};
+	}
 	
 	@Override
 	protected void onStart()
@@ -889,16 +877,6 @@ public class TimetableActivity extends ActionBarActivity
 	void showProgressPopup(CharSequence message)
 	{
 		showMessage(true, message, null, null);
-	}
-	
-	void showPopupMessage(CharSequence message)
-	{
-		new AlertDialog.Builder(this)
-				.setTitle(R.string.app_name)
-				.setMessage(message)
-				.setNeutralButton("OK", null)
-				.setIcon(R.drawable.ic_launcher)
-				.show();
 	}
 	
 	public Timetable getTimetable()
