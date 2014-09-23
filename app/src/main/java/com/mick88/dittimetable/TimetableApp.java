@@ -10,6 +10,9 @@ import java.util.Map;
 
 public class TimetableApp extends Application
 {
+    public static final String
+        BROADCAST_TIMETABLE_CHANGE = TimetableApp.class.getName()+".timetable_change";
+
 	private AppSettings settings;
 	public static final String FLURRY_API_KEY = "DN7DRPJHSB5WX5FSX5SG";
 	public static final String FONT_NAME = "Roboto-Light.ttf";

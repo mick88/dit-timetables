@@ -1,6 +1,10 @@
 package com.mick88.dittimetable.timetable_activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -30,6 +34,18 @@ public class DayFragment extends Fragment
 	TextView tvText;
 	private ListView listView;
 	FontApplicator fontApplicator = null;
+
+    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            if (TimetableApp.BROADCAST_TIMETABLE_CHANGE.equals(intent.getAction()))
+            {
+                refresh();
+            }
+        }
+    };
 	
 	private Timetable getTimetable()
 	{
@@ -58,13 +74,11 @@ public class DayFragment extends Fragment
 		super.onAttach(activity);
 		fontApplicator = new FontApplicator(activity.getApplicationContext().getAssets(), TimetableApp.FONT_NAME);
 		this.activity = (TimetableActivity) activity;
-		this.activity.addFragment(this);
 	}
 	
 	@Override
 	public void onDetach()
 	{
-		this.activity.removeFragment(this);
 		this.activity = null;
 		super.onDetach();
 	}
@@ -122,6 +136,7 @@ public class DayFragment extends Fragment
 		listView.addHeaderView(header);
 		
 		refresh();
+        getActivity().registerReceiver(broadcastReceiver, new IntentFilter(TimetableApp.BROADCAST_TIMETABLE_CHANGE));
 	}
 	
 	@Override
@@ -130,6 +145,7 @@ public class DayFragment extends Fragment
 		super.onDestroyView();
 		this.listView = null;
 		this.tvText = null;
+        getActivity().unregisterReceiver(broadcastReceiver);
 	}
 	
 	public static DayFragment newInstance(int dayId)

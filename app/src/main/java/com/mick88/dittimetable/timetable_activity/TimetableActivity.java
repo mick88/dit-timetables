@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -96,8 +95,6 @@ public class TimetableActivity extends ActionBarActivity
 	
 	final String logTag = "Timetable";
 	Timetable timetable = null;
-	// fragments to be refreshed
-	Set<DayFragment> fragments = new HashSet<DayFragment>(5);
 	private boolean timetableShown=false;
 	
 	ViewPager viewPager=null;
@@ -114,16 +111,6 @@ public class TimetableActivity extends ActionBarActivity
 	void toast(CharSequence message)
 	{
 		Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-	}
-	
-	public void addFragment(DayFragment fragment)
-	{
-		fragments.add(fragment);
-	}
-	
-	public void removeFragment(DayFragment fragment)
-	{
-		fragments.remove(fragment);
 	}
 	
 	private Timer timedUpdateTimer = null;
@@ -613,8 +600,7 @@ public class TimetableActivity extends ActionBarActivity
 		try
 		{
 			setTitle();
-			for (DayFragment dayFragment : fragments)
-				dayFragment.refresh();
+			sendBroadcast(new Intent(TimetableApp.BROADCAST_TIMETABLE_CHANGE));
 			showTimetable();
 			refreshWidget();
 		}
