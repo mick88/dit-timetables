@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
      <color name="color_group">#EE0000</color>
+     <color name="white">#ffff</color>
 
     <color name="color_lecture">#000000</color>
     <color name="color_laboratory">#0000EE</color>
@@ -19,12 +20,6 @@
     <color name="card_shadow">#ccc</color>
     <color name="card_shadow_selected">#0099CC</color>
     <color name="card_shadow_semi_selected">#7da1ad</color>
-    
-    <!-- DIT Colours -->
-    <color name="dit_dark_blue">#0060A9</color>
-    <color name="dit_light_blue">#0096D7</color>
-    <color name="dit_yellow">#FFB10F</color>
-    <color name="dit_white">#FFFFFF</color>
     
     <!-- Widget colours -->
     <color name="widget_item">@android:color/transparent</color>

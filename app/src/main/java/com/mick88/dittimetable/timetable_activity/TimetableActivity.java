@@ -390,7 +390,7 @@ public class TimetableActivity extends ActionBarActivity
 	{
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.fragment_timetable);
+		setContentView(R.layout.activity_timetable);
 
 		showMessage(true, getString(R.string.loading_), null, null);
 		
