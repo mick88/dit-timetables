@@ -21,6 +21,7 @@ import com.mick88.dittimetable.timetable_activity.TimetableActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -106,6 +107,7 @@ public class TimetableWidget extends AppWidgetProvider
 	
 	public static List<TimetableEvent> getTodaysRemainingEvents(Context context, Timetable timetable, AppSettings settings)
 	{
+        if (timetable == null) return Collections.EMPTY_LIST;
 		TimetableDay day = timetable.getToday(true);
 		List<TimetableEvent> events = new ArrayList<TimetableEvent>(day.getEvents(settings));
 		
