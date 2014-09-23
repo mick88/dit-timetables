@@ -5,14 +5,14 @@
         android:id="@+id/settings_save"
         android:orderInCategory="11"
         appCompat:showAsAction="always"
-        android:title="Save settings"
+        android:title="@string/save_settings"
         android:titleCondensed="Save"
         android:icon="@drawable/accept"/>
     <item
         android:id="@+id/settings_cancel"
         android:orderInCategory="10"
         appCompat:showAsAction="always"
-        android:title="Abandon changes"
+        android:title="@string/cancel_changes"
         android:titleCondensed="Cancel"
         android:icon="@drawable/cancel"/>
 
