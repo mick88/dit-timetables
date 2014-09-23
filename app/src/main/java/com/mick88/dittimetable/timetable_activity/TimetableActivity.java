@@ -317,11 +317,11 @@ public class TimetableActivity extends ActionBarActivity
 				int weekRange = Timetable.INVALID_WEEK_RANGE;
 				try
 				{
-					Integer.parseInt(values.get("weekRange"));
+					weekRange = Integer.parseInt(values.get("weekRange"));
 				}
 				catch (Exception e)
 				{
-					
+					e.printStackTrace();
 				}
 				
 				int year = Integer.parseInt(values.get("sYear"));

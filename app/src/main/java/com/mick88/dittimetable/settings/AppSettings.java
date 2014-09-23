@@ -44,11 +44,11 @@ public class AppSettings implements Serializable
 	
 	private AppSettings()
 	{		
-		username = new String();
-		password = new String();
+		username = "";
+		password = "";
 		
-		course = new String();
-		weekRange = new String();
+		course = "";
+		weekRange = "";
 		year = 0;
 		
 		onlyCurrentWeek = false;
