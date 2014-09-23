@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/tvDownloadStatus"
         android:layout_centerHorizontal="true"
-        android:text="Message"
+        android:text="@string/message"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ProgressBar
@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@android:id/progress"
         android:layout_centerHorizontal="true"
-        android:text="Action" />
+        android:text="@string/placeholder_action" />
 
     <TextView
         android:id="@+id/tvDownloadStatus"
@@ -50,6 +50,6 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/centerStrut"
         android:layout_centerHorizontal="true"
-        android:text="Status" />
+        android:text="@string/placeholder_status" />
 
 </RelativeLayout>

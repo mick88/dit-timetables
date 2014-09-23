@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:text="00:00 - 00:00"
+            android:text="@string/placeholder_time"
 			style="@style/card_text_big" />
 
         <TextView
@@ -36,14 +36,14 @@
             android:gravity="right"
             android:singleLine="true"
             android:ellipsize="start"
-            android:text="Room" />
+            android:text="@string/placeholder_room_number" />
 
         <TextView
             android:id="@+id/eventTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:text="Module name"
+            android:text="@string/placeholder_module_name"
             android:layout_centerInParent="true"
             android:gravity="center"
             android:singleLine="true"
@@ -63,7 +63,7 @@
             android:gravity="end"
             android:lines="1"
             android:maxLines="1"
-            android:text="Group A"
+            android:text="@string/placeholder_group"
             android:textColor="@color/color_group"
             android:visibility="visible" />
 
@@ -74,7 +74,7 @@
             android:layout_alignBaseline="@+id/eventGroup"
             android:layout_alignBottom="@+id/eventGroup"
             android:layout_centerHorizontal="true"
-            android:text="Type"
+            android:text="@string/placeholder_event_type"
 			style="@style/card_text" />
 
         <TextView
@@ -87,7 +87,7 @@
             android:ellipsize="end"
             android:lines="1"
             android:maxLines="1"
-            android:text="Lecturer"
+            android:text="@string/placeholder_lecturer_name"
             android:textColor="@color/color_lecturer"
             android:visibility="visible" />
 

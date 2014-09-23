@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textStyle="bold" 
-        android:text="Name"/>
+        android:text="@string/property_name"/>
 
     <TextView
         android:id="@android:id/text2"
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Value"
+        android:text="@string/property_value"
          />
 
 </LinearLayout>
