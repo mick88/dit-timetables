@@ -145,15 +145,13 @@ public class UnfoldActivity extends Activity implements OnClickListener
 			@Override
 			public void onAnimationStart(Animator animation)
 			{
-				// TODO Auto-generated method stub
-				
+
 			}
 			
 			@Override
 			public void onAnimationRepeat(Animator animation)
 			{
-				// TODO Auto-generated method stub
-				
+
 			}
 			
 			@Override
@@ -165,8 +163,7 @@ public class UnfoldActivity extends Activity implements OnClickListener
 			@Override
 			public void onAnimationCancel(Animator animation)
 			{
-				// TODO Auto-generated method stub
-				
+
 			}
 		});
 		set.start();		

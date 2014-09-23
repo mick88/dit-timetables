@@ -64,8 +64,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 		@Override
 		public void onStatusChange(TimetableDownloader downloader)
 		{
-			// TODO Auto-generated method stub
-			
+
 		}
 	}
 	
@@ -131,7 +130,7 @@ public class TimetableDownloader extends AsyncTask<Void, Integer, RuntimeExcepti
 			startYear = c.get(Calendar.YEAR);
 		else
 			startYear = c.get(Calendar.YEAR)-1;
-		
+
 		StringBuilder builder = new StringBuilder(6);
 		builder.append(startYear);
 		builder.append((startYear+1) % 100);

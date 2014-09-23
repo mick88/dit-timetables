@@ -114,7 +114,7 @@ public class TimetableDay implements Serializable
 	@Override
 	public String toString()
 	{
-		if (events.isEmpty()) return new String();
+		if (events.isEmpty()) return "";
 		
 		StringBuilder builder = new StringBuilder(getName());
 		
@@ -129,7 +129,7 @@ public class TimetableDay implements Serializable
 	
 	public String toString(AppSettings appSettings)
 	{
-		if (events.isEmpty()) return new String();
+		if (events.isEmpty()) return "";
 		int n=0;
 		StringBuilder builder = new StringBuilder(getName());
 		
@@ -140,7 +140,7 @@ public class TimetableDay implements Serializable
 			n++;
 			
 		}
-		if (n == 0) return new String();
+		if (n == 0) return "";
 		else return builder.toString();
 	}
 	
