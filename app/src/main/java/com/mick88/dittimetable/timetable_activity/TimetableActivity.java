@@ -695,52 +695,30 @@ public class TimetableActivity extends ActionBarActivity
 	
 	void openTimetable(final AppSettings appSettings)
 	{
-		
-		new AsyncTask<AppSettings, Void, Timetable>()
-		{
-			@Override
-			protected Timetable doInBackground(AppSettings... params) 
-			{
-				DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
-				Timetable timetable = databaseHelper.loadTimetable(params[0]);
-				
-				// attempt loading from file cache
-				if (timetable == null) 
-				{
-					timetable = new Timetable(params[0]);
-					try
-					{
-						timetable.importSavedTimetable(getApplicationContext());
-						databaseHelper.saveTimetable(timetable);
-					}
-					catch (Exceptions.NoLocalCopyException e)
-					{
-						return null;
-					}
-				}
-				return timetable;
-			}
-			
-			@Override
-			protected void onPostExecute(Timetable timetable) 
-			{
-				if (timetable == null)
-				{
-					timetable = new Timetable(appSettings);
-					TimetableActivity.this.timetable = timetable;
-					downloadTimetable();
-					setTitle();
-				}
-				else
-				{
-					setTimetable(timetable);
-					showTimetable();
-					setupTimetableDropdown();
-				}
-			}
-		}.execute(appSettings);
-		
-		
+        DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
+        Timetable timetable = databaseHelper.loadTimetable(appSettings);
+
+        // attempt loading from file cache
+        if (timetable == null)
+        {
+            timetable = new Timetable(appSettings);
+            try
+            {
+                timetable.importSavedTimetable(getApplicationContext());
+                databaseHelper.saveTimetable(timetable);
+            }
+            catch (Exceptions.NoLocalCopyException e)
+            {
+                timetable = new Timetable(appSettings);
+                this.timetable = timetable;
+                downloadTimetable();
+                setTitle();
+            }
+        }
+
+        setTimetable(timetable);
+        showTimetable();
+        setupTimetableDropdown();
 	}
 	
 	@Override
