@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flurry.android.FlurryAgent;
+import com.mick88.dittimetable.BuildConfig;
 import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.about.SocialLinkAdapter.SocialLinkItem;
@@ -116,15 +117,19 @@ public class AboutActivity extends ActionBarActivity implements OnItemClickListe
 	protected void onStart()
 	{
 		super.onStart();
-		FlurryAgent.onStartSession(this, TimetableApp.FLURRY_API_KEY);
-		FlurryAgent.onEvent("AboutActivity started");
+        if (BuildConfig.DEBUG == false)
+        {
+            FlurryAgent.onStartSession(this, TimetableApp.FLURRY_API_KEY);
+            FlurryAgent.onEvent("AboutActivity started");
+        }
 	}
 	
 	@Override
 	protected void onStop()
 	{
 		super.onStop();
-		FlurryAgent.onEndSession(this);
+        if (BuildConfig.DEBUG == false)
+		    FlurryAgent.onEndSession(this);
 	}
 
 	@Override
@@ -132,7 +137,7 @@ public class AboutActivity extends ActionBarActivity implements OnItemClickListe
 	{
 		Object clickedObject = arg0.getItemAtPosition(arg2);
 		
-		if (clickedObject instanceof SocialLink)
+		if (clickedObject instanceof SocialLink && BuildConfig.DEBUG == false)
 		{
 			try
 			{
