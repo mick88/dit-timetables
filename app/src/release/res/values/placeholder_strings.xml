@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="property_name"/>
+    <string name="property_value"/>
+    <string name="message"/>
+    <string name="placeholder_time"/>
+    <string name="placeholder_module_name"/>
+    <string name="placeholder_room_number"/>
+    <string name="placeholder_widget_title"/>
+    <string name="placeholder_action"/>
+    <string name="placeholder_status"/>
+    <string name="placeholder_event_type"/>
+    <string name="placeholder_group"/>
+    <string name="placeholder_lecturer_name"/>
+</resources>

@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/edit_weeks"
-        android:text="Show only current week" />
+        android:text="@string/show_only_current_week" />
 
     <TextView
         android:id="@+id/textDatasetInfo"
@@ -80,7 +80,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/checkBoxSetCurrentWeekOnly"
-        android:text="Dataset"
+        android:text="@string/dataset"
         android:textAppearance="@android:style/TextAppearance.Small" />
 
 </RelativeLayout>
