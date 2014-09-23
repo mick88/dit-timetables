@@ -4,9 +4,7 @@ import com.mick88.dittimetable.settings.AppSettings;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -95,22 +93,6 @@ public class TimetableDay implements Serializable
 	{
 		for (TimetableEvent event : events)
 			groupSet.addAll(event.getGroups());
-	}
-	
-	/**
-	 * Get Set of lectures at this time
-	 * @return
-	 */
-	public Set<TimetableEvent> getCurrentEvents()
-	{
-		Set<TimetableEvent> result = new HashSet<TimetableEvent>();
-		if (isToday())
-		{
-			int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-			for (TimetableEvent event : events)
-				if (event.isEventOn(hour)) result.add(event);
-		}
-		return result;
 	}
 	
 	/**

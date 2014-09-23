@@ -46,11 +46,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, Serializable
 		decodeWeeks();
 	}
 	
-	public String getDayName()
-	{
-		return Timetable.DAY_NAMES[day];
-	}
-	
 	public int getDay()
 	{
 		return day;
@@ -267,29 +262,6 @@ public class TimetableEvent implements Comparable<TimetableEvent>, Serializable
 		return String.format(Locale.ENGLISH, "%s: %s (%s)", getStartTime(), getName(), room);
 	}
 	
-	final String exportItemSeparator = ";";
-	public CharSequence export()
-	{		
-		StringBuilder builder = 
-				new StringBuilder();
-		builder.append(getId()).append(exportItemSeparator);		
-		builder.append(getName()).append(exportItemSeparator);
-		builder.append(room).append(exportItemSeparator);
-		builder.append(getLecturer()).append(exportItemSeparator);
-		
-		builder.append(getStartHour()).append(exportItemSeparator);
-		builder.append(getStartMin()).append(exportItemSeparator);
-		
-		builder.append(getEndHour()).append(exportItemSeparator);
-		builder.append(getEndMin()).append(exportItemSeparator);
-		
-		builder.append(weekRange).append(exportItemSeparator);
-		builder.append(getType().name()).append(exportItemSeparator);
-		builder.append(groupToString().replace(exportItemSeparator, "")).append(exportItemSeparator);		
-		
-		return builder.toString();
-	}
-	
 	private void decodeWeeks()
 	{
 		weeks.clear();
@@ -460,9 +432,5 @@ public class TimetableEvent implements Comparable<TimetableEvent>, Serializable
 	{
 		this.custom = custom;
 	}
-	
-	public boolean isCustom()
-	{
-		return custom;
-	}
+
 }
