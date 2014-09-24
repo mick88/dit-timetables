@@ -46,22 +46,31 @@ public class EventNotificationService extends Service
         return NotificationManagerCompat.from(this);
     }
 
-    int getTargetHour()
+    int getTargetHour(List<TimetableEvent> events)
     {
         Calendar instance = Calendar.getInstance();
         int hour = instance.get(Calendar.HOUR_OF_DAY);
         int min = instance.get(Calendar.MINUTE);
         if (min > 50) hour++;
 
+        for (TimetableEvent event : events)
+            // keep hour if theres an event at that time
+            if (event.getStartHour() == hour)
+                return hour;
+            // fast forward if there is no lecture
+            else if (event.getStartHour() > hour)
+                return event.getStartHour();
+
         return hour;
     }
 
     void showNotification(Timetable timetable, AppSettings appSettings)
     {
-        final int hour = getTargetHour();
         TimetableDay today = timetable.getToday(true);
+        List<TimetableEvent> allEvents = today.getEvents(appSettings);
+        final int hour = getTargetHour(allEvents);
         List<TimetableEvent> events = new ArrayList<TimetableEvent>(2);
-        for (TimetableEvent event : today.getEvents(appSettings))
+        for (TimetableEvent event : allEvents)
             if (event.getStartHour() == hour) events.add(event);
 
         if (events.isEmpty()) return;
