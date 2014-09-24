@@ -1,10 +1,10 @@
 package com.mick88.dittimetable.notifications;
 
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import com.mick88.dittimetable.DatabaseHelper;
 import com.mick88.dittimetable.R;
@@ -14,7 +14,10 @@ import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableDay;
 import com.mick88.dittimetable.timetable.TimetableEvent;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class EventNotificationService extends Service
 {
@@ -35,30 +38,54 @@ public class EventNotificationService extends Service
         DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
         Timetable timetable = databaseHelper.loadTimetable(settings);
         if (timetable != null)
-            showNotification(timetable);
+            showNotification(timetable, settings);
     }
 
-    private NotificationManager getNotificationManager()
+    private NotificationManagerCompat getNotificationManager()
     {
-        return (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        return NotificationManagerCompat.from(this);
     }
 
-    void showNotification(Timetable timetable)
+    int getTargetHour()
     {
+        Calendar instance = Calendar.getInstance();
+        int hour = instance.get(Calendar.HOUR_OF_DAY);
+        int min = instance.get(Calendar.MINUTE);
+        if (min > 50) hour++;
+
+        return hour;
+    }
+
+    void showNotification(Timetable timetable, AppSettings appSettings)
+    {
+        final int hour = getTargetHour();
         TimetableDay today = timetable.getToday(true);
-        List<TimetableEvent> events = today.getEvents();
+        List<TimetableEvent> events = new ArrayList<TimetableEvent>(2);
+        for (TimetableEvent event : today.getEvents(appSettings))
+            if (event.getStartHour() == hour) events.add(event);
+
         if (events.isEmpty()) return;
         TimetableEvent event = events.get(0);
 
-        NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
-        for (TimetableEvent e : events)
-            style.addLine(e.toString());
+        String text = String.format(Locale.ENGLISH, "%s %s\n%s",
+                event.getStartTime(),
+                event.getRoom(),
+                event.getName());
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle("Upcoming event")
-                .setContentText(event.toString())
-                .setStyle(style);
+                .setContentInfo(event.getRoom())
+                .setContentText(text);
+
+        if (events.size() > 1)
+        {
+            NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
+            style.setBigContentTitle("Upcoming events");
+            for (TimetableEvent e : events)
+                style.addLine(e.toString());
+            builder.setStyle(style);
+        }
 
         getNotificationManager().notify(NOTIFICATION_ID, builder.build());
     }
