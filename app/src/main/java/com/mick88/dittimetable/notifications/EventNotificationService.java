@@ -30,15 +30,16 @@ public class EventNotificationService extends Service
     }
 
     @Override
-    public void onCreate()
+    public int onStartCommand(Intent intent, int flags, int startId)
     {
-        super.onCreate();
         TimetableApp app = (TimetableApp) getApplication();
         AppSettings settings = app.getSettings();
         DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
         Timetable timetable = databaseHelper.loadTimetable(settings);
         if (timetable != null)
             showNotification(timetable, settings);
+
+        return START_NOT_STICKY;
     }
 
     private NotificationManagerCompat getNotificationManager()
