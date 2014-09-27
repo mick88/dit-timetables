@@ -2,6 +2,7 @@ package com.mick88.dittimetable.notifications;
 
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -140,6 +141,11 @@ public class EventNotificationService extends Service
                 style.addLine(eventBuilder);
             }
             builder.setStyle(style);
+
+            BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(R.drawable.kevinst);
+            NotificationCompat.WearableExtender extender = new NotificationCompat.WearableExtender()
+                    .setBackground(drawable.getBitmap());
+            builder.extend(extender);
 
             manager.notify(NOTIFICATION_ID, builder.build());
         }
