@@ -77,10 +77,6 @@
             android:name=".notifications.EventNotificationService"
             android:enabled="true"
             android:exported="true" >
-            <intent-filter>
-                <action
-                    android:name="com.mick88.dittimetable.notifications.EventNotificationService.update_notification"/>
-            </intent-filter>
         </service>
     </application>
 

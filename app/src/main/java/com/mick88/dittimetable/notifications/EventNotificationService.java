@@ -233,8 +233,8 @@ public class EventNotificationService extends Service
         calendar.set(Calendar.MINUTE, (60-HANDICAP_MIN));
         calendar.set(Calendar.SECOND, 0);
 
-        Intent intent = new Intent("com.mick88.dittimetable.notifications.EventNotificationService.update_notification");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent intent = new Intent(context, EventNotificationService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 1000*60*60, pendingIntent);
     }
