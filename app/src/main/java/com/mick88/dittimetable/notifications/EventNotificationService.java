@@ -53,6 +53,7 @@ public class EventNotificationService extends Service
         int hour = instance.get(Calendar.HOUR_OF_DAY);
         int min = instance.get(Calendar.MINUTE);
         if (min > 50) hour++;
+        hour = 14;
 
         for (TimetableEvent event : events)
             // keep hour if theres an event at that time
@@ -67,7 +68,7 @@ public class EventNotificationService extends Service
 
     void showNotification(Timetable timetable, AppSettings appSettings)
     {
-        TimetableDay today = timetable.getToday(true);
+        TimetableDay today = timetable.getDay(1);
         List<TimetableEvent> allEvents = today.getEvents(appSettings);
         final int hour = getTargetHour(allEvents);
         List<TimetableEvent> events = new ArrayList<TimetableEvent>(2);
