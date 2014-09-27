@@ -104,7 +104,7 @@ public class EventNotificationService extends Service
 
     void postSummaryNotification(NotificationManagerCompat manager, List<TimetableEvent> events, int hour)
     {
-        if (events.size() > 1)
+        if (events.size() >= 1)
         {
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.HOUR_OF_DAY, hour);
