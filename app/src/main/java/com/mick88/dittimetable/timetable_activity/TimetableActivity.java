@@ -403,7 +403,7 @@ public class TimetableActivity extends ActionBarActivity
 		if (getIntent() != null)
 			onNewIntent(getIntent());
 
-        startService(new Intent(getApplicationContext(), EventNotificationService.class));
+        EventNotificationService.scheduleUpdates(getApplicationContext());
 	}
 	
 	@Override
