@@ -33,6 +33,8 @@ public class EventNotificationService extends Service
         NOTIFICATION_TAG = "upcoming_event";
     private static final int NOTIFICATION_ID = 100;
 
+    String courseCode;
+
     @Override
     public IBinder onBind(Intent intent)
     {
@@ -78,6 +80,7 @@ public class EventNotificationService extends Service
 
     void showNotification(Timetable timetable, AppSettings appSettings)
     {
+        this.courseCode = appSettings.getCourse();
         TimetableDay today = timetable.getDay(1);
         List<TimetableEvent> allEvents = today.getEvents(appSettings);
         final int hour = getTargetHour(allEvents);
@@ -196,7 +199,7 @@ public class EventNotificationService extends Service
 
     CharSequence getGroupString(TimetableEvent event)
     {
-        String groupStr = event.getGroupStr();
+        String groupStr = event.getGroupsString(courseCode);
         if (TextUtils.isEmpty(groupStr))
             return "";
         SpannableString string = new SpannableString(groupStr);
