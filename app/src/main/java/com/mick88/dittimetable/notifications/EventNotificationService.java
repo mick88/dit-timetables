@@ -1,6 +1,9 @@
 package com.mick88.dittimetable.notifications;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.IBinder;
@@ -33,6 +36,8 @@ public class EventNotificationService extends Service
         NOTIFICATION_GROUP = "upcoming_events",
         NOTIFICATION_TAG = "upcoming_event";
     private static final int NOTIFICATION_ID = 100;
+    private static final int
+        HANDICAP_MIN = 10;
 
     String courseCode;
 
@@ -65,8 +70,8 @@ public class EventNotificationService extends Service
         Calendar instance = Calendar.getInstance();
         int hour = instance.get(Calendar.HOUR_OF_DAY);
         int min = instance.get(Calendar.MINUTE);
-        if (min > 50) hour++;
-        hour = 14;
+        if (min > (60-HANDICAP_MIN)) hour++;
+        hour = 9;
 
         for (TimetableEvent event : events)
             // keep hour if theres an event at that time
@@ -220,6 +225,18 @@ public class EventNotificationService extends Service
         NotificationCompat.Builder builder = buildEventNotification(event);
 
         notificationManager.notify(NOTIFICATION_TAG, NOTIFICATION_ID + notificationIdOffset, builder.build());
+    }
+
+    public static void scheduleUpdates(Context context)
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MINUTE, (60-HANDICAP_MIN));
+        calendar.set(Calendar.SECOND, 0);
+
+        Intent intent = new Intent("com.mick88.dittimetable.notifications.EventNotificationService.update_notification");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 1000*60*60, pendingIntent);
     }
 
 }
