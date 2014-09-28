@@ -599,6 +599,7 @@ public class TimetableActivity extends ActionBarActivity
 			sendBroadcast(new Intent(TimetableApp.BROADCAST_TIMETABLE_CHANGE));
 			showTimetable();
 			refreshWidget();
+            startService(new Intent(getApplicationContext(), EventNotificationService.class));
 		}
 		catch (Exception e)
 		{
