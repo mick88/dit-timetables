@@ -86,7 +86,8 @@ public class EventNotificationService extends Service
     void showNotification(Timetable timetable, AppSettings appSettings)
     {
         this.courseCode = appSettings.getCourse();
-        TimetableDay today = timetable.getToday(true);
+        TimetableDay today = timetable.getToday(false);
+        if (today == null) return;
         List<TimetableEvent> allEvents = today.getEvents(appSettings);
         final int hour = getTargetHour(allEvents);
         List<TimetableEvent> events = new ArrayList<TimetableEvent>(2);
