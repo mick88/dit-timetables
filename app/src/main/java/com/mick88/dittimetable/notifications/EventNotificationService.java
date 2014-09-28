@@ -85,6 +85,10 @@ public class EventNotificationService extends Service
 
     void showNotification(Timetable timetable, AppSettings appSettings)
     {
+        NotificationManagerCompat notificationManager = getNotificationManager();
+        // cancel previous notifications
+        notificationManager.cancel(NOTIFICATION_TAG, NOTIFICATION_ID);
+
         this.courseCode = appSettings.getCourse();
         TimetableDay today = timetable.getToday(false);
         if (today == null) return;
@@ -96,9 +100,6 @@ public class EventNotificationService extends Service
 
         if (events.isEmpty()) return;
 
-        NotificationManagerCompat notificationManager = getNotificationManager();
-        // cancel previous notifications
-        notificationManager.cancel(NOTIFICATION_TAG, NOTIFICATION_ID);
         // post new notifications
         notifyEvents(notificationManager, events, hour);
     }
