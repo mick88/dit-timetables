@@ -72,14 +72,6 @@ public class EventNotificationService extends Service
         int min = instance.get(Calendar.MINUTE);
         if (min > (60-HANDICAP_MIN)) hour++;
 
-        for (TimetableEvent event : events)
-            // keep hour if theres an event at that time
-            if (event.getStartHour() == hour)
-                return hour;
-            // fast forward if there is no lecture
-            else if (event.getStartHour() > hour)
-                return event.getStartHour();
-
         return hour;
     }
 
