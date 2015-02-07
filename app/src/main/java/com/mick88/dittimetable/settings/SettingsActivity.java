@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -28,6 +29,7 @@ import com.mick88.dittimetable.R;
 import com.mick88.dittimetable.RobotoArrayAdapter;
 import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.downloader.TimetableDownloader;
+import com.mick88.dittimetable.notifications.EventNotificationService;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableStub;
 import com.mick88.dittimetable.timetable_activity.TimetableActivity;
@@ -39,7 +41,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class SettingsActivity extends ActionBarActivity implements OnClickListener
+public class SettingsActivity extends ActionBarActivity implements OnClickListener, CompoundButton.OnCheckedChangeListener
 {	
 
 	public static final String EXTRA_ALLOW_CANCEL = "allow_cancel";
@@ -86,12 +88,14 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		eventNotificationsCheckbox = (CheckBox) findViewById(R.id.checkboxNotifyUpcomingEvents);
 		TextView tvInfo = (TextView) findViewById(R.id.textDatasetInfo);
 
+        eventNotificationsCheckbox.setOnCheckedChangeListener(this);
+
         if (editCourse instanceof AutoCompleteTextView)
         {
             RobotoArrayAdapter<String> courseAdapter = new RobotoArrayAdapter<String>(this, R.layout.dropdown_autocomplete, android.R.id.text1, getCourseCodes());
             ((AutoCompleteTextView)editCourse).setAdapter(courseAdapter);
         }
-		
+
 		findViewById(R.id.btnClearTimetables).setOnClickListener(this);
 		findViewById(R.id.btnDeleteSelectedTimetables).setOnClickListener(this);
 		
@@ -162,7 +166,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		
 		appSettings.setCourse(editCourse.getText().toString().toUpperCase(Locale.ENGLISH));
 		appSettings.setWeekRange(editWeeks.getText().toString());
-		appSettings.setYear((int) (yearSelector.getSelectedItemId()+1));
+		appSettings.setYear((int) (yearSelector.getSelectedItemId() + 1));
 		appSettings.setOnlyCurrentWeek(weekCheckBox.isChecked());
 		appSettings.setEventNotifications(eventNotificationsCheckbox.isChecked());
 
@@ -195,7 +199,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		
 		editCourse.setText(courseCode);
 		editWeeks.setText(weeks);
-		yearSelector.setSelection(year-1);
+		yearSelector.setSelection(year - 1);
 		editUsername.setText(username);
 		editPassword.setText(password);
 		weekCheckBox.setChecked(appSettings.getOnlyCurrentWeek());
@@ -692,4 +696,19 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		
 		return result;
 	}
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+    {
+        switch (buttonView.getId())
+        {
+            case R.id.checkboxNotifyUpcomingEvents:
+                if (isChecked)
+                    EventNotificationService.scheduleUpdates(getApplicationContext());
+                else
+                    EventNotificationService.clearNotification(getApplicationContext());
+
+                break;
+        }
+    }
 }

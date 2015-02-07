@@ -96,6 +96,12 @@ public class EventNotificationService extends Service
         notifyEvents(notificationManager, events, hour);
     }
 
+    public static void clearNotification(Context context)
+    {
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
+        managerCompat.cancel(NOTIFICATION_ID);
+    }
+
     void notifyEvents(NotificationManagerCompat notificationManager, List<TimetableEvent> events, int hour)
     {
         for (TimetableEvent event : events)
@@ -222,6 +228,9 @@ public class EventNotificationService extends Service
 
     public static void scheduleUpdates(Context context)
     {
+        AppSettings settings = AppSettings.loadFromPreferences(context);
+        if (settings.getEventNotifications() == false) return;
+
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MINUTE, (60-HANDICAP_MIN));
         calendar.set(Calendar.SECOND, 0);
