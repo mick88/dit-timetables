@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 public class AppSettings implements Serializable
 {
@@ -149,7 +150,7 @@ public class AppSettings implements Serializable
         else
         {
             String string = preferences.getString(PREF_HIDDEN_MODULES, "");
-            return new HashSet<>(Arrays.asList(string.split(MODULE_SEPARATOR)));
+            return new HashSet<>(Arrays.asList(string.split(Pattern.quote(MODULE_SEPARATOR))));
         }
 	}
 
