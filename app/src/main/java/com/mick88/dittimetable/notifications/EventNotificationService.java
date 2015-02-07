@@ -88,7 +88,7 @@ public class EventNotificationService extends Service
         final int hour = getTargetHour(allEvents);
 
         // make sure user isnt notified twice about the same events:
-        if (appSettings.wasTimeslotNotified(getApplicationContext(), today.getId(), hour))
+        if (appSettings.wasTimeslotNotified(today.getId(), hour))
             return;
 
         List<TimetableEvent> events = new ArrayList<TimetableEvent>(2);
@@ -237,7 +237,8 @@ public class EventNotificationService extends Service
 
     public static void scheduleUpdates(Context context)
     {
-        AppSettings settings = AppSettings.loadFromPreferences(context);
+
+        AppSettings settings = new AppSettings(context);
         if (settings.getEventNotifications() == false) return;
 
         Calendar calendar = Calendar.getInstance();

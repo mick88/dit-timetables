@@ -10,6 +10,7 @@ import android.widget.RemoteViewsService.RemoteViewsFactory;
 
 import com.mick88.dittimetable.DatabaseHelper;
 import com.mick88.dittimetable.R;
+import com.mick88.dittimetable.TimetableApp;
 import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.timetable.Timetable;
 import com.mick88.dittimetable.timetable.TimetableEvent;
@@ -84,7 +85,8 @@ public class RemoteTimetableAdapter extends RemoteViewsService implements Remote
 	@Override
 	public void onCreate()
 	{
-		AppSettings settings = AppSettings.loadFromPreferences(getApplicationContext());
+        TimetableApp application = (TimetableApp) getApplication();
+        AppSettings settings = application.getSettings();
 		Timetable timetable = new DatabaseHelper(getApplicationContext()).getTimetable(settings.getCourse(), settings.getYear(), settings.getWeekRange());
 		this.events = TimetableWidget.getTodaysRemainingEvents(getApplicationContext(), timetable, settings);
 	}

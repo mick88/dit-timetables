@@ -170,8 +170,6 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		appSettings.setOnlyCurrentWeek(weekCheckBox.isChecked());
 		appSettings.setEventNotifications(eventNotificationsCheckbox.isChecked());
 
-		appSettings.saveSettings(this);
-		
 		return true;
 	}
 	

@@ -22,7 +22,7 @@ public class TimetableApp extends Application
 	{
 		super.onCreate();
 		
-		settings = AppSettings.loadFromPreferences(getApplicationContext());
+		settings = new AppSettings(getApplicationContext());
 	}
 	
 	public AppSettings getSettings()
