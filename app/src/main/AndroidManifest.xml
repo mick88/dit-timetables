@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name="com.mick88.dittimetable.TimetableApp"
@@ -59,6 +60,15 @@
             </intent-filter>
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info"/>
+        </receiver>
+
+        <receiver android:name=".notifications.BootScheduler"
+            android:enabled="true"
+            android:exported="false"
+            android:label="Notification scheduler">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
         </receiver>
 
         <service
