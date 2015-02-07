@@ -952,8 +952,7 @@ public class TimetableActivity extends ActionBarActivity
 		}
 		else throw new RuntimeException();
 		
-		settings.saveSettings(this);
-		refresh();		
+		refresh();
 	}
 
 	@Override

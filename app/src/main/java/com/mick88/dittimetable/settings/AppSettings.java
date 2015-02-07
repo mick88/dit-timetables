@@ -2,11 +2,10 @@ package com.mick88.dittimetable.settings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -14,183 +13,75 @@ import java.util.regex.Pattern;
 
 public class AppSettings implements Serializable
 {
+    private final SharedPreferences preferences;
 	private static final long serialVersionUID = 1L;
 	
-	private static final String PREF_ONLY_CURRENT_WEEK = "only_current_week";
-	private static final String PREF_HIDDEN_GROUPS = "hidden_groups";
-	private static final String PREF_HIDDEN_MODULES = "hidden_modules";
-	private static final String PREF_YEAR = "year";
-	private static final String PREF_WEEKS = "weeks";
-	private static final String PREF_COURSE = "course";
-	private static final String PREF_PASSWORD = "password";
-	private static final String PREF_USERNAME = "username";
-	private static final String PREF_EVENT_NOTIFICATIONS = "event_notifications";
-	private static final String PREF_LAST_NOTIFIED_TIMESLOT = "last_notified";
+	public static final String
+            PREF_ONLY_CURRENT_WEEK = "only_current_week",
+	        PREF_HIDDEN_GROUPS = "hidden_groups",
+	        PREF_HIDDEN_GROUPS_SET = "hidden_groups_set",
+	        PREF_HIDDEN_MODULES = "hidden_modules",
+	        PREF_HIDDEN_MODULES_SET = "hidden_modules_set",
+	        PREF_YEAR = "year",
+	        PREF_WEEKS = "weeks",
+	        PREF_COURSE = "course",
+	        PREF_PASSWORD = "password",
+	        PREF_USERNAME = "username",
+	        PREF_EVENT_NOTIFICATIONS = "event_notifications",
+	        PREF_LAST_NOTIFIED_TIMESLOT = "last_notified";
 
 	private static final String 
 		DEFAULT_USERNAME = "students",
 		DEFAULT_PASSWORD = "timetables";
 	public static final String PREFERENCES_NAME = "com.mick88.dittimetable";
 	public static final String GROUP_SEPARATOR = ",";
-
 	private static final String MODULE_SEPARATOR = "|";
-	
-	String username, 
-		password;	
-	String
-		course, weekRange, lastNotified;
-	int year;
-	boolean onlyCurrentWeek;
-	boolean eventNotifications;
-	Set<String> hiddenGroups;
-	Set<String> hiddenModules;
-	
-	private AppSettings()
-	{		
-		username = "";
-		password = "";
-		
-		course = "";
-		weekRange = "";
-		year = 0;
-		
-		onlyCurrentWeek = false;
-		hiddenGroups = new HashSet<String>();
-		hiddenModules = new HashSet<String>();
+
+	public AppSettings(SharedPreferences sharedPreferences)
+	{
+        this.preferences = sharedPreferences;
 	}
-	
+
+    public AppSettings(Context context)
+    {
+        this(context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE));
+    }
+
 	public boolean isCourseDataSpecified()
 	{
-		return TextUtils.isEmpty(course) == false && TextUtils.isEmpty(weekRange) == false && year > 0;
-	}
-	
-	private AppSettings(Context context, boolean loadSettings)
-	{
-		this();
-		if (loadSettings == true) this.loadSettings(context);
-	}
-	
-	public void loadSettings(Context context)
-	{
-		loadSettings(context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE));
-		Log.d("AppSettings", "Settings loaded: "+toString());
-	}
-	
-	public void loadSettings(SharedPreferences sharedPreferences)
-	{
-		username = sharedPreferences.getString(PREF_USERNAME, DEFAULT_USERNAME);
-		password = sharedPreferences.getString(PREF_PASSWORD, DEFAULT_PASSWORD);
-		
-		course = sharedPreferences.getString(PREF_COURSE, "");
-		weekRange = sharedPreferences.getString(PREF_WEEKS, "");
-		year = sharedPreferences.getInt(PREF_YEAR, 0);
-		
-		onlyCurrentWeek = sharedPreferences.getBoolean(PREF_ONLY_CURRENT_WEEK, false);
-		eventNotifications = sharedPreferences.getBoolean(PREF_EVENT_NOTIFICATIONS, true);
-        lastNotified = sharedPreferences.getString(PREF_LAST_NOTIFIED_TIMESLOT, "");
-
-		setHiddenGroups(sharedPreferences.getString(PREF_HIDDEN_GROUPS, ""));
-		setHiddenModules(sharedPreferences.getString(PREF_HIDDEN_MODULES, ""));
-		
-		Log.i(toString(), "Settings loaded");
-	}
-	
-	public void saveSettings(Context context)
-	{
-		saveSettings(context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE));
-	}
-	
-	public void saveSettings(SharedPreferences sharedPreferences)
-	{
-		sharedPreferences.edit()
-			.putString(PREF_USERNAME, username)
-			.putString(PREF_PASSWORD, password)
-			
-			.putString(PREF_COURSE, course)
-			.putString(PREF_WEEKS, weekRange)
-			.putInt(PREF_YEAR, year)
-			
-			.putString(PREF_HIDDEN_GROUPS, getHiddenGroupsString())
-			.putBoolean(PREF_ONLY_CURRENT_WEEK, onlyCurrentWeek)
-			.putBoolean(PREF_EVENT_NOTIFICATIONS, eventNotifications)
-            .putString(PREF_LAST_NOTIFIED_TIMESLOT, lastNotified)
-			.putString(PREF_HIDDEN_MODULES, getHiddenModulesString())
-			
-			.commit();
-		Log.i(toString(), "App settings saved: "+toString());
-	}
-	
-	@Override
-	public String toString()
-	{
-		return String.format(Locale.ENGLISH, "%s-%d %s", course, year, weekRange);
-	}
-	
-	private String getHiddenGroupsString()
-	{
-		StringBuilder builder = new StringBuilder();
-		for (String group : hiddenGroups)
-		{
-			builder.append(group).append(GROUP_SEPARATOR);
-		}
-		return builder.toString();
-	}
-	
-	private String getHiddenModulesString()
-	{
-		StringBuilder builder = new StringBuilder();
-		for (String module : hiddenModules)
-		{
-			builder.append(module).append(MODULE_SEPARATOR);
-		}
-		return builder.toString();
-	}
-	
-	/**
-	 * Sets hidden groups and clears previous values
-	 */
-	private void setHiddenGroups(String groupString)
-	{
-		String [] groups = groupString.split(GROUP_SEPARATOR);
-		hiddenGroups.clear();
-		hiddenGroups.addAll(Arrays.asList(groups));
-	}
-	
-	private void setHiddenModules(String moduleString)
-	{
-		String [] modules = moduleString.split(Pattern.quote(MODULE_SEPARATOR));
-		hiddenModules.clear();
-		hiddenModules.addAll(Arrays.asList(modules));
+        return preferences.contains(PREF_COURSE)
+                && preferences.contains(PREF_WEEKS)
+                && preferences.contains(PREF_YEAR);
 	}
 	
 	public String getPassword()
 	{
-		return password;
+		return preferences.getString(PREF_PASSWORD, DEFAULT_PASSWORD);
 	}
 	
 	public String getUsername()
 	{
-		return username;
+		return preferences.getString(PREF_USERNAME, DEFAULT_USERNAME);
 	}
 	
 	public void setPassword(String password)
 	{
-		this.password = password;
+		preferences.edit().putString(PREF_PASSWORD, password).apply();
 	}
 	
 	public void setUsername(String username)
 	{
-		this.username = username;
+        preferences.edit().putString(PREF_USERNAME, username).apply();
 	}
 	
 	public String getCourse()
 	{
-		return course;
+        return preferences.getString(PREF_COURSE, "");
 	}
 	
 	public int getYear()
 	{
-		return year;
+		return preferences.getInt(PREF_YEAR, 1);
 	}
 	
 	/**
@@ -199,93 +90,120 @@ public class AppSettings implements Serializable
 	 */
 	public boolean getOnlyCurrentWeek()
 	{
-		return onlyCurrentWeek;
+		return preferences.getBoolean(PREF_ONLY_CURRENT_WEEK, false);
 	}
 	
 	public String getWeekRange()
 	{
-		return weekRange;
+		return preferences.getString(PREF_WEEKS, "");
 	}
 	
 	public void setCourse(String course)
 	{
-		this.course = course;
+		preferences.edit().putString(PREF_COURSE, course).apply();
 	}
 	
 	public void setYear(int year)
 	{
-		this.year = year;
+		preferences.edit().putInt(PREF_YEAR, year).apply();
 	}
 	
 	public void setWeekRange(String weekRange)
 	{
-		this.weekRange = weekRange;
+		preferences.edit().putString(PREF_WEEKS, weekRange).apply();
 	}
 	
 	public Set<String> getHiddenGroups()
 	{
-		return hiddenGroups;
+		if (preferences.contains(PREF_HIDDEN_GROUPS_SET))
+            return preferences.getStringSet(PREF_HIDDEN_GROUPS_SET, Collections.<String>emptySet());
+        else
+        {
+            String string = preferences.getString(PREF_HIDDEN_GROUPS, "");
+            return new HashSet<>(Arrays.asList(string.split(GROUP_SEPARATOR)));
+        }
 	}
 
 	public void setOnlyCurrentWeek(boolean onlyCurrentWeek)
 	{
-		this.onlyCurrentWeek = onlyCurrentWeek;
+		preferences.edit().putBoolean(PREF_ONLY_CURRENT_WEEK, onlyCurrentWeek).apply();
 	}
 	
 	public void hideGroup(String groupCode)
 	{
-		hiddenGroups.add(groupCode);
+        Set<String> hiddenGroups = getHiddenGroups();
+        hiddenGroups.add(groupCode);
+        setHiddenGroups(hiddenGroups);
 	}
 	
 	public void unhideGroup(String group)
 	{
+        Set<String> hiddenGroups = getHiddenGroups();
 		hiddenGroups.remove(group);
+        setHiddenGroups(hiddenGroups);
 	}
 
 	public Set<String> getHiddenModules()
 	{
-		return hiddenModules;
+        if (preferences.contains(PREF_HIDDEN_MODULES_SET))
+            return preferences.getStringSet(PREF_HIDDEN_MODULES_SET, Collections.<String>emptySet());
+        else
+        {
+            String string = preferences.getString(PREF_HIDDEN_MODULES, "");
+            return new HashSet<>(Arrays.asList(string.split(Pattern.quote(MODULE_SEPARATOR))));
+        }
 	}
 
 	public void unhideModule(String s)
 	{
-		hiddenModules.remove(s);
+        Set<String> hiddenModules = getHiddenModules();
+        hiddenModules.remove(s);
+        setHiddenModules(hiddenModules);
 	}
 
-	public void hideModule(String s)
+    private void setHiddenModules(Set<String> hiddenModules)
+    {
+        preferences.edit().putStringSet(PREF_HIDDEN_MODULES_SET, hiddenModules).apply();
+    }
+
+    private void setHiddenGroups(Set<String> hiddenGroups)
+    {
+        preferences.edit().putStringSet(PREF_HIDDEN_GROUPS_SET, hiddenGroups).apply();
+    }
+
+    public void hideModule(String s)
 	{
+        Set<String> hiddenModules = getHiddenModules();
 		hiddenModules.add(s);
+        setHiddenModules(hiddenModules);
 		
 	}
 
     public boolean getEventNotifications()
     {
-        return eventNotifications;
+        return preferences.getBoolean(PREF_EVENT_NOTIFICATIONS, true);
     }
 
     public void setEventNotifications(boolean eventNotifications)
     {
-        this.eventNotifications = eventNotifications;
+        preferences.edit().putBoolean(PREF_EVENT_NOTIFICATIONS, eventNotifications).apply();
     }
-
-    public static AppSettings loadFromPreferences(Context context)
-	{
-		return new AppSettings(context, true);
-	}
 
     /**
      * Check if user was last notified about events for this time and day
      * if not, set this time/day as last notified
      */
-    public boolean wasTimeslotNotified(Context context, int day, int timeslot)
+    public boolean wasTimeslotNotified(int day, int timeslot)
     {
         final String notifiedTimeslot = String.format(Locale.ENGLISH, "%d%d", day, timeslot);
-        if (this.lastNotified.equals(notifiedTimeslot)) return true;
+
+        if (preferences.getString(PREF_LAST_NOTIFIED_TIMESLOT, "").equals(notifiedTimeslot)) return true;
         else
         {
-            this.lastNotified = notifiedTimeslot;
-            saveSettings(context);
+            preferences.edit().putString(PREF_LAST_NOTIFIED_TIMESLOT, notifiedTimeslot).apply();
             return false;
         }
     }
+
+
 }

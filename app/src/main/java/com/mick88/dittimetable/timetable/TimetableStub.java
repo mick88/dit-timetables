@@ -124,7 +124,6 @@ public class TimetableStub implements Serializable, Comparable<TimetableStub>
 		settings.setCourse(course);
 		settings.setYear(year);
 		settings.setWeekRange(weekRange);
-		settings.saveSettings(context);
 	}
 	
 	public CharSequence describe()

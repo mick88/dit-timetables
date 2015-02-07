@@ -65,7 +65,7 @@ public class TimetableWidget extends AppWidgetProvider
 	
 	RemoteViews buildViews(Context context)
 	{
-		AppSettings settings = AppSettings.loadFromPreferences(context);
+		AppSettings settings = new AppSettings(context);
 		Timetable timetable = new DatabaseHelper(context).getTimetable(settings.getCourse(), settings.getYear(), settings.getWeekRange());
 		int day = Timetable.getTodayId(true);
 		
