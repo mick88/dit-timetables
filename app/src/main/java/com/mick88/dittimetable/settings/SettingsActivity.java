@@ -41,27 +41,28 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class SettingsActivity extends ActionBarActivity implements OnClickListener, CompoundButton.OnCheckedChangeListener
-{	
-
-	public static final String EXTRA_ALLOW_CANCEL = "allow_cancel";
+public class SettingsActivity extends ActionBarActivity implements OnClickListener, CompoundButton.OnCheckedChangeListener, OnItemSelectedListener
+{
+    public static final String EXTRA_ALLOW_CANCEL = "allow_cancel";
 	
-	FontApplicator fontApplicator;
-	Spinner yearSelector, 
+	Spinner
+        yearSelector,
 		semesterSelector;
-	CheckBox weekCheckBox;
-	CheckBox eventNotificationsCheckbox;
+	CheckBox
+        weekCheckBox,
+        eventNotificationsCheckbox;
 	EditText editWeeks,
 		editPassword,
 		editUsername;
-	AppSettings appSettings;
-	TextView editCourse;
-	boolean allowCancel = true;
+	TextView
+            editCourse;
 	
-	final int SEM_1_ID=0,
-			SEM_2_ID=1,
-			SEM_ALL_ID=2,
-			CUSTOM_ID=4;
+	private final PresetWeeks[] presetWeekses = new PresetWeeks[] {
+            new PresetWeeks("Semester 1", Timetable.SEMESTER_1),
+            new PresetWeeks("Semester 2", Timetable.SEMESTER_2),
+            new PresetWeeks("This week", String.valueOf(Timetable.getCurrentWeek())),
+            new PresetWeeks("Custom...", null),
+    };
 	int currentWeek = Timetable.getCurrentWeek();
 	
 	@Override
@@ -70,12 +71,9 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 		
-		this.allowCancel = getIntent().getBooleanExtra(EXTRA_ALLOW_CANCEL, true);
-		
-		this.fontApplicator = new FontApplicator(getAssets(), TimetableApp.FONT_NAME);
+        FontApplicator fontApplicator = new FontApplicator(getAssets(), TimetableApp.FONT_NAME);
 		fontApplicator.applyFont(getWindow().getDecorView());
-		appSettings = ((TimetableApp)getApplication()).getSettings();
-		
+
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		yearSelector = (Spinner) findViewById(R.id.spinner_year_selector);
@@ -88,79 +86,31 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		eventNotificationsCheckbox = (CheckBox) findViewById(R.id.checkboxNotifyUpcomingEvents);
 		TextView tvInfo = (TextView) findViewById(R.id.textDatasetInfo);
 
-        eventNotificationsCheckbox.setOnCheckedChangeListener(this);
-
         if (editCourse instanceof AutoCompleteTextView)
         {
             RobotoArrayAdapter<String> courseAdapter = new RobotoArrayAdapter<String>(this, R.layout.dropdown_autocomplete, android.R.id.text1, getCourseCodes());
             ((AutoCompleteTextView)editCourse).setAdapter(courseAdapter);
         }
 
-		findViewById(R.id.btnClearTimetables).setOnClickListener(this);
-		findViewById(R.id.btnDeleteSelectedTimetables).setOnClickListener(this);
-		
 		String [] years = getResources().getStringArray(R.array.year_values);
 		yearSelector.setAdapter(new RobotoArrayAdapter<String>(this, android.R.layout.simple_spinner_item, android.R.id.text1, years));
 		
-		String [] presetWeeks = getResources().getStringArray(R.array.semester_predefines);
-		semesterSelector.setAdapter(new RobotoArrayAdapter<String>(this, android.R.layout.simple_spinner_item, android.R.id.text1, presetWeeks));
-		
-		findViewById(R.id.btn_get_password).setOnClickListener(new View.OnClickListener()
-		{
-			
-			@Override
-			public void onClick(View v)
-			{
-				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.dit.ie/registration/studentclasstimetables/"));				
-				startActivity(intent);
-			}
-		});
+		semesterSelector.setAdapter(new RobotoArrayAdapter<>(this, android.R.layout.simple_spinner_item, android.R.id.text1, presetWeekses));
+
 		tvInfo.setText(String.format(Locale.ENGLISH, "Dataset: %s, week %d", TimetableDownloader.getDataset(), currentWeek));
 		
 		loadSettings();
 		
-		semesterSelector.setOnItemSelectedListener(new OnItemSelectedListener()
-		{
-
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1,
-					int arg2, long arg3)
-			{
-				switch ((int)arg3)
-				{
-				case SEM_1_ID:
-					editWeeks.setText(Timetable.SEMESTER_1);
-					editWeeks.setError(null);
-					break;
-				case SEM_2_ID:
-					editWeeks.setText(Timetable.SEMESTER_2);
-					editWeeks.setError(null);
-					break;
-				case 2:
-					editWeeks.setText(Timetable.ALL_WEEKS);
-					editWeeks.setError(null);
-					break;
-				case 3:
-					editWeeks.setText(String.valueOf(currentWeek));
-					editWeeks.setError(null);
-					break;
-				case 4:
-					editWeeks.requestFocus();
-					editWeeks.selectAll();
-					break;
-				}
-				
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0)
-			{
-			}
-		});
+		semesterSelector.setOnItemSelectedListener(this);
+        eventNotificationsCheckbox.setOnCheckedChangeListener(this);
+        findViewById(R.id.btnClearTimetables).setOnClickListener(this);
+        findViewById(R.id.btnDeleteSelectedTimetables).setOnClickListener(this);
+        findViewById(R.id.btnGetPassword).setOnClickListener(this);
 	}
 	
 	boolean saveSettings()
-	{		
+	{
+        AppSettings appSettings = ((TimetableApp) getApplication()).getSettings();
 		appSettings.setUsername(editUsername.getText().toString().trim());
 		appSettings.setPassword(editPassword.getText().toString().trim());
 		
@@ -175,25 +125,27 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 	
 	void loadSettings()
 	{
-		String courseCode="",
-			weeks=Timetable.getCurrentSemester()==1?Timetable.SEMESTER_1:Timetable.SEMESTER_2,
-					username="", 
-					password="";
-		int year=1;
+        AppSettings appSettings = ((TimetableApp) getApplication()).getSettings();
+
+		String courseCode = appSettings.getCourse();
+		String weeks = appSettings.getWeekRange();
+		int year = appSettings.getYear();
 		
-		courseCode = appSettings.getCourse();
-		weeks = appSettings.getWeekRange();
-		year = appSettings.getYear();
+		String username = appSettings.getUsername();
+		String password = appSettings.getPassword();
 		
-		username = appSettings.getUsername();
-		password = appSettings.getPassword();
-		
-		if (TextUtils.isEmpty(weeks)) weeks = Timetable.getCurrentSemester()==1?Timetable.SEMESTER_1:Timetable.SEMESTER_2;
-		
-		if (weeks.equals(Timetable.SEMESTER_1)) semesterSelector.setSelection(SEM_1_ID);
-		else if (weeks.equals(Timetable.SEMESTER_2)) semesterSelector.setSelection(SEM_2_ID);
-		else if (weeks.equals(Timetable.ALL_WEEKS)) semesterSelector.setSelection(SEM_ALL_ID);
-		else semesterSelector.setSelection(CUSTOM_ID);
+		if (TextUtils.isEmpty(weeks))
+            weeks = Timetable.getCurrentSemester()==1?Timetable.SEMESTER_1:Timetable.SEMESTER_2;
+
+        for (int i=0; i < presetWeekses.length; i++)
+        {
+            // select relevant semester or last item ("Custom...")
+            if (weeks.equals(presetWeekses[i].weekRange) || i == presetWeekses.length - 1)
+            {
+                semesterSelector.setSelection(i);
+                break;
+            }
+        }
 		
 		editCourse.setText(courseCode);
 		editWeeks.setText(weeks);
@@ -211,16 +163,17 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 	{
 		switch(item.getItemId())
 		{
-		case android.R.id.home:
-			onBackPressed();
-			break;
-			
-		case R.id.settings_save:
-			saveAndQuit();
-			break;
-		case R.id.settings_cancel:
-			cancelAndQuit();
-			break;
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            case R.id.settings_save:
+                saveAndQuit();
+                return true;
+
+            case R.id.settings_cancel:
+                cancelAndQuit();
+                return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -229,7 +182,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		getMenuInflater().inflate(R.menu.activity_settings, menu);
-		if (allowCancel == false)
+		if (getIntent().getBooleanExtra(EXTRA_ALLOW_CANCEL, true) == false)
 		{
 			menu.findItem(R.id.settings_cancel).setVisible(false);
 		}
@@ -279,7 +232,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
                 {
                     Map<String, String> stringMap = new HashMap<String, String>(1);
                     stringMap.put("course", course);
-                    FlurryAgent.onEvent("Invalid course code");
+                    FlurryAgent.onEvent("Invalid course code", stringMap);
                 }
 			}
 		}
@@ -399,6 +352,11 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 			case R.id.btnDeleteSelectedTimetables:
 				showTimetableDeleteDialog();
 				break;
+
+            case R.id.btnGetPassword:
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.dit.ie/registration/studentclasstimetables/"));
+                startActivity(intent);
+                break;
 		}		
 	}
 	
@@ -708,5 +666,31 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 
                 break;
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View itemView, int position, long id)
+    {
+        final Object item = adapterView.getItemAtPosition(position);
+        if (item instanceof PresetWeeks)
+        {
+            final String weekRange = ((PresetWeeks) item).weekRange;
+            if (weekRange == null)
+            {
+                editWeeks.requestFocus();
+                editWeeks.selectAll();
+            }
+            else
+            {
+                editWeeks.setText(weekRange);
+                editWeeks.setError(null);
+            }
+        }
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> arg0)
+    {
     }
 }
