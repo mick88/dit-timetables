@@ -7,6 +7,7 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:windowBackground">@color/color_background</item>
+        <item name="colorAccent">@color/card_selected</item>
     </style>
 
     <style name="card_text_big" parent="@style/card_text">

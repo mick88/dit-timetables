@@ -52,7 +52,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		editPassword,
 		editUsername;
 	AppSettings appSettings;
-	AutoCompleteTextView editCourse;
+	TextView editCourse;
 	boolean allowCancel = true;
 	
 	final int SEM_1_ID=0,
@@ -78,14 +78,17 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		yearSelector = (Spinner) findViewById(R.id.spinner_year_selector);
 		semesterSelector = (Spinner) findViewById(R.id.spinner_semester_selector);
 		editWeeks = (EditText) findViewById(R.id.edit_weeks);
-		editCourse = (AutoCompleteTextView) findViewById(R.id.editCourseCode);
+		editCourse = (TextView) findViewById(R.id.editCourseCode);
 		editUsername =  (EditText) findViewById(R.id.editUsername);
 		editPassword = (EditText) findViewById(R.id.editPassword);
 		weekCheckBox = (CheckBox) findViewById(R.id.checkBoxSetCurrentWeekOnly);
 		TextView tvInfo = (TextView) findViewById(R.id.textDatasetInfo);
 
-		RobotoArrayAdapter<String> courseAdapter = new RobotoArrayAdapter<String>(this, R.layout.dropdown_autocomplete, android.R.id.text1, getCourseCodes());
-		editCourse.setAdapter(courseAdapter);
+        if (editCourse instanceof AutoCompleteTextView)
+        {
+            RobotoArrayAdapter<String> courseAdapter = new RobotoArrayAdapter<String>(this, R.layout.dropdown_autocomplete, android.R.id.text1, getCourseCodes());
+            ((AutoCompleteTextView)editCourse).setAdapter(courseAdapter);
+        }
 		
 		findViewById(R.id.btnClearTimetables).setOnClickListener(this);
 		findViewById(R.id.btnDeleteSelectedTimetables).setOnClickListener(this);

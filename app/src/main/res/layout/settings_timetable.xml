@@ -30,6 +30,7 @@
         android:ems="10"
         android:hint="@string/course_code"
         android:completionThreshold="1"
+        style="@style/Widget.AppCompat.EditText"
         android:inputType="textCapCharacters|textNoSuggestions|textVisiblePassword"
         android:singleLine="true" />
 
