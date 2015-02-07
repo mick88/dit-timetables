@@ -42,8 +42,8 @@ import java.util.Locale;
 import java.util.Map;
 
 public class SettingsActivity extends ActionBarActivity implements OnClickListener, CompoundButton.OnCheckedChangeListener, OnItemSelectedListener
-{	
-	public static final String EXTRA_ALLOW_CANCEL = "allow_cancel";
+{
+    public static final String EXTRA_ALLOW_CANCEL = "allow_cancel";
 	
 	Spinner
         yearSelector,
@@ -59,10 +59,12 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 	boolean
             allowCancel = true;
 	
-	private static final int SEM_1_ID=0,
-			SEM_2_ID=1,
-			SEM_ALL_ID=2,
-			CUSTOM_ID=4;
+	private final PresetWeeks[] presetWeekses = new PresetWeeks[] {
+            new PresetWeeks("Semester 1", Timetable.SEMESTER_1),
+            new PresetWeeks("Semester 2", Timetable.SEMESTER_2),
+            new PresetWeeks("This week", String.valueOf(Timetable.getCurrentWeek())),
+            new PresetWeeks("Custom...", null),
+    };
 	int currentWeek = Timetable.getCurrentWeek();
 	
 	@Override
@@ -97,8 +99,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		String [] years = getResources().getStringArray(R.array.year_values);
 		yearSelector.setAdapter(new RobotoArrayAdapter<String>(this, android.R.layout.simple_spinner_item, android.R.id.text1, years));
 		
-		String [] presetWeeks = getResources().getStringArray(R.array.semester_predefines);
-		semesterSelector.setAdapter(new RobotoArrayAdapter<String>(this, android.R.layout.simple_spinner_item, android.R.id.text1, presetWeeks));
+		semesterSelector.setAdapter(new RobotoArrayAdapter<>(this, android.R.layout.simple_spinner_item, android.R.id.text1, presetWeekses));
 
 		tvInfo.setText(String.format(Locale.ENGLISH, "Dataset: %s, week %d", TimetableDownloader.getDataset(), currentWeek));
 		
@@ -140,20 +141,14 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		if (TextUtils.isEmpty(weeks))
             weeks = Timetable.getCurrentSemester()==1?Timetable.SEMESTER_1:Timetable.SEMESTER_2;
 
-        switch (weeks)
+        for (int i=0; i < presetWeekses.length; i++)
         {
-            case Timetable.SEMESTER_1:
-                semesterSelector.setSelection(SEM_1_ID);
+            // select relevant semester or last item ("Custom...")
+            if (weeks.equals(presetWeekses[i].weekRange) || i == presetWeekses.length - 1)
+            {
+                semesterSelector.setSelection(i);
                 break;
-            case Timetable.SEMESTER_2:
-                semesterSelector.setSelection(SEM_2_ID);
-                break;
-            case Timetable.ALL_WEEKS:
-                semesterSelector.setSelection(SEM_ALL_ID);
-                break;
-            default:
-                semesterSelector.setSelection(CUSTOM_ID);
-                break;
+            }
         }
 		
 		editCourse.setText(courseCode);
@@ -680,28 +675,20 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View itemView, int position, long id)
     {
-        switch (position)
+        final Object item = adapterView.getItemAtPosition(position);
+        if (item instanceof PresetWeeks)
         {
-            case SEM_1_ID:
-                editWeeks.setText(Timetable.SEMESTER_1);
-                editWeeks.setError(null);
-                break;
-            case SEM_2_ID:
-                editWeeks.setText(Timetable.SEMESTER_2);
-                editWeeks.setError(null);
-                break;
-            case 2:
-                editWeeks.setText(Timetable.ALL_WEEKS);
-                editWeeks.setError(null);
-                break;
-            case 3:
-                editWeeks.setText(String.valueOf(currentWeek));
-                editWeeks.setError(null);
-                break;
-            case 4:
+            final String weekRange = ((PresetWeeks) item).weekRange;
+            if (weekRange == null)
+            {
                 editWeeks.requestFocus();
                 editWeeks.selectAll();
-                break;
+            }
+            else
+            {
+                editWeeks.setText(weekRange);
+                editWeeks.setError(null);
+            }
         }
 
     }

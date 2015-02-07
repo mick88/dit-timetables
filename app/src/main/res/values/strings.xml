@@ -14,13 +14,6 @@
         <item>year 3</item>
         <item>year 4</item>
     </string-array>
-    <string-array name="semester_predefines">
-        <item>semester 1</item>
-        <item>semester 2</item>
-        <item>all weeks</item>
-        <item>this week</item>
-        <item>custom&#8230;</item>
-    </string-array>
 
     <string name="week_edit_hint">Weeks</string>
     <string name="title_activity_settings">Settings</string>
