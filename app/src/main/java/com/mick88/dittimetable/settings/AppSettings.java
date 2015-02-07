@@ -25,6 +25,7 @@ public class AppSettings implements Serializable
 	private static final String PREF_PASSWORD = "password";
 	private static final String PREF_USERNAME = "username";
 	private static final String PREF_EVENT_NOTIFICATIONS = "event_notifications";
+	private static final String PREF_LAST_NOTIFIED_TIMESLOT = "last_notified";
 
 	private static final String 
 		DEFAULT_USERNAME = "students",
@@ -37,7 +38,7 @@ public class AppSettings implements Serializable
 	String username, 
 		password;	
 	String
-		course, weekRange;
+		course, weekRange, lastNotified;
 	int year;
 	boolean onlyCurrentWeek;
 	boolean eventNotifications;
@@ -86,6 +87,7 @@ public class AppSettings implements Serializable
 		
 		onlyCurrentWeek = sharedPreferences.getBoolean(PREF_ONLY_CURRENT_WEEK, false);
 		eventNotifications = sharedPreferences.getBoolean(PREF_EVENT_NOTIFICATIONS, true);
+        lastNotified = sharedPreferences.getString(PREF_LAST_NOTIFIED_TIMESLOT, "");
 
 		setHiddenGroups(sharedPreferences.getString(PREF_HIDDEN_GROUPS, ""));
 		setHiddenModules(sharedPreferences.getString(PREF_HIDDEN_MODULES, ""));
@@ -111,6 +113,7 @@ public class AppSettings implements Serializable
 			.putString(PREF_HIDDEN_GROUPS, getHiddenGroupsString())
 			.putBoolean(PREF_ONLY_CURRENT_WEEK, onlyCurrentWeek)
 			.putBoolean(PREF_EVENT_NOTIFICATIONS, eventNotifications)
+            .putString(PREF_LAST_NOTIFIED_TIMESLOT, lastNotified)
 			.putString(PREF_HIDDEN_MODULES, getHiddenModulesString())
 			
 			.commit();
@@ -269,4 +272,20 @@ public class AppSettings implements Serializable
 	{
 		return new AppSettings(context, true);
 	}
+
+    /**
+     * Check if user was last notified about events for this time and day
+     * if not, set this time/day as last notified
+     */
+    public boolean wasTimeslotNotified(Context context, int day, int timeslot)
+    {
+        final String notifiedTimeslot = String.format(Locale.ENGLISH, "%d%d", day, timeslot);
+        if (this.lastNotified.equals(notifiedTimeslot)) return true;
+        else
+        {
+            this.lastNotified = notifiedTimeslot;
+            saveSettings(context);
+            return false;
+        }
+    }
 }

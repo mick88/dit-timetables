@@ -86,6 +86,11 @@ public class EventNotificationService extends Service
         if (today == null) return;
         List<TimetableEvent> allEvents = today.getEvents(appSettings);
         final int hour = getTargetHour(allEvents);
+
+        // make sure user isnt notified twice about the same events:
+        if (appSettings.wasTimeslotNotified(getApplicationContext(), today.getId(), hour))
+            return;
+
         List<TimetableEvent> events = new ArrayList<TimetableEvent>(2);
         for (TimetableEvent event : allEvents)
             if (event.getStartHour() == hour) events.add(event);
