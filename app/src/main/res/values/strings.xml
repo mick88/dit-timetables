@@ -97,4 +97,6 @@ Dataset: %5$s
     <string name="get_password">Get password</string>
     <string name="show_only_current_week">Show only current week</string>
     <string name="dataset">Dataset</string>
+    <string name="notifications">Notifications</string>
+    <string name="notify_events">Show upcoming events</string>
 </resources>

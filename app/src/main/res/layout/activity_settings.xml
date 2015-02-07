@@ -9,9 +9,8 @@
         android:orientation="vertical" >
 
         <include layout="@layout/settings_timetable"  android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="@dimen/tile_margin_width"/>
-        
+        <include layout="@layout/settings_preferences"  android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="@dimen/tile_margin_width"/>
         <include layout="@layout/settings_saved_timetables"  android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="@dimen/tile_margin_width"/>
-
         <include layout="@layout/settings_credentials"  android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="@dimen/tile_margin_width" android:layout_marginTop="5dp"/>
     </LinearLayout>
 

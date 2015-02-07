@@ -48,6 +48,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 	Spinner yearSelector, 
 		semesterSelector;
 	CheckBox weekCheckBox;
+	CheckBox eventNotificationsCheckbox;
 	EditText editWeeks,
 		editPassword,
 		editUsername;
@@ -82,6 +83,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		editUsername =  (EditText) findViewById(R.id.editUsername);
 		editPassword = (EditText) findViewById(R.id.editPassword);
 		weekCheckBox = (CheckBox) findViewById(R.id.checkBoxSetCurrentWeekOnly);
+		eventNotificationsCheckbox = (CheckBox) findViewById(R.id.checkboxNotifyUpcomingEvents);
 		TextView tvInfo = (TextView) findViewById(R.id.textDatasetInfo);
 
         if (editCourse instanceof AutoCompleteTextView)
@@ -162,7 +164,8 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		appSettings.setWeekRange(editWeeks.getText().toString());
 		appSettings.setYear((int) (yearSelector.getSelectedItemId()+1));
 		appSettings.setOnlyCurrentWeek(weekCheckBox.isChecked());
-		
+		appSettings.setEventNotifications(eventNotificationsCheckbox.isChecked());
+
 		appSettings.saveSettings(this);
 		
 		return true;
@@ -196,7 +199,8 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		editUsername.setText(username);
 		editPassword.setText(password);
 		weekCheckBox.setChecked(appSettings.getOnlyCurrentWeek());
-		
+		eventNotificationsCheckbox.setChecked(appSettings.getEventNotifications());
+
 	}
 	
 	@Override

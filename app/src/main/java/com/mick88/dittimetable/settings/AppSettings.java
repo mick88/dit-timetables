@@ -24,7 +24,8 @@ public class AppSettings implements Serializable
 	private static final String PREF_COURSE = "course";
 	private static final String PREF_PASSWORD = "password";
 	private static final String PREF_USERNAME = "username";
-	
+	private static final String PREF_EVENT_NOTIFICATIONS = "event_notifications";
+
 	private static final String 
 		DEFAULT_USERNAME = "students",
 		DEFAULT_PASSWORD = "timetables";
@@ -39,6 +40,7 @@ public class AppSettings implements Serializable
 		course, weekRange;
 	int year;
 	boolean onlyCurrentWeek;
+	boolean eventNotifications;
 	Set<String> hiddenGroups;
 	Set<String> hiddenModules;
 	
@@ -83,7 +85,8 @@ public class AppSettings implements Serializable
 		year = sharedPreferences.getInt(PREF_YEAR, 0);
 		
 		onlyCurrentWeek = sharedPreferences.getBoolean(PREF_ONLY_CURRENT_WEEK, false);
-		
+		eventNotifications = sharedPreferences.getBoolean(PREF_EVENT_NOTIFICATIONS, true);
+
 		setHiddenGroups(sharedPreferences.getString(PREF_HIDDEN_GROUPS, ""));
 		setHiddenModules(sharedPreferences.getString(PREF_HIDDEN_MODULES, ""));
 		
@@ -107,6 +110,7 @@ public class AppSettings implements Serializable
 			
 			.putString(PREF_HIDDEN_GROUPS, getHiddenGroupsString())
 			.putBoolean(PREF_ONLY_CURRENT_WEEK, onlyCurrentWeek)
+			.putBoolean(PREF_EVENT_NOTIFICATIONS, eventNotifications)
 			.putString(PREF_HIDDEN_MODULES, getHiddenModulesString())
 			
 			.commit();
@@ -250,8 +254,18 @@ public class AppSettings implements Serializable
 		hiddenModules.add(s);
 		
 	}
-	
-	public static AppSettings loadFromPreferences(Context context)
+
+    public boolean getEventNotifications()
+    {
+        return eventNotifications;
+    }
+
+    public void setEventNotifications(boolean eventNotifications)
+    {
+        this.eventNotifications = eventNotifications;
+    }
+
+    public static AppSettings loadFromPreferences(Context context)
 	{
 		return new AppSettings(context, true);
 	}
