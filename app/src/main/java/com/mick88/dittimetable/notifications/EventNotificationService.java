@@ -90,7 +90,11 @@ public class EventNotificationService extends Service
         for (TimetableEvent event : allEvents)
             if (event.getStartHour() == hour) events.add(event);
 
-        if (events.isEmpty()) return;
+        if (events.isEmpty())
+        {
+            clearNotification(getApplicationContext());
+            return;
+        }
 
         // post new notifications
         notifyEvents(notificationManager, events, hour);
