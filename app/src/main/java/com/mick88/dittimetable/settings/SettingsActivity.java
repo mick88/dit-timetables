@@ -56,8 +56,6 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		editUsername;
 	TextView
             editCourse;
-	boolean
-            allowCancel = true;
 	
 	private final PresetWeeks[] presetWeekses = new PresetWeeks[] {
             new PresetWeeks("Semester 1", Timetable.SEMESTER_1),
@@ -73,8 +71,6 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings);
 		
-		this.allowCancel = getIntent().getBooleanExtra(EXTRA_ALLOW_CANCEL, true);
-
         FontApplicator fontApplicator = new FontApplicator(getAssets(), TimetableApp.FONT_NAME);
 		fontApplicator.applyFont(getWindow().getDecorView());
 
@@ -186,7 +182,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		getMenuInflater().inflate(R.menu.activity_settings, menu);
-		if (allowCancel == false)
+		if (getIntent().getBooleanExtra(EXTRA_ALLOW_CANCEL, true) == false)
 		{
 			menu.findItem(R.id.settings_cancel).setVisible(false);
 		}
