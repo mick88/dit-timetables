@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.mick88.dittimetable"
-        minSdkVersion 7
+        minSdkVersion 14
         targetSdkVersion 21
     }
 
