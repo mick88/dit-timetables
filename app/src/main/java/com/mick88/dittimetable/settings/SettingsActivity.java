@@ -189,11 +189,22 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		password = appSettings.getPassword();
 		
 		if (TextUtils.isEmpty(weeks)) weeks = Timetable.getCurrentSemester()==1?Timetable.SEMESTER_1:Timetable.SEMESTER_2;
-		
-		if (weeks.equals(Timetable.SEMESTER_1)) semesterSelector.setSelection(SEM_1_ID);
-		else if (weeks.equals(Timetable.SEMESTER_2)) semesterSelector.setSelection(SEM_2_ID);
-		else if (weeks.equals(Timetable.ALL_WEEKS)) semesterSelector.setSelection(SEM_ALL_ID);
-		else semesterSelector.setSelection(CUSTOM_ID);
+
+        switch (weeks)
+        {
+            case Timetable.SEMESTER_1:
+                semesterSelector.setSelection(SEM_1_ID);
+                break;
+            case Timetable.SEMESTER_2:
+                semesterSelector.setSelection(SEM_2_ID);
+                break;
+            case Timetable.ALL_WEEKS:
+                semesterSelector.setSelection(SEM_ALL_ID);
+                break;
+            default:
+                semesterSelector.setSelection(CUSTOM_ID);
+                break;
+        }
 		
 		editCourse.setText(courseCode);
 		editWeeks.setText(weeks);
