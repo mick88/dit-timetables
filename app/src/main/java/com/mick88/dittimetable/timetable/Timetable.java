@@ -171,6 +171,7 @@ public class Timetable extends TimetableStub
 	
 	public TimetableDay getDay(int id)
 	{
+        if (id == -1) return null;
 		return getDays()[id];
 	}
 	

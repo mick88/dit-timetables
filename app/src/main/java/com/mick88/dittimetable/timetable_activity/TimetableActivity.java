@@ -36,6 +36,7 @@ import com.mick88.dittimetable.about.AboutActivity;
 import com.mick88.dittimetable.downloader.Exceptions;
 import com.mick88.dittimetable.downloader.TimetableDownloader;
 import com.mick88.dittimetable.downloader.TimetableDownloader.TimetableDownloadListener;
+import com.mick88.dittimetable.notifications.EventNotificationService;
 import com.mick88.dittimetable.settings.AppSettings;
 import com.mick88.dittimetable.settings.SettingsActivity;
 import com.mick88.dittimetable.timetable.Timetable;
@@ -401,6 +402,8 @@ public class TimetableActivity extends ActionBarActivity
 		
 		if (getIntent() != null)
 			onNewIntent(getIntent());
+
+        EventNotificationService.scheduleUpdates(getApplicationContext());
 	}
 	
 	@Override
@@ -596,6 +599,7 @@ public class TimetableActivity extends ActionBarActivity
 			sendBroadcast(new Intent(TimetableApp.BROADCAST_TIMETABLE_CHANGE));
 			showTimetable();
 			refreshWidget();
+            startService(new Intent(getApplicationContext(), EventNotificationService.class));
 		}
 		catch (Exception e)
 		{
