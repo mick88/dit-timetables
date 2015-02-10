@@ -65,11 +65,10 @@ public class EventNotificationService extends Service
         return NotificationManagerCompat.from(this);
     }
 
-    int getTargetHour(List<TimetableEvent> events)
+    public static int getTargetHour(Calendar time)
     {
-        Calendar instance = Calendar.getInstance();
-        int hour = instance.get(Calendar.HOUR_OF_DAY);
-        int min = instance.get(Calendar.MINUTE);
+        int hour = time.get(Calendar.HOUR_OF_DAY);
+        int min = time.get(Calendar.MINUTE);
         if (min > (60-HANDICAP_MIN)) hour++;
 
         return hour;
@@ -85,7 +84,7 @@ public class EventNotificationService extends Service
         TimetableDay today = timetable.getToday(false);
         if (today == null) return;
         List<TimetableEvent> allEvents = today.getEvents(appSettings);
-        final int hour = getTargetHour(allEvents);
+        final int hour = getTargetHour(Calendar.getInstance());
 
         // make sure user isnt notified twice about the same events:
         if (appSettings.wasTimeslotNotified(today.getId(), hour))
