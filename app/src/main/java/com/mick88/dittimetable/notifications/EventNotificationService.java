@@ -69,7 +69,7 @@ public class EventNotificationService extends Service
     {
         int hour = time.get(Calendar.HOUR_OF_DAY);
         int min = time.get(Calendar.MINUTE);
-        if (min > (60-HANDICAP_MIN)) hour++;
+        if (min >= (60-HANDICAP_MIN)) hour++;
 
         return hour;
     }
