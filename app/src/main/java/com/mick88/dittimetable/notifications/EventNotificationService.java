@@ -129,7 +129,7 @@ public class EventNotificationService extends Service
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                     .setContentTitle(getEventRooms(events))
                     .setContentText(getEventNames(events))
-                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setSmallIcon(R.drawable.ic_notification)
                     .setWhen(calendar.getTimeInMillis())
                     .setGroup(NOTIFICATION_GROUP)
                     .setContentInfo(events.get(0).getType().toString())
@@ -205,7 +205,7 @@ public class EventNotificationService extends Service
                 .append(event.getName());
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setContentTitle(event.getRoom())
                 .setContentInfo(event.getEventTimeString())
                 .setGroup(NOTIFICATION_GROUP)
