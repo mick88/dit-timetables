@@ -250,4 +250,14 @@ public class EventNotificationService extends Service
         alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 1000*60*60, pendingIntent);
     }
 
+    public static void cancelScheduledUpdates(Context context)
+    {
+        final AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+
+        final Intent intent = new Intent(context, EventNotificationService.class);
+        final PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmManager.cancel(pendingIntent);
+    }
+
 }

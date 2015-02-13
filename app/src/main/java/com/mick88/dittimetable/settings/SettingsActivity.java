@@ -125,6 +125,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
         {
             appSettings.setEventNotifications(false);
             EventNotificationService.clearNotification(getApplicationContext());
+            EventNotificationService.cancelScheduledUpdates(getApplicationContext());
         }
 
 		return true;
