@@ -237,6 +237,12 @@ public class EventNotificationService extends Service
         notificationManager.notify(NOTIFICATION_TAG, NOTIFICATION_ID + notificationIdOffset, builder.build());
     }
 
+    protected static PendingIntent getPendingIntent(Context context)
+    {
+        Intent intent = new Intent(context, EventNotificationService.class);
+        return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
     public static void scheduleUpdates(Context context, AppSettings settings)
     {
         if (settings.getEventNotifications() == false) return;
@@ -245,18 +251,16 @@ public class EventNotificationService extends Service
         calendar.set(Calendar.MINUTE, (60-HANDICAP_MIN));
         calendar.set(Calendar.SECOND, 0);
 
-        Intent intent = new Intent(context, EventNotificationService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+        PendingIntent pendingIntent = getPendingIntent(context);
         alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 1000*60*60, pendingIntent);
     }
 
     public static void cancelScheduledUpdates(Context context)
     {
         final AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-
-        final Intent intent = new Intent(context, EventNotificationService.class);
-        final PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        final PendingIntent pendingIntent = getPendingIntent(context);
 
         alarmManager.cancel(pendingIntent);
     }
