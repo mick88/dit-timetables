@@ -234,10 +234,8 @@ public class EventNotificationService extends Service
         notificationManager.notify(NOTIFICATION_TAG, NOTIFICATION_ID + notificationIdOffset, builder.build());
     }
 
-    public static void scheduleUpdates(Context context)
+    public static void scheduleUpdates(Context context, AppSettings settings)
     {
-
-        AppSettings settings = new AppSettings(context);
         if (settings.getEventNotifications() == false) return;
 
         Calendar calendar = Calendar.getInstance();

@@ -119,7 +119,7 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
         if (eventNotificationsCheckbox.isChecked())
         {
             appSettings.setEventNotifications(true);
-            EventNotificationService.scheduleUpdates(getApplicationContext());
+            EventNotificationService.scheduleUpdates(getApplicationContext(), appSettings);
         }
         else
         {
