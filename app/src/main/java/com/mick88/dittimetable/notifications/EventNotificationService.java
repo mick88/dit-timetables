@@ -37,6 +37,7 @@ public class EventNotificationService extends Service
         NOTIFICATION_TAG = "upcoming_event";
     private static final int NOTIFICATION_ID = 100;
     private static final int
+        ALARM_REQUEST_CODE = 120,
         HANDICAP_MIN = 10;
 
     String courseCode;
@@ -240,7 +241,7 @@ public class EventNotificationService extends Service
     protected static PendingIntent getPendingIntent(Context context)
     {
         Intent intent = new Intent(context, EventNotificationService.class);
-        return PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return PendingIntent.getService(context, ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     public static void scheduleUpdates(Context context, AppSettings settings)
