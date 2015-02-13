@@ -52,10 +52,13 @@ public class EventNotificationService extends Service
     {
         TimetableApp app = (TimetableApp) getApplication();
         AppSettings settings = app.getSettings();
-        DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
-        Timetable timetable = databaseHelper.loadTimetable(settings);
-        if (timetable != null)
-            showNotification(timetable, settings);
+        if (settings.getEventNotifications())
+        {
+            DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
+            Timetable timetable = databaseHelper.loadTimetable(settings);
+            if (timetable != null)
+                showNotification(timetable, settings);
+        }
 
         return START_NOT_STICKY;
     }
