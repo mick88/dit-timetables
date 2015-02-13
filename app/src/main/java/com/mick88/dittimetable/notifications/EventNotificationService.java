@@ -37,6 +37,7 @@ public class EventNotificationService extends Service
         NOTIFICATION_TAG = "upcoming_event";
     private static final int NOTIFICATION_ID = 100;
     private static final int
+        ALARM_REQUEST_CODE = 120,
         HANDICAP_MIN = 10;
 
     String courseCode;
@@ -52,10 +53,13 @@ public class EventNotificationService extends Service
     {
         TimetableApp app = (TimetableApp) getApplication();
         AppSettings settings = app.getSettings();
-        DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
-        Timetable timetable = databaseHelper.loadTimetable(settings);
-        if (timetable != null)
-            showNotification(timetable, settings);
+        if (settings.getEventNotifications())
+        {
+            DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
+            Timetable timetable = databaseHelper.loadTimetable(settings);
+            if (timetable != null)
+                showNotification(timetable, settings);
+        }
 
         return START_NOT_STICKY;
     }
@@ -234,20 +238,32 @@ public class EventNotificationService extends Service
         notificationManager.notify(NOTIFICATION_TAG, NOTIFICATION_ID + notificationIdOffset, builder.build());
     }
 
-    public static void scheduleUpdates(Context context)
+    protected static PendingIntent getPendingIntent(Context context)
     {
+        Intent intent = new Intent(context, EventNotificationService.class);
+        return PendingIntent.getService(context, ALARM_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
 
-        AppSettings settings = new AppSettings(context);
+    public static void scheduleUpdates(Context context, AppSettings settings)
+    {
         if (settings.getEventNotifications() == false) return;
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.MINUTE, (60-HANDICAP_MIN));
         calendar.set(Calendar.SECOND, 0);
 
-        Intent intent = new Intent(context, EventNotificationService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+        PendingIntent pendingIntent = getPendingIntent(context);
         alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), 1000*60*60, pendingIntent);
+    }
+
+    public static void cancelScheduledUpdates(Context context)
+    {
+        final AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+        final PendingIntent pendingIntent = getPendingIntent(context);
+
+        alarmManager.cancel(pendingIntent);
     }
 
 }
