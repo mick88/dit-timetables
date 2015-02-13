@@ -16,7 +16,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -41,7 +40,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class SettingsActivity extends ActionBarActivity implements OnClickListener, CompoundButton.OnCheckedChangeListener, OnItemSelectedListener
+public class SettingsActivity extends ActionBarActivity implements OnClickListener, OnItemSelectedListener
 {
     public static final String EXTRA_ALLOW_CANCEL = "allow_cancel";
 	
@@ -102,7 +101,6 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		loadSettings();
 		
 		semesterSelector.setOnItemSelectedListener(this);
-        eventNotificationsCheckbox.setOnCheckedChangeListener(this);
         findViewById(R.id.btnClearTimetables).setOnClickListener(this);
         findViewById(R.id.btnDeleteSelectedTimetables).setOnClickListener(this);
         findViewById(R.id.btnGetPassword).setOnClickListener(this);
@@ -118,7 +116,16 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		appSettings.setWeekRange(editWeeks.getText().toString());
 		appSettings.setYear((int) (yearSelector.getSelectedItemId() + 1));
 		appSettings.setOnlyCurrentWeek(weekCheckBox.isChecked());
-		appSettings.setEventNotifications(eventNotificationsCheckbox.isChecked());
+        if (eventNotificationsCheckbox.isChecked())
+        {
+            appSettings.setEventNotifications(true);
+            EventNotificationService.scheduleUpdates(getApplicationContext());
+        }
+        else
+        {
+            appSettings.setEventNotifications(false);
+            EventNotificationService.clearNotification(getApplicationContext());
+        }
 
 		return true;
 	}
@@ -652,21 +659,6 @@ public class SettingsActivity extends ActionBarActivity implements OnClickListen
 		
 		return result;
 	}
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-    {
-        switch (buttonView.getId())
-        {
-            case R.id.checkboxNotifyUpcomingEvents:
-                if (isChecked)
-                    EventNotificationService.scheduleUpdates(getApplicationContext());
-                else
-                    EventNotificationService.clearNotification(getApplicationContext());
-
-                break;
-        }
-    }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View itemView, int position, long id)
